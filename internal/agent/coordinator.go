@@ -18,24 +18,21 @@ import (
 
 	"charm.land/catwalk/pkg/catwalk"
 	"charm.land/fantasy"
-	"github.com/charmbracelet/crush/internal/agent/hyper"
-	"github.com/charmbracelet/crush/internal/agent/notify"
-	"github.com/charmbracelet/crush/internal/agent/prompt"
-	"github.com/charmbracelet/crush/internal/agent/tools"
-	"github.com/charmbracelet/crush/internal/config"
-	"github.com/charmbracelet/crush/internal/discover"
-	"github.com/charmbracelet/crush/internal/event"
-	"github.com/charmbracelet/crush/internal/filetracker"
-	"github.com/charmbracelet/crush/internal/history"
-	"github.com/charmbracelet/crush/internal/hooks"
-	"github.com/charmbracelet/crush/internal/log"
-	"github.com/charmbracelet/crush/internal/lsp"
-	"github.com/charmbracelet/crush/internal/message"
-	"github.com/charmbracelet/crush/internal/oauth/copilot"
-	"github.com/charmbracelet/crush/internal/permission"
-	"github.com/charmbracelet/crush/internal/pubsub"
-	"github.com/charmbracelet/crush/internal/session"
-	"github.com/charmbracelet/crush/internal/skills"
+	"github.com/liamb/opencode/aide/internal/agent/notify"
+	"github.com/liamb/opencode/aide/internal/agent/prompt"
+	"github.com/liamb/opencode/aide/internal/agent/tools"
+	"github.com/liamb/opencode/aide/internal/config"
+	"github.com/liamb/opencode/aide/internal/discover"
+	"github.com/liamb/opencode/aide/internal/filetracker"
+	"github.com/liamb/opencode/aide/internal/history"
+	"github.com/liamb/opencode/aide/internal/hooks"
+	"github.com/liamb/opencode/aide/internal/log"
+	"github.com/liamb/opencode/aide/internal/lsp"
+	"github.com/liamb/opencode/aide/internal/message"
+	"github.com/liamb/opencode/aide/internal/permission"
+	"github.com/liamb/opencode/aide/internal/pubsub"
+	"github.com/liamb/opencode/aide/internal/session"
+	"github.com/liamb/opencode/aide/internal/skills"
 	"golang.org/x/sync/errgroup"
 
 	"charm.land/fantasy/providers/anthropic"
@@ -62,25 +59,14 @@ var (
 	errSmallModelNotFound              = errors.New("small model not found in provider config")
 )
 
-// Copilot models that use the Responses API instead of Chat Completions.
-var copilotResponsesModels = map[string]bool{
-	"gpt-5.2":       true,
-	"gpt-5.2-codex": true,
-	"gpt-5.3-codex": true,
-	"gpt-5.4":       true,
-	"gpt-5.4-mini":  true,
-	"gpt-5.5":       true,
-	"gpt-5-mini":    true,
-}
-
 // OpenCode models that user Anthropic Messages API instead of Chat Completions.
 var opencodeMessagesModels = map[string]bool{
 	"qwen3.7-max": true,
 }
 
 type Coordinator interface {
-	// INFO: (kujtim) this is not used yet we will use this when we have multiple agents
-	// SetMainAgent(string)
+	SetMainAgent(ctx context.Context, name string) error
+	MainAgentName() string
 	Run(ctx context.Context, sessionID, prompt string, attachments ...message.Attachment) (*fantasy.AgentResult, error)
 	// RunAccepted runs a call that was already accepted via
 	// BeginAccepted on the fire-and-forget dispatch path. The handle is
@@ -115,8 +101,9 @@ type coordinator struct {
 	notify      pubsub.Publisher[notify.Notification]
 	runComplete pubsub.Publisher[notify.RunComplete]
 
-	currentAgent SessionAgent
-	agents       map[string]SessionAgent
+	currentAgent   SessionAgent
+	currentAgentID string
+	agents         map[string]SessionAgent
 
 	// Skills discovery results (session-start snapshot).
 	allSkills    []*skills.Skill // Pre-filter: all discovered after dedup.
@@ -173,24 +160,80 @@ func NewCoordinator(
 		return nil, errCoderAgentNotConfigured
 	}
 
-	// TODO: make this dynamic when we support multiple agents
-	prompt, err := coderPrompt(prompt.WithWorkingDir(c.cfg.WorkingDir()))
+	// Build the default agent (Coder/Build) — this is the main work-horse agent.
+	coderP, err := coderPrompt(prompt.WithWorkingDir(c.cfg.WorkingDir()))
 	if err != nil {
 		return nil, err
+	}
+	coderAgent, err := c.buildAgent(ctx, coderP, agentCfg, false)
+	if err != nil {
+		return nil, err
+	}
+	c.currentAgent = coderAgent
+	c.currentAgentID = config.AgentCoder
+	c.agents[config.AgentCoder] = coderAgent
+
+	// Build the Plan agent if configured — read-only planning mode.
+	if planCfg, planOK := cfg.Config().Agents[config.AgentPlan]; planOK && !planCfg.Disabled {
+		planP, pErr := planPrompt(prompt.WithWorkingDir(c.cfg.WorkingDir()))
+		if pErr != nil {
+			return nil, pErr
+		}
+		planAgent, pErr := c.buildAgent(ctx, planP, planCfg, false)
+		if pErr != nil {
+			return nil, pErr
+		}
+		c.agents[config.AgentPlan] = planAgent
 	}
 
-	agent, err := c.buildAgent(ctx, prompt, agentCfg, false)
-	if err != nil {
-		return nil, err
+	// Build the Build agent if configured (explicit Build, separate from Coder).
+	if buildCfg, buildOK := cfg.Config().Agents[config.AgentBuild]; buildOK && !buildCfg.Disabled {
+		buildP, bErr := buildPrompt(prompt.WithWorkingDir(c.cfg.WorkingDir()))
+		if bErr != nil {
+			return nil, bErr
+		}
+		buildAgent, bErr := c.buildAgent(ctx, buildP, buildCfg, false)
+		if bErr != nil {
+			return nil, bErr
+		}
+		c.agents[config.AgentBuild] = buildAgent
 	}
-	c.currentAgent = agent
-	c.agents[config.AgentCoder] = agent
+
 	return c, nil
 }
 
 // Run implements Coordinator.
 func (c *coordinator) Run(ctx context.Context, sessionID string, prompt string, attachments ...message.Attachment) (*fantasy.AgentResult, error) {
 	return c.run(ctx, nil, sessionID, prompt, attachments...)
+}
+
+// SetMainAgent implements Coordinator.
+func (c *coordinator) SetMainAgent(ctx context.Context, name string) error {
+	agent, ok := c.agents[name]
+	if !ok {
+		return fmt.Errorf("agent %q not found", name)
+	}
+	if err := c.readyWg.Wait(); err != nil {
+		return err
+	}
+	c.currentAgent = agent
+	c.currentAgentID = name
+	// Rebuild the tools for the new agent from its config.
+	agentCfg, ok := c.cfg.Config().Agents[name]
+	if !ok {
+		return fmt.Errorf("agent %q not configured", name)
+	}
+	tools, err := c.buildTools(context.Background(), agentCfg, false)
+	if err != nil {
+		return err
+	}
+	agent.SetTools(tools)
+	return nil
+}
+
+// MainAgentName implements Coordinator.
+func (c *coordinator) MainAgentName() string {
+	return c.currentAgentID
 }
 
 // RunAccepted implements Coordinator.
@@ -246,7 +289,7 @@ func (c *coordinator) run(ctx context.Context, accept *AcceptedRun, sessionID st
 	// Coalesce per-attempt RunComplete payloads so only the final
 	// outcome reaches subscribers. Without this, the first attempt's
 	// failed RunComplete (unauthorized) would race ahead of the
-	// retry's success, and `crush run` would exit on the stale error
+	// retry's success, and `aide run` would exit on the stale error
 	// before ever seeing the retry result. Each attempt's
 	// SessionAgentCall.OnComplete hook overwrites latest; we publish
 	// exactly once after retries resolve, via PublishMustDeliver, so
@@ -292,15 +335,6 @@ func (c *coordinator) run(ctx context.Context, accept *AcceptedRun, sessionID st
 		return err
 	})
 	logTurnSkillUsage(sessionID, prompt, c.activeSkills, c.skillTracker, beforeLoaded)
-
-	// Notify only if still unauthorized after retry — a successful
-	// retry means the user doesn't need to re-authenticate.
-	if originalErr != nil && c.isUnauthorized(originalErr) && c.notify != nil && model.ModelCfg.Provider == hyper.Name {
-		c.notify.Publish(pubsub.CreatedEvent, notify.Notification{
-			Type:       notify.TypeReAuthenticate,
-			ProviderID: model.ModelCfg.Provider,
-		})
-	}
 
 	if hasLatest && c.runComplete != nil {
 		c.runComplete.PublishMustDeliver(ctx, pubsub.UpdatedEvent, latest)
@@ -463,7 +497,7 @@ func getProviderOptions(model Model, providerCfg config.ProviderConfig) fantasy.
 		if err == nil {
 			options[google.Name] = parsed
 		}
-	case openaicompat.Name, hyper.Name:
+	case openaicompat.Name:
 		extraBody := make(map[string]any)
 
 		_, hasReasoningEffort := mergedOptions["reasoning_effort"]
@@ -481,8 +515,6 @@ func getProviderOptions(model Model, providerCfg config.ProviderConfig) fantasy.
 		// TODO: Abstract this in Fantasy somehow?
 		// TODO: Allow custom providers to specify how to set this?
 		switch providerCfg.ID {
-		case hyper.Name:
-			extraBody["thinking"] = model.ModelCfg.Think
 		case string(catwalk.InferenceProviderIoNet):
 			if _, ok := extraBody["reasoning"]; !ok && model.CatwalkCfg.CanReason {
 				if model.ModelCfg.Think {
@@ -615,7 +647,7 @@ func (c *coordinator) buildTools(ctx context.Context, agent config.Agent, isSubA
 		}
 	}
 
-	logFile := filepath.Join(c.cfg.Config().Options.DataDirectory, "logs", "crush.log")
+	logFile := filepath.Join(c.cfg.Config().Options.DataDirectory, "logs", "aide.log")
 
 	// Build hook runner if PreToolUse hooks are configured.
 	var hookRunner *hooks.Runner
@@ -873,15 +905,6 @@ func (c *coordinator) buildOpenaiCompatProvider(baseURL, apiKey string, headers 
 	// Set HTTP client based on provider and debug mode.
 	var httpClient *http.Client
 	switch providerID {
-	case string(catwalk.InferenceProviderCopilot):
-		opts = append(
-			opts,
-			openaicompat.WithUseResponsesAPI(),
-			openaicompat.WithResponsesAPIFunc(func(modelID string) bool {
-				return copilotResponsesModels[modelID]
-			}),
-		)
-		httpClient = copilot.NewClient(isSubAgent, c.cfg.Config().Options.Debug)
 	}
 	if httpClient == nil && c.cfg.Config().Options.Debug {
 		httpClient = log.NewHTTPClient()
@@ -1037,11 +1060,8 @@ func (c *coordinator) buildProvider(providerCfg config.ProviderConfig, model con
 		return c.buildGoogleProvider(baseURL, apiKey, headers)
 	case "google-vertex":
 		return c.buildGoogleVertexProvider(headers, providerCfg.ExtraParams)
-	case openaicompat.Name, hyper.Name:
+	case openaicompat.Name:
 		switch providerCfg.ID {
-		case hyper.Name:
-			baseURL = hyper.BaseURL() + "/v1"
-			headers["x-crush-id"] = event.GetID()
 		case string(catwalk.InferenceProviderZAI):
 			if providerCfg.ExtraBody == nil {
 				providerCfg.ExtraBody = map[string]any{}
@@ -1111,9 +1131,9 @@ func (c *coordinator) UpdateModels(ctx context.Context) error {
 	}
 	c.currentAgent.SetModels(large, small)
 
-	agentCfg, ok := c.cfg.Config().Agents[config.AgentCoder]
+	agentCfg, ok := c.cfg.Config().Agents[c.currentAgentID]
 	if !ok {
-		return errCoderAgentNotConfigured
+		return fmt.Errorf("current agent %q not configured", c.currentAgentID)
 	}
 
 	tools, err := c.buildTools(ctx, agentCfg, false)
@@ -1290,13 +1310,6 @@ func (c *coordinator) runSubAgent(ctx context.Context, params subAgentParams) (f
 		result, runErr = run()
 		return runErr
 	})
-	// Notify only if still unauthorized after retry.
-	if err != nil && c.isUnauthorized(err) && c.notify != nil && model.ModelCfg.Provider == hyper.Name {
-		c.notify.Publish(pubsub.CreatedEvent, notify.Notification{
-			Type:       notify.TypeReAuthenticate,
-			ProviderID: model.ModelCfg.Provider,
-		})
-	}
 	if err != nil {
 		return fantasy.NewTextErrorResponse(fmt.Sprintf("Failed to generate response: %s", err)), nil
 	}

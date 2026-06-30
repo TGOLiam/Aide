@@ -7,10 +7,10 @@ import (
 	"time"
 
 	"charm.land/fantasy"
-	"github.com/charmbracelet/crush/internal/agent"
-	"github.com/charmbracelet/crush/internal/app"
-	"github.com/charmbracelet/crush/internal/message"
-	"github.com/charmbracelet/crush/internal/proto"
+	"github.com/liamb/opencode/aide/internal/agent"
+	"github.com/liamb/opencode/aide/internal/app"
+	"github.com/liamb/opencode/aide/internal/message"
+	"github.com/liamb/opencode/aide/internal/proto"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 )
@@ -58,6 +58,8 @@ func (c *blockingCoordinator) Summarize(context.Context, string) error          
 func (c *blockingCoordinator) Model() agent.Model                                { return agent.Model{} }
 func (c *blockingCoordinator) UpdateModels(context.Context) error                { return nil }
 func (c *blockingCoordinator) GenerateTitle(context.Context, string, string)     {}
+func (c *blockingCoordinator) SetMainAgent(context.Context, string) error         { return nil }
+func (c *blockingCoordinator) MainAgentName() string                              { return "build" }
 
 // insertAgentWorkspace installs a synthetic workspace with the given
 // coordinator (or none) and a workspace run context, mirroring the

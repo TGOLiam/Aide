@@ -8,11 +8,11 @@ import (
 
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
-	"github.com/charmbracelet/crush/internal/message"
-	"github.com/charmbracelet/crush/internal/ui/anim"
-	"github.com/charmbracelet/crush/internal/ui/common"
-	"github.com/charmbracelet/crush/internal/ui/list"
-	"github.com/charmbracelet/crush/internal/ui/styles"
+	"github.com/liamb/opencode/aide/internal/message"
+	"github.com/liamb/opencode/aide/internal/ui/anim"
+	"github.com/liamb/opencode/aide/internal/ui/common"
+	"github.com/liamb/opencode/aide/internal/ui/list"
+	"github.com/liamb/opencode/aide/internal/ui/styles"
 	"github.com/charmbracelet/x/ansi"
 )
 
@@ -131,6 +131,11 @@ type AssistantMessageItem struct {
 	thinkingViewMode  thinkingViewMode
 	thinkingBoxHeight int // Tracks the rendered thinking box height for click detection.
 
+	// showThinking controls whether the thinking/reasoning content is
+	// rendered visibly. When false, a compact "Thinking" spinner or
+	// nothing is shown instead of the full thinking box.
+	showThinking bool
+
 	// Per-section render caches. Splitting these out means content
 	// streaming does not invalidate the (often expensive) thinking
 	// render, and vice versa.
@@ -158,6 +163,7 @@ func NewAssistantMessageItem(sty *styles.Styles, message *message.Message) Messa
 		focusableMessageItem:     newFocusableMessageItem(v),
 		message:                  message,
 		sty:                      sty,
+		showThinking:             true,
 	}
 
 	a.anim = anim.New(anim.Settings{
@@ -325,7 +331,7 @@ func (a *AssistantMessageItem) renderMessageContent(width int) (string, int) {
 	thinking := strings.TrimSpace(a.message.ReasoningContent().Thinking)
 	content := strings.TrimSpace(a.message.Content().Text)
 
-	if thinking != "" {
+	if thinking != "" && a.showThinking {
 		messageParts = append(messageParts, a.cachedThinking(width))
 	}
 
@@ -587,6 +593,16 @@ func (a *AssistantMessageItem) clearCache() {
 	a.contentSec.reset()
 	a.errorSec.reset()
 	a.streamingContent.Reset()
+}
+
+// SetShowThinking controls whether the thinking/reasoning content is
+// rendered visibly for this message.
+func (a *AssistantMessageItem) SetShowThinking(show bool) {
+	if a.showThinking != show {
+		a.showThinking = show
+		a.thinkingSec.reset()
+		a.Bump()
+	}
 }
 
 // ToggleExpanded advances the F5 thinking view-mode cycle and returns

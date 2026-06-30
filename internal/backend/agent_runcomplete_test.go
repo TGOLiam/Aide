@@ -7,10 +7,10 @@ import (
 	"time"
 
 	"charm.land/fantasy"
-	"github.com/charmbracelet/crush/internal/agent"
-	"github.com/charmbracelet/crush/internal/app"
-	"github.com/charmbracelet/crush/internal/message"
-	"github.com/charmbracelet/crush/internal/proto"
+	"github.com/liamb/opencode/aide/internal/agent"
+	"github.com/liamb/opencode/aide/internal/app"
+	"github.com/liamb/opencode/aide/internal/message"
+	"github.com/liamb/opencode/aide/internal/proto"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 )
@@ -48,6 +48,8 @@ func (c *errorCoordinator) Summarize(context.Context, string) error           { 
 func (c *errorCoordinator) Model() agent.Model                                { return agent.Model{} }
 func (c *errorCoordinator) UpdateModels(context.Context) error                { return nil }
 func (c *errorCoordinator) GenerateTitle(context.Context, string, string)     {}
+func (c *errorCoordinator) SetMainAgent(context.Context, string) error         { return nil }
+func (c *errorCoordinator) MainAgentName() string                              { return "build" }
 
 // insertRunCompleteWorkspace installs a workspace backed by a real
 // app.App (so the runCompletions broker exists) with the given
@@ -77,7 +79,7 @@ func insertRunCompleteWorkspace(t *testing.T, b *Backend, base context.Context, 
 // error returned from RunAccepted before the coordinator could publish
 // its own terminal event (e.g. a readyWg or UpdateModels failure,
 // modeled here by a stub coordinator) still yields a reliable terminal
-// RunComplete for the run's RunID. Without it, a `crush run` caller
+// RunComplete for the run's RunID. Without it, a `aide run` caller
 // blocking on that RunID would hang because the lossy TypeAgentError
 // event is not a guaranteed terminal signal.
 func TestRunAgent_PreRunErrorPublishesTerminalRunComplete(t *testing.T) {

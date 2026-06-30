@@ -13,12 +13,12 @@ import (
 	"time"
 
 	"charm.land/fantasy"
-	"github.com/charmbracelet/crush/internal/agent"
-	"github.com/charmbracelet/crush/internal/app"
-	"github.com/charmbracelet/crush/internal/backend"
-	"github.com/charmbracelet/crush/internal/message"
-	"github.com/charmbracelet/crush/internal/proto"
-	"github.com/charmbracelet/crush/internal/pubsub"
+	"github.com/liamb/opencode/aide/internal/agent"
+	"github.com/liamb/opencode/aide/internal/app"
+	"github.com/liamb/opencode/aide/internal/backend"
+	"github.com/liamb/opencode/aide/internal/message"
+	"github.com/liamb/opencode/aide/internal/proto"
+	"github.com/liamb/opencode/aide/internal/pubsub"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 )
@@ -221,6 +221,8 @@ func (c *scriptedCoordinator) Summarize(context.Context, string) error       { r
 func (c *scriptedCoordinator) Model() agent.Model                            { return agent.Model{} }
 func (c *scriptedCoordinator) UpdateModels(context.Context) error            { return nil }
 func (c *scriptedCoordinator) GenerateTitle(context.Context, string, string) {}
+func (c *scriptedCoordinator) SetMainAgent(context.Context, string) error         { return nil }
+func (c *scriptedCoordinator) MainAgentName() string                              { return "build" }
 
 // agentE2EHarness extends the SSE harness with a scripted coordinator
 // wired into the workspace's embedded app.App, so POST /agent drives a

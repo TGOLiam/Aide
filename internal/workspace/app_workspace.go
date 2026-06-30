@@ -8,20 +8,20 @@ import (
 	"time"
 
 	tea "charm.land/bubbletea/v2"
-	"github.com/charmbracelet/crush/internal/agent"
-	mcptools "github.com/charmbracelet/crush/internal/agent/tools/mcp"
-	"github.com/charmbracelet/crush/internal/app"
-	"github.com/charmbracelet/crush/internal/commands"
-	"github.com/charmbracelet/crush/internal/config"
-	"github.com/charmbracelet/crush/internal/history"
-	"github.com/charmbracelet/crush/internal/lsp"
-	"github.com/charmbracelet/crush/internal/message"
-	"github.com/charmbracelet/crush/internal/oauth"
-	"github.com/charmbracelet/crush/internal/permission"
-	"github.com/charmbracelet/crush/internal/proto"
-	"github.com/charmbracelet/crush/internal/session"
-	"github.com/charmbracelet/crush/internal/shell"
-	"github.com/charmbracelet/crush/internal/skills"
+	"github.com/liamb/opencode/aide/internal/agent"
+	mcptools "github.com/liamb/opencode/aide/internal/agent/tools/mcp"
+	"github.com/liamb/opencode/aide/internal/app"
+	"github.com/liamb/opencode/aide/internal/commands"
+	"github.com/liamb/opencode/aide/internal/config"
+	"github.com/liamb/opencode/aide/internal/history"
+	"github.com/liamb/opencode/aide/internal/lsp"
+	"github.com/liamb/opencode/aide/internal/message"
+	"github.com/liamb/opencode/aide/internal/oauth"
+	"github.com/liamb/opencode/aide/internal/permission"
+	"github.com/liamb/opencode/aide/internal/proto"
+	"github.com/liamb/opencode/aide/internal/session"
+	"github.com/liamb/opencode/aide/internal/shell"
+	"github.com/liamb/opencode/aide/internal/skills"
 )
 
 // AppWorkspace implements the Workspace interface by delegating
@@ -222,6 +222,20 @@ func (w *AppWorkspace) AgentSummarize(ctx context.Context, sessionID string) err
 		return errors.New("agent coordinator not initialized")
 	}
 	return w.app.AgentCoordinator.Summarize(ctx, sessionID)
+}
+
+func (w *AppWorkspace) AgentMode() string {
+	if w.app.AgentCoordinator == nil {
+		return config.AgentBuild
+	}
+	return w.app.AgentCoordinator.MainAgentName()
+}
+
+func (w *AppWorkspace) AgentSetMode(name string) error {
+	if w.app.AgentCoordinator == nil {
+		return errors.New("agent coordinator not initialized")
+	}
+	return w.app.AgentCoordinator.SetMainAgent(context.Background(), name)
 }
 
 func (w *AppWorkspace) UpdateAgentModel(ctx context.Context) error {

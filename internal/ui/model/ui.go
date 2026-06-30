@@ -27,36 +27,35 @@ import (
 	tea "charm.land/bubbletea/v2"
 	"charm.land/catwalk/pkg/catwalk"
 	"charm.land/lipgloss/v2"
-	"github.com/charmbracelet/crush/internal/agent/hyper"
-	"github.com/charmbracelet/crush/internal/agent/notify"
-	agenttools "github.com/charmbracelet/crush/internal/agent/tools"
-	"github.com/charmbracelet/crush/internal/agent/tools/mcp"
-	"github.com/charmbracelet/crush/internal/app"
-	"github.com/charmbracelet/crush/internal/clipboard"
-	"github.com/charmbracelet/crush/internal/commands"
-	"github.com/charmbracelet/crush/internal/config"
-	"github.com/charmbracelet/crush/internal/fsext"
-	"github.com/charmbracelet/crush/internal/history"
-	"github.com/charmbracelet/crush/internal/home"
-	"github.com/charmbracelet/crush/internal/message"
-	"github.com/charmbracelet/crush/internal/permission"
-	"github.com/charmbracelet/crush/internal/pubsub"
-	"github.com/charmbracelet/crush/internal/session"
-	"github.com/charmbracelet/crush/internal/skills"
-	"github.com/charmbracelet/crush/internal/stringext"
-	"github.com/charmbracelet/crush/internal/ui/anim"
-	"github.com/charmbracelet/crush/internal/ui/attachments"
-	"github.com/charmbracelet/crush/internal/ui/chat"
-	"github.com/charmbracelet/crush/internal/ui/common"
-	"github.com/charmbracelet/crush/internal/ui/completions"
-	"github.com/charmbracelet/crush/internal/ui/dialog"
-	fimage "github.com/charmbracelet/crush/internal/ui/image"
-	"github.com/charmbracelet/crush/internal/ui/logo"
-	"github.com/charmbracelet/crush/internal/ui/notification"
-	"github.com/charmbracelet/crush/internal/ui/styles"
-	"github.com/charmbracelet/crush/internal/ui/util"
-	"github.com/charmbracelet/crush/internal/version"
-	"github.com/charmbracelet/crush/internal/workspace"
+	"github.com/liamb/opencode/aide/internal/agent/notify"
+	agenttools "github.com/liamb/opencode/aide/internal/agent/tools"
+	"github.com/liamb/opencode/aide/internal/agent/tools/mcp"
+	"github.com/liamb/opencode/aide/internal/app"
+	"github.com/liamb/opencode/aide/internal/clipboard"
+	"github.com/liamb/opencode/aide/internal/commands"
+	"github.com/liamb/opencode/aide/internal/config"
+	"github.com/liamb/opencode/aide/internal/fsext"
+	"github.com/liamb/opencode/aide/internal/history"
+	"github.com/liamb/opencode/aide/internal/home"
+	"github.com/liamb/opencode/aide/internal/message"
+	"github.com/liamb/opencode/aide/internal/permission"
+	"github.com/liamb/opencode/aide/internal/pubsub"
+	"github.com/liamb/opencode/aide/internal/session"
+	"github.com/liamb/opencode/aide/internal/skills"
+	"github.com/liamb/opencode/aide/internal/stringext"
+	"github.com/liamb/opencode/aide/internal/ui/anim"
+	"github.com/liamb/opencode/aide/internal/ui/attachments"
+	"github.com/liamb/opencode/aide/internal/ui/chat"
+	"github.com/liamb/opencode/aide/internal/ui/common"
+	"github.com/liamb/opencode/aide/internal/ui/completions"
+	"github.com/liamb/opencode/aide/internal/ui/dialog"
+	fimage "github.com/liamb/opencode/aide/internal/ui/image"
+	"github.com/liamb/opencode/aide/internal/ui/logo"
+	"github.com/liamb/opencode/aide/internal/ui/notification"
+	"github.com/liamb/opencode/aide/internal/ui/styles"
+	"github.com/liamb/opencode/aide/internal/ui/util"
+	"github.com/liamb/opencode/aide/internal/version"
+	"github.com/liamb/opencode/aide/internal/workspace"
 	uv "github.com/charmbracelet/ultraviolet"
 	"github.com/charmbracelet/ultraviolet/layout"
 	"github.com/charmbracelet/ultraviolet/screen"
@@ -165,11 +164,6 @@ type (
 	// sessionFilesUpdatesMsg is sent when the files for this session have been updated
 	sessionFilesUpdatesMsg struct {
 		sessionFiles []SessionFile
-	}
-	// creditsUpdatedMsg is sent when the remaining Hyper credits have been
-	// fetched from the API.
-	creditsUpdatedMsg struct {
-		credits int
 	}
 )
 
@@ -285,6 +279,13 @@ type UI struct {
 	// forceCompactMode tracks whether compact mode is forced by user toggle
 	forceCompactMode bool
 
+	// showThinking controls whether thinking/reasoning content is rendered
+	// visibly in assistant messages.
+	showThinking bool
+
+	// agentMode is the current agent mode (e.g. "build", "plan", "coder").
+	agentMode string
+
 	// isCompact tracks whether we're currently in compact layout mode (either
 	// by user toggle or auto-switch based on window size)
 	isCompact bool
@@ -305,9 +306,6 @@ type UI struct {
 
 	// mouse highlighting related state
 	lastClickTime time.Time
-
-	// hyperCredits is the remaining Hyper credits, updated after each prompt.
-	hyperCredits *int
 
 	// Prompt history for up/down navigation through previous messages.
 	promptHistory struct {
@@ -381,6 +379,8 @@ func New(com *common.Common, initialSessionID string, continueLast bool) *UI {
 		initialSessionID:    initialSessionID,
 		continueLastSession: continueLast,
 		skillStates:         skills.GetLatestStates(),
+		showThinking:        true,
+		agentMode:           config.AgentBuild,
 	}
 
 	status := NewStatus(com, ui)
@@ -420,6 +420,16 @@ func New(com *common.Common, initialSessionID string, continueLast bool) *UI {
 	// enable transparent mode
 	ui.isTransparent = opts.TUI.Transparent != nil && *opts.TUI.Transparent
 
+	// Set showThinking from config.
+	if opts.TUI.ShowThinking != nil {
+		ui.showThinking = *opts.TUI.ShowThinking
+	}
+	// Sync the chat component so messages inherit the correct state.
+	ui.chat.SetShowThinking(ui.showThinking)
+
+	// Set the default agent mode from config.
+	ui.agentMode = cmp.Or(opts.AgentMode, config.AgentBuild)
+
 	return ui
 }
 
@@ -438,9 +448,6 @@ func (m *UI) Init() tea.Cmd {
 	// load initial session if specified
 	if cmd := m.loadInitialSession(); cmd != nil {
 		cmds = append(cmds, cmd)
-	}
-	if m.com.IsHyper() {
-		cmds = append(cmds, m.fetchHyperCredits())
 	}
 	return tea.Batch(cmds...)
 }
@@ -1043,8 +1050,6 @@ func (m *UI) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if cmd := m.handleSelectModel(msg.action); cmd != nil {
 			cmds = append(cmds, cmd)
 		}
-	case creditsUpdatedMsg:
-		m.hyperCredits = &msg.credits
 	case util.InfoMsg:
 		if msg.Type == util.InfoTypeError {
 			slog.Error("Error reported", "error", msg.Msg)
@@ -1620,6 +1625,25 @@ func (m *UI) handleDialogMsg(msg tea.Msg) tea.Cmd {
 			return util.NewInfoMsg("Thinking mode " + status)
 		})
 		m.dialog.CloseDialog(dialog.CommandsID)
+	case dialog.ActionToggleThinkingDisplay:
+		m.showThinking = !m.showThinking
+		m.chat.SetShowThinking(m.showThinking)
+		status := "hidden"
+		if m.showThinking {
+			status = "visible"
+		}
+		cmds = append(cmds, func() tea.Msg {
+			if err := m.com.Workspace.SetConfigField(
+				config.ScopeGlobal, "options.tui.show_thinking", m.showThinking,
+			); err != nil {
+				return util.ReportError(err)()
+			}
+			return util.NewInfoMsg("Thinking output " + status)
+		})
+		m.dialog.CloseDialog(dialog.CommandsID)
+	case dialog.ActionSwitchAgent:
+		cmds = append(cmds, m.switchAgent(msg.AgentID))
+		m.dialog.CloseDialog(dialog.CommandsID)
 	case dialog.ActionToggleTransparentBackground:
 		cmds = append(cmds, func() tea.Msg {
 			cfg := m.com.Config()
@@ -1789,32 +1813,6 @@ func (m *UI) refreshHyperAndRetrySelect(msg dialog.ActionSelectModel) tea.Cmd {
 }
 
 // fetchHyperCredits returns a command that asynchronously fetches the
-// remaining Hyper credits from the API.
-func (m *UI) fetchHyperCredits() tea.Cmd {
-	return func() tea.Msg {
-		cfg := m.com.Config()
-		if cfg == nil {
-			return nil
-		}
-		providerCfg, ok := cfg.Providers.Get(hyper.Name)
-		if !ok {
-			return nil
-		}
-		apiKey, err := m.com.Workspace.Resolver().ResolveValue(providerCfg.APIKey)
-		if err != nil || apiKey == "" {
-			return nil
-		}
-		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-		defer cancel()
-		credits, err := hyper.FetchCredits(ctx, apiKey)
-		if err != nil {
-			slog.Error("Failed to fetch Hyper credits", "error", err)
-			return nil
-		}
-		return creditsUpdatedMsg{credits: credits}
-	}
-}
-
 // handleSelectModel performs the model selection after any provider
 // pre-checks (such as a silent Hyper OAuth refresh) have completed.
 func (m *UI) handleSelectModel(msg dialog.ActionSelectModel) tea.Cmd {
@@ -1906,8 +1904,6 @@ func (m *UI) handleSelectModel(msg dialog.ActionSelectModel) tea.Cmd {
 		if err := m.com.Workspace.InitCoderAgent(context.TODO()); err != nil {
 			cmds = append(cmds, util.ReportError(err))
 		}
-	} else if m.com.IsHyper() {
-		cmds = append(cmds, m.fetchHyperCredits())
 	}
 
 	return tea.Batch(cmds...)
@@ -1922,10 +1918,6 @@ func (m *UI) openAuthenticationDialog(provider catwalk.Provider, model config.Se
 	)
 
 	switch provider.ID {
-	case "hyper":
-		dlg, cmd = dialog.NewOAuthHyper(m.com, isOnboarding, provider, model, modelType)
-	case catwalk.InferenceProviderCopilot:
-		dlg, cmd = dialog.NewOAuthCopilot(m.com, isOnboarding, provider, model, modelType)
 	default:
 		dlg, cmd = dialog.NewAPIKeyInput(m.com, isOnboarding, provider, model, modelType)
 	}
@@ -2021,6 +2013,22 @@ func (m *UI) handleKeyPressMsg(msg tea.KeyPressMsg) tea.Cmd {
 	// Route all messages to dialog if one is open.
 	if m.dialog.HasDialogs() {
 		return m.handleDialogMsg(msg)
+	}
+
+	// Handle Switch Agent key globally (when no dialog is open).
+	if key.Matches(msg, m.keyMap.SwitchAgent) {
+		agents := m.availableAgents()
+		if len(agents) > 1 {
+			nextAgent := agents[0]
+			for i, a := range agents {
+				if a == m.agentMode && i+1 < len(agents) {
+					nextAgent = agents[i+1]
+					break
+				}
+			}
+			cmds = append(cmds, m.switchAgent(nextAgent))
+		}
+		return tea.Batch(cmds...)
 	}
 
 	// Handle cancel key when agent is busy.
@@ -2141,6 +2149,18 @@ func (m *UI) handleKeyPressMsg(msg tea.KeyPressMsg) tea.Cmd {
 					m.textarea.Blur()
 					m.chat.Focus()
 					m.chat.SetSelected(m.chat.Len() - 1)
+				}
+			case key.Matches(msg, m.keyMap.SwitchAgent):
+				agents := m.availableAgents()
+				if len(agents) > 1 {
+					nextAgent := agents[0]
+					for i, a := range agents {
+						if a == m.agentMode && i+1 < len(agents) {
+							nextAgent = agents[i+1]
+							break
+						}
+					}
+					cmds = append(cmds, m.switchAgent(nextAgent))
 				}
 			case key.Matches(msg, m.keyMap.Editor.OpenEditor):
 				if m.isAgentBusy() {
@@ -2278,6 +2298,18 @@ func (m *UI) handleKeyPressMsg(msg tea.KeyPressMsg) tea.Cmd {
 				m.focus = uiFocusEditor
 				cmds = append(cmds, m.textarea.Focus())
 				m.chat.Blur()
+			case key.Matches(msg, m.keyMap.SwitchAgent):
+				agents := m.availableAgents()
+				if len(agents) > 1 {
+					nextAgent := agents[0]
+					for i, a := range agents {
+						if a == m.agentMode && i+1 < len(agents) {
+							nextAgent = agents[i+1]
+							break
+						}
+					}
+					cmds = append(cmds, m.switchAgent(nextAgent))
+				}
 			case key.Matches(msg, m.keyMap.Chat.NewSession):
 				if !m.hasSession() {
 					break
@@ -2378,7 +2410,6 @@ func (m *UI) drawHeader(scr uv.Screen, area uv.Rectangle) {
 		m.isCompact,
 		m.detailsOpen,
 		area.Dx(),
-		m.hyperCredits,
 	)
 }
 
@@ -2474,7 +2505,7 @@ func (m *UI) Draw(scr uv.Screen, area uv.Rectangle) *tea.Cursor {
 	}
 
 	// Debugging rendering (visually see when the tui rerenders)
-	if os.Getenv("CRUSH_UI_DEBUG") == "true" {
+	if os.Getenv("AIDE_UI_DEBUG") == "true" {
 		debugView := lipgloss.NewStyle().Background(lipgloss.ANSIColor(rand.Intn(256))).Width(4).Height(2)
 		debug := uv.NewStyledString(debugView.String())
 		debug.Draw(scr, image.Rectangle{
@@ -2520,7 +2551,7 @@ func (m *UI) View() tea.View {
 	}
 	v.MouseMode = tea.MouseModeCellMotion
 	v.ReportFocus = m.caps.ReportFocusEvents
-	v.WindowTitle = "crush " + home.Short(m.com.Workspace.WorkingDir())
+	v.WindowTitle = "aide " + home.Short(m.com.Workspace.WorkingDir())
 
 	canvas := uv.NewScreenBuffer(m.width, m.height)
 	v.Cursor = m.Draw(canvas, canvas.Bounds())
@@ -3100,7 +3131,7 @@ func (m *UI) openEditor(value string) tea.Cmd {
 		return util.ReportError(err)
 	}
 	cmd, err := editor.Command(
-		"crush",
+		"aide",
 		tmpPath,
 		editor.AtPosition(
 			m.textarea.Line()+1,
@@ -3750,7 +3781,9 @@ func (m *UI) openCommandsDialog() tea.Cmd {
 	hasTodos := hasSession && hasIncompleteTodos(m.session.Todos)
 	hasQueue := m.promptQueue > 0
 
-	commands, err := dialog.NewCommands(m.com, sessionID, hasSession, hasTodos, hasQueue, m.customCommands, m.mcpPrompts)
+	availableAgents := m.availableAgents()
+
+	commands, err := dialog.NewCommands(m.com, sessionID, hasSession, hasTodos, hasQueue, m.showThinking, availableAgents, m.agentMode, m.customCommands, m.mcpPrompts)
 	if err != nil {
 		return util.ReportError(err)
 	}
@@ -3878,9 +3911,6 @@ func (m *UI) handleAgentNotification(n notify.Notification) tea.Cmd {
 			Title:   "Crush is waiting...",
 			Message: fmt.Sprintf("Agent's turn completed in \"%s\"", n.SessionTitle),
 		}))
-		if m.com.IsHyper() {
-			cmds = append(cmds, m.fetchHyperCredits())
-		}
 		return tea.Batch(cmds...)
 	case notify.TypeReAuthenticate:
 		return m.handleReAuthenticate(n.ProviderID)
@@ -4303,6 +4333,58 @@ func (m *UI) disableDockerMCP() tea.Msg {
 	}
 
 	return util.NewInfoMsg("Docker MCP disabled successfully")
+}
+
+// availableAgents returns the list of configured agent IDs (e.g. "build", "plan", "coder").
+func (m *UI) availableAgents() []string {
+	cfg := m.com.Config()
+	if cfg == nil {
+		return []string{config.AgentBuild}
+	}
+	var agents []string
+	// Plan comes first, then Build, then Coder, then any others.
+	for _, id := range []string{config.AgentPlan, config.AgentBuild, config.AgentCoder} {
+		if a, ok := cfg.Agents[id]; ok && !a.Disabled {
+			agents = append(agents, id)
+		}
+	}
+	// Add any user-defined agents.
+	for id, a := range cfg.Agents {
+		if a.Disabled {
+			continue
+		}
+		switch id {
+		case config.AgentPlan, config.AgentBuild, config.AgentCoder, config.AgentTask:
+			continue
+		default:
+			agents = append(agents, id)
+		}
+	}
+	if len(agents) == 0 {
+		return []string{config.AgentBuild}
+	}
+	return agents
+}
+
+// switchAgent switches the current agent mode to the given agent ID.
+func (m *UI) switchAgent(agentID string) tea.Cmd {
+	if err := m.com.Workspace.AgentSetMode(agentID); err != nil {
+		return util.ReportError(err)
+	}
+	m.agentMode = agentID
+	// Persist the agent mode preference.
+	if err := m.com.Workspace.SetConfigField(config.ScopeGlobal, "options.agent_mode", agentID); err != nil {
+		slog.Warn("Failed to persist agent mode", "error", err)
+	}
+	// Update the sidebar logo cache so the mode indicator refreshes.
+	m.sidebarLogo = ""
+	status := "Build"
+	if name := m.com.Config().Agents[agentID].Name; name != "" {
+		status = name
+	}
+	return func() tea.Msg {
+		return util.NewInfoMsg("Switched to " + status + " mode")
+	}
 }
 
 // renderLogo renders the Crush logo with the given styles and dimensions.

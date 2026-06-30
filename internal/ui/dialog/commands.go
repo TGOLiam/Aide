@@ -9,11 +9,11 @@ import (
 	"charm.land/bubbles/v2/spinner"
 	"charm.land/bubbles/v2/textinput"
 	tea "charm.land/bubbletea/v2"
-	"github.com/charmbracelet/crush/internal/commands"
-	"github.com/charmbracelet/crush/internal/config"
-	"github.com/charmbracelet/crush/internal/ui/common"
-	"github.com/charmbracelet/crush/internal/ui/list"
-	"github.com/charmbracelet/crush/internal/ui/styles"
+	"github.com/liamb/opencode/aide/internal/commands"
+	"github.com/liamb/opencode/aide/internal/config"
+	"github.com/liamb/opencode/aide/internal/ui/common"
+	"github.com/liamb/opencode/aide/internal/ui/list"
+	"github.com/liamb/opencode/aide/internal/ui/styles"
 	uv "github.com/charmbracelet/ultraviolet"
 )
 
@@ -73,21 +73,27 @@ type Commands struct {
 
 	dockerMCPAvailable     *bool
 	dockerMCPCheckInFlight bool
+	showThinking           bool
+	availableAgents       []string
+	currentAgent          string
 }
 
 var _ Dialog = (*Commands)(nil)
 
 // NewCommands creates a new commands dialog.
-func NewCommands(com *common.Common, sessionID string, hasSession, hasTodos, hasQueue bool, customCommands []commands.CustomCommand, mcpPrompts []commands.MCPPrompt) (*Commands, error) {
+func NewCommands(com *common.Common, sessionID string, hasSession, hasTodos, hasQueue bool, showThinking bool, availableAgents []string, currentAgent string, customCommands []commands.CustomCommand, mcpPrompts []commands.MCPPrompt) (*Commands, error) {
 	c := &Commands{
-		com:            com,
-		selected:       SystemCommands,
-		sessionID:      sessionID,
-		hasSession:     hasSession,
-		hasTodos:       hasTodos,
-		hasQueue:       hasQueue,
-		customCommands: customCommands,
-		mcpPrompts:     mcpPrompts,
+		com:             com,
+		selected:        SystemCommands,
+		sessionID:       sessionID,
+		hasSession:      hasSession,
+		hasTodos:        hasTodos,
+		hasQueue:        hasQueue,
+		showThinking:    showThinking,
+		availableAgents: availableAgents,
+		currentAgent:    currentAgent,
+		customCommands:  customCommands,
+		mcpPrompts:      mcpPrompts,
 	}
 
 	help := help.New()
@@ -464,6 +470,26 @@ func (c *Commands) defaultCommands() []*CommandItem {
 			}
 		}
 	}
+
+	// Add Switch Agent command if multiple agents are available.
+	if len(c.availableAgents) > 1 {
+		// Find the next agent in the list for the cycling action.
+		nextAgent := c.availableAgents[0]
+		for i, a := range c.availableAgents {
+			if a == c.currentAgent && i+1 < len(c.availableAgents) {
+				nextAgent = c.availableAgents[i+1]
+				break
+			}
+		}
+		// Build a label showing the current and next agent.
+		agentName := cfg.Agents[c.currentAgent].Name
+		label := "Switch Agent"
+		if agentName != "" {
+			label = "Switch Agent (" + agentName + ")"
+		}
+		commands = append(commands, NewCommandItem(c.com.Styles, "switch_agent", label, "shift+tab", ActionSwitchAgent{AgentID: nextAgent}))
+	}
+
 	// Only show toggle compact mode command if window width is larger than compact breakpoint (120)
 	if c.windowWidth >= sidebarCompactModeBreakpoint && c.hasSession {
 		commands = append(commands, NewCommandItem(c.com.Styles, "toggle_sidebar", "Toggle Sidebar", "", ActionToggleCompactMode{}))
@@ -528,6 +554,13 @@ func (c *Commands) defaultCommands() []*CommandItem {
 		transparentLabel = "Enable Background Color"
 	}
 	commands = append(commands, NewCommandItem(c.com.Styles, "toggle_transparent", transparentLabel, "", ActionToggleTransparentBackground{}))
+
+	// Add thinking display toggle.
+	thinkingLabel := "Show Thinking Output"
+	if c.showThinking {
+		thinkingLabel = "Hide Thinking Output"
+	}
+	commands = append(commands, NewCommandItem(c.com.Styles, "toggle_thinking_display", thinkingLabel, "", ActionToggleThinkingDisplay{}))
 
 	commands = append(
 		commands,

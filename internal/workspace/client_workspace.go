@@ -10,20 +10,20 @@ import (
 	"time"
 
 	tea "charm.land/bubbletea/v2"
-	"github.com/charmbracelet/crush/internal/agent/notify"
-	"github.com/charmbracelet/crush/internal/agent/tools/mcp"
-	"github.com/charmbracelet/crush/internal/client"
-	"github.com/charmbracelet/crush/internal/config"
-	"github.com/charmbracelet/crush/internal/history"
-	"github.com/charmbracelet/crush/internal/log"
-	"github.com/charmbracelet/crush/internal/lsp"
-	"github.com/charmbracelet/crush/internal/message"
-	"github.com/charmbracelet/crush/internal/oauth"
-	"github.com/charmbracelet/crush/internal/permission"
-	"github.com/charmbracelet/crush/internal/proto"
-	"github.com/charmbracelet/crush/internal/pubsub"
-	"github.com/charmbracelet/crush/internal/session"
-	"github.com/charmbracelet/crush/internal/skills"
+	"github.com/liamb/opencode/aide/internal/agent/notify"
+	"github.com/liamb/opencode/aide/internal/agent/tools/mcp"
+	"github.com/liamb/opencode/aide/internal/client"
+	"github.com/liamb/opencode/aide/internal/config"
+	"github.com/liamb/opencode/aide/internal/history"
+	"github.com/liamb/opencode/aide/internal/log"
+	"github.com/liamb/opencode/aide/internal/lsp"
+	"github.com/liamb/opencode/aide/internal/message"
+	"github.com/liamb/opencode/aide/internal/oauth"
+	"github.com/liamb/opencode/aide/internal/permission"
+	"github.com/liamb/opencode/aide/internal/proto"
+	"github.com/liamb/opencode/aide/internal/pubsub"
+	"github.com/liamb/opencode/aide/internal/session"
+	"github.com/liamb/opencode/aide/internal/skills"
 	"github.com/charmbracelet/x/powernap/pkg/lsp/protocol"
 )
 
@@ -255,6 +255,15 @@ func (w *ClientWorkspace) AgentSummarize(ctx context.Context, sessionID string) 
 
 func (w *ClientWorkspace) UpdateAgentModel(ctx context.Context) error {
 	return w.client.UpdateAgent(ctx, w.workspaceID())
+}
+
+func (w *ClientWorkspace) AgentMode() string {
+	return config.AgentBuild
+}
+
+func (w *ClientWorkspace) AgentSetMode(name string) error {
+	slog.Warn("AgentSetMode not supported in client mode", "mode", name)
+	return nil
 }
 
 func (w *ClientWorkspace) InitCoderAgent(ctx context.Context) error {

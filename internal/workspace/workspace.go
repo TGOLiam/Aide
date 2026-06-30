@@ -10,16 +10,16 @@ import (
 
 	tea "charm.land/bubbletea/v2"
 	"charm.land/catwalk/pkg/catwalk"
-	mcptools "github.com/charmbracelet/crush/internal/agent/tools/mcp"
-	"github.com/charmbracelet/crush/internal/config"
-	"github.com/charmbracelet/crush/internal/history"
-	"github.com/charmbracelet/crush/internal/lsp"
-	"github.com/charmbracelet/crush/internal/message"
-	"github.com/charmbracelet/crush/internal/oauth"
-	"github.com/charmbracelet/crush/internal/permission"
-	"github.com/charmbracelet/crush/internal/proto"
-	"github.com/charmbracelet/crush/internal/session"
-	"github.com/charmbracelet/crush/internal/skills"
+	mcptools "github.com/liamb/opencode/aide/internal/agent/tools/mcp"
+	"github.com/liamb/opencode/aide/internal/config"
+	"github.com/liamb/opencode/aide/internal/history"
+	"github.com/liamb/opencode/aide/internal/lsp"
+	"github.com/liamb/opencode/aide/internal/message"
+	"github.com/liamb/opencode/aide/internal/oauth"
+	"github.com/liamb/opencode/aide/internal/permission"
+	"github.com/liamb/opencode/aide/internal/proto"
+	"github.com/liamb/opencode/aide/internal/session"
+	"github.com/liamb/opencode/aide/internal/skills"
 )
 
 // LSPClientInfo holds information about an LSP client's state. This is
@@ -93,6 +93,8 @@ type Workspace interface {
 	AgentQueuedPromptsList(sessionID string) []string
 	AgentClearQueue(sessionID string)
 	AgentSummarize(ctx context.Context, sessionID string) error
+	AgentSetMode(name string) error
+	AgentMode() string
 	UpdateAgentModel(ctx context.Context) error
 	InitCoderAgent(ctx context.Context) error
 	GetDefaultSmallModel(providerID string) config.SelectedModel

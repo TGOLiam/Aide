@@ -8,15 +8,15 @@ import (
 
 	tea "charm.land/bubbletea/v2"
 	"charm.land/catwalk/pkg/catwalk"
-	"github.com/charmbracelet/crush/internal/commands"
-	"github.com/charmbracelet/crush/internal/config"
-	"github.com/charmbracelet/crush/internal/message"
-	"github.com/charmbracelet/crush/internal/oauth"
-	"github.com/charmbracelet/crush/internal/permission"
-	"github.com/charmbracelet/crush/internal/session"
-	"github.com/charmbracelet/crush/internal/skills"
-	"github.com/charmbracelet/crush/internal/ui/common"
-	"github.com/charmbracelet/crush/internal/ui/util"
+	"github.com/liamb/opencode/aide/internal/commands"
+	"github.com/liamb/opencode/aide/internal/config"
+	"github.com/liamb/opencode/aide/internal/message"
+	"github.com/liamb/opencode/aide/internal/oauth"
+	"github.com/liamb/opencode/aide/internal/permission"
+	"github.com/liamb/opencode/aide/internal/session"
+	"github.com/liamb/opencode/aide/internal/skills"
+	"github.com/liamb/opencode/aide/internal/ui/common"
+	"github.com/liamb/opencode/aide/internal/ui/util"
 )
 
 // ActionClose is a message to close the current dialog.
@@ -57,6 +57,10 @@ type (
 		Style string
 	}
 	ActionToggleTransparentBackground struct{}
+	ActionToggleThinkingDisplay     struct{}
+	ActionSwitchAgent               struct {
+		AgentID string
+	}
 	ActionInitializeProject           struct{}
 	ActionSummarize                   struct {
 		SessionID string

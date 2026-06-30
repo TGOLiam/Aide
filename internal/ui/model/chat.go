@@ -6,10 +6,10 @@ import (
 
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
-	"github.com/charmbracelet/crush/internal/ui/anim"
-	"github.com/charmbracelet/crush/internal/ui/chat"
-	"github.com/charmbracelet/crush/internal/ui/common"
-	"github.com/charmbracelet/crush/internal/ui/list"
+	"github.com/liamb/opencode/aide/internal/ui/anim"
+	"github.com/liamb/opencode/aide/internal/ui/chat"
+	"github.com/liamb/opencode/aide/internal/ui/common"
+	"github.com/liamb/opencode/aide/internal/ui/list"
 	uv "github.com/charmbracelet/ultraviolet"
 	"github.com/charmbracelet/x/ansi"
 	"github.com/clipperhouse/displaywidth"
@@ -60,6 +60,10 @@ type Chat struct {
 	// Pending single click action (delayed to detect double-click)
 	pendingClickID int // Incremented on each click to invalidate old pending clicks
 
+	// showThinking controls whether thinking/reasoning content is
+	// rendered visibly in assistant messages.
+	showThinking bool
+
 	// follow is a flag to indicate whether the view should auto-scroll to
 	// bottom on new messages.
 	follow bool
@@ -98,6 +102,7 @@ func NewChat(com *common.Common) *Chat {
 		com:              com,
 		idInxMap:         make(map[string]int),
 		pausedAnimations: make(map[string]struct{}),
+		showThinking:     true,
 	}
 	l := list.NewList()
 	l.SetGap(1)
@@ -245,6 +250,10 @@ func (m *Chat) SetMessages(msgs ...chat.MessageItem) {
 			}
 		}
 		items[i] = msg
+		// Propagate showThinking to assistant items.
+		if ass, ok := msg.(*chat.AssistantMessageItem); ok {
+			ass.SetShowThinking(m.showThinking)
+		}
 	}
 	m.list.SetItems(items...)
 	m.ScrollToBottom()
@@ -263,6 +272,10 @@ func (m *Chat) AppendMessages(msgs ...chat.MessageItem) {
 			}
 		}
 		items[i] = msg
+		// Propagate showThinking to assistant items.
+		if ass, ok := msg.(*chat.AssistantMessageItem); ok {
+			ass.SetShowThinking(m.showThinking)
+		}
 	}
 	m.list.AppendItems(items...)
 }
@@ -610,6 +623,18 @@ func (m *Chat) ToggleExpandedSelectedItem() {
 		}
 		if m.AtBottom() {
 			m.ScrollToBottom()
+		}
+	}
+}
+
+// SetShowThinking controls whether thinking/reasoning content is rendered
+// visibly across all assistant messages. When false, a compact indicator
+// is shown instead of the full thinking box.
+func (m *Chat) SetShowThinking(show bool) {
+	m.showThinking = show
+	for i := range m.list.Len() {
+		if ass, ok := m.list.ItemAt(i).(*chat.AssistantMessageItem); ok {
+			ass.SetShowThinking(show)
 		}
 	}
 }

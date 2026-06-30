@@ -12,11 +12,11 @@ import (
 	"time"
 
 	"charm.land/fantasy"
-	"github.com/charmbracelet/crush/internal/agent"
-	"github.com/charmbracelet/crush/internal/app"
-	"github.com/charmbracelet/crush/internal/backend"
-	"github.com/charmbracelet/crush/internal/message"
-	"github.com/charmbracelet/crush/internal/proto"
+	"github.com/liamb/opencode/aide/internal/agent"
+	"github.com/liamb/opencode/aide/internal/app"
+	"github.com/liamb/opencode/aide/internal/backend"
+	"github.com/liamb/opencode/aide/internal/message"
+	"github.com/liamb/opencode/aide/internal/proto"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 )
@@ -82,6 +82,8 @@ func (s *runCoordinator) Summarize(context.Context, string) error {
 func (s *runCoordinator) Model() agent.Model                            { return agent.Model{} }
 func (s *runCoordinator) UpdateModels(context.Context) error            { return nil }
 func (s *runCoordinator) GenerateTitle(context.Context, string, string) {}
+func (s *runCoordinator) SetMainAgent(context.Context, string) error         { return nil }
+func (s *runCoordinator) MainAgentName() string                              { return "build" }
 
 func (s *runCoordinator) capturedCtx() context.Context {
 	s.mu.Lock()

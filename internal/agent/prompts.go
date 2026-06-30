@@ -4,12 +4,18 @@ import (
 	"context"
 	_ "embed"
 
-	"github.com/charmbracelet/crush/internal/agent/prompt"
-	"github.com/charmbracelet/crush/internal/config"
+	"github.com/liamb/opencode/aide/internal/agent/prompt"
+	"github.com/liamb/opencode/aide/internal/config"
 )
 
 //go:embed templates/coder.md.tpl
 var coderPromptTmpl []byte
+
+//go:embed templates/build.md.tpl
+var buildPromptTmpl []byte
+
+//go:embed templates/plan.md.tpl
+var planPromptTmpl []byte
 
 //go:embed templates/task.md.tpl
 var taskPromptTmpl []byte
@@ -19,6 +25,22 @@ var initializePromptTmpl []byte
 
 func coderPrompt(opts ...prompt.Option) (*prompt.Prompt, error) {
 	systemPrompt, err := prompt.NewPrompt("coder", string(coderPromptTmpl), opts...)
+	if err != nil {
+		return nil, err
+	}
+	return systemPrompt, nil
+}
+
+func buildPrompt(opts ...prompt.Option) (*prompt.Prompt, error) {
+	systemPrompt, err := prompt.NewPrompt("build", string(buildPromptTmpl), opts...)
+	if err != nil {
+		return nil, err
+	}
+	return systemPrompt, nil
+}
+
+func planPrompt(opts ...prompt.Option) (*prompt.Prompt, error) {
+	systemPrompt, err := prompt.NewPrompt("plan", string(planPromptTmpl), opts...)
 	if err != nil {
 		return nil, err
 	}

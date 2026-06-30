@@ -67,6 +67,7 @@ type KeyMap struct {
 	Sessions   key.Binding
 	Tab        key.Binding
 	ToggleYolo key.Binding
+	SwitchAgent key.Binding
 }
 
 func DefaultKeyMap() KeyMap {
@@ -104,6 +105,11 @@ func DefaultKeyMap() KeyMap {
 			key.WithHelp("ctrl+y", "toggle yolo"),
 		),
 	}
+
+	km.SwitchAgent = key.NewBinding(
+		key.WithKeys("shift+tab"),
+		key.WithHelp("shift+tab", "switch agent"),
+	)
 
 	km.Editor.AddFile = key.NewBinding(
 		key.WithKeys("/"),

@@ -6,8 +6,8 @@ import (
 	"image"
 
 	"charm.land/lipgloss/v2"
-	"github.com/charmbracelet/crush/internal/ui/common"
-	"github.com/charmbracelet/crush/internal/ui/logo"
+	"github.com/liamb/opencode/aide/internal/ui/common"
+	"github.com/liamb/opencode/aide/internal/ui/logo"
 	uv "github.com/charmbracelet/ultraviolet"
 	"github.com/charmbracelet/ultraviolet/layout"
 )
@@ -54,7 +54,22 @@ func (m *UI) modelInfo(width int) string {
 	if model != nil {
 		modelName = model.CatwalkCfg.Name
 	}
-	return common.ModelInfo(m.com.Styles, modelName, providerName, reasoningInfo, modelContext, width, m.hyperCredits)
+	return common.ModelInfo(m.com.Styles, modelName, providerName, reasoningInfo, modelContext, width, nil)
+}
+
+// agentModeTag returns a styled tag showing the current agent mode.
+func (m *UI) agentModeTag(width int) string {
+	cfg := m.com.Config()
+	if cfg == nil {
+		return ""
+	}
+	agentCfg, ok := cfg.Agents[m.agentMode]
+	if !ok || agentCfg.Disabled {
+		return ""
+	}
+	name := cmp.Or(agentCfg.Name, m.agentMode)
+	style := m.com.Styles.ModelInfo.Reasoning
+	return style.Width(width).Render("[" + name + "]")
 }
 
 // getDynamicHeightLimits will give us the num of items to show in each section based on the height
@@ -152,6 +167,8 @@ func (m *UI) drawSidebar(scr uv.Screen, area uv.Rectangle) {
 		title,
 		"",
 		cwd,
+		"",
+		m.agentModeTag(width),
 		"",
 		m.modelInfo(width),
 		"",

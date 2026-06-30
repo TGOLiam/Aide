@@ -9,12 +9,12 @@ import (
 	"testing"
 
 	"charm.land/fantasy"
-	"github.com/charmbracelet/crush/internal/agent"
-	"github.com/charmbracelet/crush/internal/app"
-	"github.com/charmbracelet/crush/internal/backend"
-	"github.com/charmbracelet/crush/internal/message"
-	"github.com/charmbracelet/crush/internal/proto"
-	"github.com/charmbracelet/crush/internal/session"
+	"github.com/liamb/opencode/aide/internal/agent"
+	"github.com/liamb/opencode/aide/internal/app"
+	"github.com/liamb/opencode/aide/internal/backend"
+	"github.com/liamb/opencode/aide/internal/message"
+	"github.com/liamb/opencode/aide/internal/proto"
+	"github.com/liamb/opencode/aide/internal/session"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 )
@@ -53,6 +53,8 @@ func (s *stubCoordinator) Summarize(context.Context, string) error {
 func (s *stubCoordinator) Model() agent.Model                            { return agent.Model{} }
 func (s *stubCoordinator) UpdateModels(context.Context) error            { return nil }
 func (s *stubCoordinator) GenerateTitle(context.Context, string, string) {}
+func (s *stubCoordinator) SetMainAgent(context.Context, string) error         { return nil }
+func (s *stubCoordinator) MainAgentName() string                              { return "build" }
 
 // stubSessions is a minimal session.Service that returns a fixed list
 // (and supports Get by ID). All other methods return zero values; the
