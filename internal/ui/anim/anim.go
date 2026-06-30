@@ -258,16 +258,21 @@ func New(opts Settings) *Anim {
 
 				var r rune
 				if opts.SlashTravel {
-					// Traveling slash pattern: a block of slashes
-					// slides left-to-right across the width.
-					// The pattern uses (width/4) slashes, min 1.
-					slashLen := a.width / 4
-					if slashLen < 1 {
-						slashLen = 1
-					}
-					// Position of the first slash for this frame.
+					// Traveling slash pattern: 6 consecutive
+					// slashes slide left-to-right across the width,
+					// wrapping around at the edges.
 					pos := i % (a.width)
-					if j >= pos && j < pos+slashLen {
+					// The slash block occupies positions [pos, pos+6).
+					// When the block extends past the right edge it
+					// wraps to the left side.
+					inBlock := false
+					for k := pos; k < pos+6; k++ {
+						if j == k%(a.width) {
+							inBlock = true
+							break
+						}
+					}
+					if inBlock {
 						r = '/'
 					} else {
 						r = '.'
