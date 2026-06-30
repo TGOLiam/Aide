@@ -15,7 +15,7 @@ import (
 	"charm.land/lipgloss/v2"
 	"github.com/lucasb-eyer/go-colorful"
 
-	"github.com/charmbracelet/crush/internal/csync"
+	"github.com/liamb/opencode/aide/internal/csync"
 )
 
 const (
@@ -83,8 +83,8 @@ var animCacheMap = csync.NewMap[string, *animCache]()
 // settingsHash creates a hash key for the settings to use for caching
 func settingsHash(opts Settings) string {
 	h := xxh3.New()
-	fmt.Fprintf(h, "%d-%s-%v-%v-%v-%t",
-		opts.Size, opts.Label, opts.LabelColor, opts.GradColorA, opts.GradColorB, opts.CycleColors)
+	fmt.Fprintf(h, "%d-%s-%v-%v-%v-%t-%t",
+		opts.Size, opts.Label, opts.LabelColor, opts.GradColorA, opts.GradColorB, opts.CycleColors, opts.SlashTravel)
 	return fmt.Sprintf("%x", h.Sum(nil))
 }
 
@@ -106,6 +106,12 @@ type Settings struct {
 	// animated ellipsis are visible. Useful for non-LLM contexts where
 	// scrambled glyphs imply "thinking" rather than "running".
 	NoScramble bool
+
+	// SlashTravel replaces the scrambled rune cycling with a
+	// traveling slash pattern (///.... → .///.. → ..///) that
+	// slides across the animation area. Ignored when NoScramble is
+	// true since there are no cycling chars to animate.
+	SlashTravel bool
 }
 
 // Default settings.
@@ -236,8 +242,11 @@ func New(opts Settings) *Anim {
 		// a pure function of Settings: two processes with identical
 		// Settings populate the cache with the same glyphs, which
 		// keeps any cross-process golden-file comparison stable.
-		seed := xxh3.HashString(cacheKey)
-		rng := rand.New(rand.NewPCG(seed, ^seed))
+		var rng *rand.Rand
+		if !opts.SlashTravel {
+			seed := xxh3.HashString(cacheKey)
+			rng = rand.New(rand.NewPCG(seed, ^seed))
+		}
 		a.cyclingFrames = make([][]string, numFrames)
 		offset = 0
 		for i := range a.cyclingFrames {
@@ -247,9 +256,28 @@ func New(opts Settings) *Anim {
 					continue // skip if we run out of colors
 				}
 
+				var r rune
+				if opts.SlashTravel {
+					// Traveling slash pattern: a block of slashes
+					// slides left-to-right across the width.
+					// The pattern uses (width/4) slashes, min 1.
+					slashLen := a.width / 4
+					if slashLen < 1 {
+						slashLen = 1
+					}
+					// Position of the first slash for this frame.
+					pos := i % (a.width)
+					if j >= pos && j < pos+slashLen {
+						r = '/'
+					} else {
+						r = '.'
+					}
+				} else {
+					r = availableRunes[rng.IntN(len(availableRunes))]
+				}
+
 				// Also prerender the color with Lip Gloss here to avoid processing
 				// in the render loop.
-				r := availableRunes[rng.IntN(len(availableRunes))]
 				a.cyclingFrames[i][j] = lipgloss.NewStyle().
 					Foreground(ramp[j+offset]).
 					Render(string(r))

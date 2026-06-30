@@ -173,6 +173,7 @@ func NewAssistantMessageItem(sty *styles.Styles, message *message.Message) Messa
 		GradColorB:  sty.WorkingGradToColor,
 		LabelColor:  sty.WorkingLabelColor,
 		CycleColors: true,
+		SlashTravel: true,
 	})
 	return a
 }

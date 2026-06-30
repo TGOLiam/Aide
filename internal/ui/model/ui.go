@@ -3416,17 +3416,23 @@ func (m *UI) randomizePlaceholders() {
 	m.readyPlaceholder = readyPlaceholders[rand.Intn(len(readyPlaceholders))]
 }
 
-// renderEditorView renders the editor view with attachments if any.
+// renderEditorView renders the editor view with attachments if any
+// and the current agent mode indicator.
 func (m *UI) renderEditorView(width int) string {
 	var attachmentsView string
 	if len(m.attachments.List()) > 0 {
 		attachmentsView = m.attachments.Render(width)
 	}
-	return strings.Join([]string{
-		attachmentsView,
-		m.textarea.View(),
-		"", // margin at bottom of editor
-	}, "\n")
+	agentTag := m.agentModeTag(width)
+	var parts []string
+	if attachmentsView != "" {
+		parts = append(parts, attachmentsView)
+	}
+	if agentTag != "" {
+		parts = append(parts, agentTag)
+	}
+	parts = append(parts, m.textarea.View(), "")
+	return strings.Join(parts, "\n")
 }
 
 // cacheSidebarLogo renders and caches the sidebar logo at the specified width.
@@ -4376,8 +4382,6 @@ func (m *UI) switchAgent(agentID string) tea.Cmd {
 	if err := m.com.Workspace.SetConfigField(config.ScopeGlobal, "options.agent_mode", agentID); err != nil {
 		slog.Warn("Failed to persist agent mode", "error", err)
 	}
-	// Update the sidebar logo cache so the mode indicator refreshes.
-	m.sidebarLogo = ""
 	status := "Build"
 	if name := m.com.Config().Agents[agentID].Name; name != "" {
 		status = name

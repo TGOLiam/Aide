@@ -168,8 +168,6 @@ func (m *UI) drawSidebar(scr uv.Screen, area uv.Rectangle) {
 		"",
 		cwd,
 		"",
-		m.agentModeTag(width),
-		"",
 		m.modelInfo(width),
 		"",
 	}
