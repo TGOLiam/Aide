@@ -3193,16 +3193,17 @@ func (m *UI) normalPromptFunc(info textarea.PromptInfo) string {
 		if info.Focused {
 			if m.textarea.Value() == "" {
 				hasWorkspace := m.com != nil && m.com.Workspace != nil
+				hintStyle := t.Editor.Textarea.Focused.Placeholder
 				if m.bangMode {
-					return "  > Run a shell command"
+					return "  > " + hintStyle.Render("Run a shell command")
 				}
 				if hasWorkspace && m.com.Workspace.PermissionSkipRequests() {
-					return "  > Yolo mode!"
+					return "  > " + hintStyle.Render("Yolo mode!")
 				}
 				if hasWorkspace && m.isAgentBusy() {
-					return "  > " + m.workingPlaceholder
+					return "  > " + hintStyle.Render(m.workingPlaceholder)
 				}
-				return "  > " + m.readyPlaceholder
+				return "  > " + hintStyle.Render(m.readyPlaceholder)
 			}
 			return "  > "
 		}

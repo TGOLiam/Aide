@@ -37,16 +37,23 @@ func Render(base lipgloss.Style, version string, compact bool, o Opts) string {
 		return lipgloss.NewStyle().Foreground(c).Render(s)
 	}
 
-	name := "AIDE"
+	name := "Aide"
 	if o.Hyper {
-		name = "HYPERAIDE"
+		name = "Hyperaide"
 	}
 
 	prompt := fg(o.TitleColorA, ">_ ")
 	wordmark := fg(o.TitleColorB, name)
 
 	if compact {
-		return prompt + wordmark
+		leftField := fg(o.FieldColor, "////")
+		content := prompt + wordmark
+		remainingWidth := max(0, o.Width-lipgloss.Width(leftField)-1-lipgloss.Width(content)-1)
+		rightField := fg(o.FieldColor, strings.Repeat("/", remainingWidth))
+		if remainingWidth == 0 {
+			return lipgloss.JoinHorizontal(lipgloss.Top, leftField, " ", content)
+		}
+		return lipgloss.JoinHorizontal(lipgloss.Top, leftField, " ", content, " ", rightField)
 	}
 
 	// Wide version with diagonal side fields.
@@ -78,12 +85,17 @@ func Render(base lipgloss.Style, version string, compact bool, o Opts) string {
 // SmallRender renders a small inline version of the Aide logo: ">_ aide"
 // with diagonal fill to the right, suitable for sidebar header or topbar.
 func SmallRender(t *styles.Styles, width int, o Opts) string {
-	title := lipgloss.NewStyle().Foreground(o.TitleColorA).Render(">_ ")
-	title += styles.ApplyBoldForegroundGrad(t.Logo.GradCanvas, "AIDE", t.Logo.SmallGradFromColor, t.Logo.SmallGradToColor)
-	remainingWidth := width - lipgloss.Width(title) - 1
-	if remainingWidth > 0 {
-		lines := strings.Repeat("╱", remainingWidth)
-		title = fmt.Sprintf("%s %s", title, t.Logo.SmallDiagonals.Render(lines))
+	wordmark := "Aide"
+	if o.Hyper {
+		wordmark = "Hyperaide"
 	}
-	return title
+	leftField := t.Logo.SmallDiagonals.Render("////")
+	title := lipgloss.NewStyle().Foreground(o.TitleColorA).Render(">_ ")
+	title += styles.ApplyBoldForegroundGrad(t.Logo.GradCanvas, wordmark, t.Logo.SmallGradFromColor, t.Logo.SmallGradToColor)
+	remainingWidth := max(0, width-lipgloss.Width(leftField)-1-lipgloss.Width(title)-1)
+	if remainingWidth == 0 {
+		return fmt.Sprintf("%s %s", leftField, title)
+	}
+	lines := strings.Repeat("/", remainingWidth)
+	return fmt.Sprintf("%s %s %s", leftField, title, t.Logo.SmallDiagonals.Render(lines))
 }
