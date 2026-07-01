@@ -58,8 +58,9 @@ const (
 const (
 	AgentCoder string = "coder"
 	AgentTask  string = "task"
-	AgentPlan  string = "plan"
-	AgentBuild string = "build"
+	AgentAgent string = "agent"
+	AgentChat  string = "chat"
+	AgentSWE   string = "swe"
 )
 
 type SelectedModel struct {
@@ -289,8 +290,8 @@ type Options struct {
 	DisableNotifications      bool         `json:"disable_notifications,omitempty" jsonschema:"description=Deprecated: Use notification_style instead. Disable desktop notifications,default=false"`
 	NotificationStyle         string       `json:"notification_style,omitempty" jsonschema:"description=Notification style to use. Options: auto (default), native, osc, bell, disabled. Auto selects based on environment: native for local sessions, osc for SSH (with automatic OSC 99/777 detection).,enum=auto,enum=native,enum=osc,enum=bell,enum=disabled,default=auto"`
 	DisabledSkills            []string     `json:"disabled_skills,omitempty" jsonschema:"description=List of skill names to disable and hide from the agent,example=aide-config"`
-	// AgentMode sets the default agent mode on startup (e.g. "build", "plan", "coder").
-	AgentMode string `json:"agent_mode,omitempty" jsonschema:"description=Default agent mode on startup,default=build,example=build,example=plan"`
+	// AgentMode sets the default agent mode on startup (e.g. "agent", "chat", "coder").
+	AgentMode string `json:"agent_mode,omitempty" jsonschema:"description=Default agent mode on startup,default=agent,example=agent,example=chat,example=coder,example=swe"`
 }
 
 type MCPs map[string]MCPConfig
@@ -784,7 +785,7 @@ func (c *Config) SetupAgents() {
 		AgentCoder: {
 			ID:           AgentCoder,
 			Name:         "Coder",
-			Description:  "An agent that helps with executing coding tasks.",
+			Description:  "Implements code from specifications. Requires a spec to code.",
 			Model:        SelectedModelTypeLarge,
 			ContextPaths: c.Options.ContextPaths,
 			AllowedTools: allowedTools,
@@ -797,28 +798,35 @@ func (c *Config) SetupAgents() {
 			Model:        SelectedModelTypeLarge,
 			ContextPaths: c.Options.ContextPaths,
 			AllowedTools: resolveReadOnlyTools(allowedTools),
-			// NO MCPs or LSPs by default
 			AllowedMCP: map[string][]string{},
 		},
 
-		AgentBuild: {
-			ID:           AgentBuild,
-			Name:         "Build",
-			Description:  "An agent that implements code changes and executes commands.",
+		AgentAgent: {
+			ID:           AgentAgent,
+			Name:         "Agent",
+			Description:  "General-purpose development agent with read/write access.",
 			Model:        SelectedModelTypeLarge,
 			ContextPaths: c.Options.ContextPaths,
 			AllowedTools: allowedTools,
 		},
 
-		AgentPlan: {
-			ID:           AgentPlan,
-			Name:         "Plan",
-			Description:  "An agent that analyzes code and plans changes without making modifications.",
+		AgentChat: {
+			ID:           AgentChat,
+			Name:         "Chat",
+			Description:  "Read-only conversational AI assistant for analysis and discussion.",
 			Model:        SelectedModelTypeLarge,
 			ContextPaths: c.Options.ContextPaths,
 			AllowedTools: resolveReadOnlyTools(allowedTools),
-			// NO MCPs by default
 			AllowedMCP: map[string][]string{},
+		},
+
+		AgentSWE: {
+			ID:           AgentSWE,
+			Name:         "SWE",
+			Description:  "Software engineering architect — designs systems, writes specs, does not code.",
+			Model:        SelectedModelTypeLarge,
+			ContextPaths: c.Options.ContextPaths,
+			AllowedTools: allowedTools,
 		},
 	}
 	c.Agents = agents

@@ -160,7 +160,7 @@ func NewCoordinator(
 		return nil, errCoderAgentNotConfigured
 	}
 
-	// Build the default agent (Coder/Build) — this is the main work-horse agent.
+	// Build the coder agent — requires specs to implement.
 	coderP, err := coderPrompt(prompt.WithWorkingDir(c.cfg.WorkingDir()))
 	if err != nil {
 		return nil, err
@@ -173,30 +173,43 @@ func NewCoordinator(
 	c.currentAgentID = config.AgentCoder
 	c.agents[config.AgentCoder] = coderAgent
 
-	// Build the Plan agent if configured — read-only planning mode.
-	if planCfg, planOK := cfg.Config().Agents[config.AgentPlan]; planOK && !planCfg.Disabled {
-		planP, pErr := planPrompt(prompt.WithWorkingDir(c.cfg.WorkingDir()))
-		if pErr != nil {
-			return nil, pErr
+	// Build the Agent agent (general-purpose, replaces Build).
+	if agentCfg, agentOK := cfg.Config().Agents[config.AgentAgent]; agentOK && !agentCfg.Disabled {
+		agentP, aErr := agentPrompt(prompt.WithWorkingDir(c.cfg.WorkingDir()))
+		if aErr != nil {
+			return nil, aErr
 		}
-		planAgent, pErr := c.buildAgent(ctx, planP, planCfg, false)
-		if pErr != nil {
-			return nil, pErr
+		agentAgent, aErr := c.buildAgent(ctx, agentP, agentCfg, false)
+		if aErr != nil {
+			return nil, aErr
 		}
-		c.agents[config.AgentPlan] = planAgent
+		c.agents[config.AgentAgent] = agentAgent
 	}
 
-	// Build the Build agent if configured (explicit Build, separate from Coder).
-	if buildCfg, buildOK := cfg.Config().Agents[config.AgentBuild]; buildOK && !buildCfg.Disabled {
-		buildP, bErr := buildPrompt(prompt.WithWorkingDir(c.cfg.WorkingDir()))
-		if bErr != nil {
-			return nil, bErr
+	// Build the Chat agent (read-only conversational, replaces Plan).
+	if chatCfg, chatOK := cfg.Config().Agents[config.AgentChat]; chatOK && !chatCfg.Disabled {
+		chatP, cErr := chatPrompt(prompt.WithWorkingDir(c.cfg.WorkingDir()))
+		if cErr != nil {
+			return nil, cErr
 		}
-		buildAgent, bErr := c.buildAgent(ctx, buildP, buildCfg, false)
-		if bErr != nil {
-			return nil, bErr
+		chatAgent, cErr := c.buildAgent(ctx, chatP, chatCfg, false)
+		if cErr != nil {
+			return nil, cErr
 		}
-		c.agents[config.AgentBuild] = buildAgent
+		c.agents[config.AgentChat] = chatAgent
+	}
+
+	// Build the SWE agent (software engineering architect).
+	if sweCfg, sweOK := cfg.Config().Agents[config.AgentSWE]; sweOK && !sweCfg.Disabled {
+		sweP, sErr := swePrompt(prompt.WithWorkingDir(c.cfg.WorkingDir()))
+		if sErr != nil {
+			return nil, sErr
+		}
+		sweAgent, sErr := c.buildAgent(ctx, sweP, sweCfg, false)
+		if sErr != nil {
+			return nil, sErr
+		}
+		c.agents[config.AgentSWE] = sweAgent
 	}
 
 	return c, nil

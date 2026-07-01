@@ -11,11 +11,14 @@ import (
 //go:embed templates/coder.md.tpl
 var coderPromptTmpl []byte
 
-//go:embed templates/build.md.tpl
-var buildPromptTmpl []byte
+//go:embed templates/agent.md.tpl
+var agentPromptTmpl []byte
 
-//go:embed templates/plan.md.tpl
-var planPromptTmpl []byte
+//go:embed templates/chat.md.tpl
+var chatPromptTmpl []byte
+
+//go:embed templates/swe.md.tpl
+var swePromptTmpl []byte
 
 //go:embed templates/task.md.tpl
 var taskPromptTmpl []byte
@@ -31,16 +34,24 @@ func coderPrompt(opts ...prompt.Option) (*prompt.Prompt, error) {
 	return systemPrompt, nil
 }
 
-func buildPrompt(opts ...prompt.Option) (*prompt.Prompt, error) {
-	systemPrompt, err := prompt.NewPrompt("build", string(buildPromptTmpl), opts...)
+func agentPrompt(opts ...prompt.Option) (*prompt.Prompt, error) {
+	systemPrompt, err := prompt.NewPrompt("agent", string(agentPromptTmpl), opts...)
 	if err != nil {
 		return nil, err
 	}
 	return systemPrompt, nil
 }
 
-func planPrompt(opts ...prompt.Option) (*prompt.Prompt, error) {
-	systemPrompt, err := prompt.NewPrompt("plan", string(planPromptTmpl), opts...)
+func chatPrompt(opts ...prompt.Option) (*prompt.Prompt, error) {
+	systemPrompt, err := prompt.NewPrompt("chat", string(chatPromptTmpl), opts...)
+	if err != nil {
+		return nil, err
+	}
+	return systemPrompt, nil
+}
+
+func swePrompt(opts ...prompt.Option) (*prompt.Prompt, error) {
+	systemPrompt, err := prompt.NewPrompt("swe", string(swePromptTmpl), opts...)
 	if err != nil {
 		return nil, err
 	}

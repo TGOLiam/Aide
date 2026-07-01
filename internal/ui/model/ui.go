@@ -283,7 +283,7 @@ type UI struct {
 	// visibly in assistant messages.
 	showThinking bool
 
-	// agentMode is the current agent mode (e.g. "build", "plan", "coder").
+	// agentMode is the current agent mode (e.g. "agent", "chat", "swe", "coder").
 	agentMode string
 
 	// isCompact tracks whether we're currently in compact layout mode (either
@@ -384,7 +384,7 @@ func New(com *common.Common, initialSessionID string, continueLast bool) *UI {
 		continueLastSession: continueLast,
 		skillStates:         skills.GetLatestStates(),
 		showThinking:        true,
-		agentMode:           config.AgentBuild,
+		agentMode:           config.AgentAgent,
 		useTopbarLayout:     true,
 	}
 
@@ -433,7 +433,7 @@ func New(com *common.Common, initialSessionID string, continueLast bool) *UI {
 	ui.chat.SetShowThinking(ui.showThinking)
 
 	// Set the default agent mode from config.
-	ui.agentMode = cmp.Or(opts.AgentMode, config.AgentBuild)
+	ui.agentMode = cmp.Or(opts.AgentMode, config.AgentAgent)
 
 	return ui
 }
@@ -2932,7 +2932,7 @@ func (m *UI) generateLayout(w, h int) uiLayout {
 	// The help height
 	helpHeight := 1
 	// The editor height: textarea height + margin for attachments and bottom spacing.
-	editorHeight := m.textarea.Height() + editorHeightMargin
+	editorHeight := m.textarea.Height() + editorHeightMargin + m.textarea.Styles().Focused.Base.GetVerticalFrameSize()
 	// The sidebar width
 	sidebarWidth := 30
 	// The header height
@@ -4361,15 +4361,14 @@ func (m *UI) disableDockerMCP() tea.Msg {
 	return util.NewInfoMsg("Docker MCP disabled successfully")
 }
 
-// availableAgents returns the list of configured agent IDs (e.g. "build", "plan", "coder").
+// availableAgents returns the list of configured agent IDs (e.g. "agent", "chat", "swe", "coder").
 func (m *UI) availableAgents() []string {
 	cfg := m.com.Config()
 	if cfg == nil {
-		return []string{config.AgentBuild}
+		return []string{config.AgentAgent}
 	}
 	var agents []string
-	// Plan comes first, then Build, then Coder, then any others.
-	for _, id := range []string{config.AgentPlan, config.AgentBuild, config.AgentCoder} {
+	for _, id := range []string{config.AgentAgent, config.AgentChat, config.AgentSWE, config.AgentCoder} {
 		if a, ok := cfg.Agents[id]; ok && !a.Disabled {
 			agents = append(agents, id)
 		}
@@ -4380,14 +4379,14 @@ func (m *UI) availableAgents() []string {
 			continue
 		}
 		switch id {
-		case config.AgentPlan, config.AgentBuild, config.AgentCoder, config.AgentTask:
+		case config.AgentAgent, config.AgentChat, config.AgentSWE, config.AgentCoder, config.AgentTask:
 			continue
 		default:
 			agents = append(agents, id)
 		}
 	}
 	if len(agents) == 0 {
-		return []string{config.AgentBuild}
+		return []string{config.AgentAgent}
 	}
 	return agents
 }

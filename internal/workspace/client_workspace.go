@@ -258,7 +258,7 @@ func (w *ClientWorkspace) UpdateAgentModel(ctx context.Context) error {
 }
 
 func (w *ClientWorkspace) AgentMode() string {
-	return config.AgentBuild
+	return config.AgentAgent
 }
 
 func (w *ClientWorkspace) AgentSetMode(name string) error {

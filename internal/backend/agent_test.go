@@ -59,7 +59,7 @@ func (c *blockingCoordinator) Model() agent.Model                               
 func (c *blockingCoordinator) UpdateModels(context.Context) error                { return nil }
 func (c *blockingCoordinator) GenerateTitle(context.Context, string, string)     {}
 func (c *blockingCoordinator) SetMainAgent(context.Context, string) error         { return nil }
-func (c *blockingCoordinator) MainAgentName() string                              { return "build" }
+func (c *blockingCoordinator) MainAgentName() string                              { return "agent" }
 
 // insertAgentWorkspace installs a synthetic workspace with the given
 // coordinator (or none) and a workspace run context, mirroring the

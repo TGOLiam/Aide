@@ -136,7 +136,7 @@ func quickStyle(o quickStyleOpts) Styles {
 
 	s.Editor.Textarea = textarea.Styles{
 		Focused: textarea.StyleState{
-			Base:             base,
+			Base:             base.Border(lipgloss.RoundedBorder()).BorderForeground(o.primary),
 			Text:             base,
 			LineNumber:       base.Foreground(o.fgMostSubtle),
 			CursorLine:       base,

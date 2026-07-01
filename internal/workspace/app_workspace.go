@@ -226,7 +226,7 @@ func (w *AppWorkspace) AgentSummarize(ctx context.Context, sessionID string) err
 
 func (w *AppWorkspace) AgentMode() string {
 	if w.app.AgentCoordinator == nil {
-		return config.AgentBuild
+		return config.AgentAgent
 	}
 	return w.app.AgentCoordinator.MainAgentName()
 }
