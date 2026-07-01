@@ -8,10 +8,10 @@ import (
 
 	"charm.land/lipgloss/v2"
 	"charm.land/lipgloss/v2/table"
-	"github.com/liamb/opencode/aide/internal/config"
-	"github.com/liamb/opencode/aide/internal/message"
-	"github.com/liamb/opencode/aide/internal/stringext"
-	"github.com/liamb/opencode/aide/internal/ui/styles"
+	"github.com/liamb/aide/internal/config"
+	"github.com/liamb/aide/internal/message"
+	"github.com/liamb/aide/internal/stringext"
+	"github.com/liamb/aide/internal/ui/styles"
 )
 
 // DockerMCPToolMessageItem is a message item that represents a Docker MCP tool call.

@@ -13,8 +13,8 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/liamb/opencode/aide/internal/backend"
-	"github.com/liamb/opencode/aide/internal/config"
+	"github.com/liamb/aide/internal/backend"
+	"github.com/liamb/aide/internal/config"
 )
 
 // maxUnixSocketPathLen is the maximum length of a Unix domain socket

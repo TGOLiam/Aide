@@ -8,7 +8,7 @@ import (
 
 	"charm.land/lipgloss/v2"
 	"github.com/charmbracelet/x/ansi"
-	"github.com/liamb/opencode/aide/internal/ui/styles"
+	"github.com/liamb/aide/internal/ui/styles"
 )
 
 const diag = `╱`

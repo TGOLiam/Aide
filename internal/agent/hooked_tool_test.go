@@ -5,9 +5,9 @@ import (
 	"testing"
 
 	"charm.land/fantasy"
-	"github.com/liamb/opencode/aide/internal/config"
-	"github.com/liamb/opencode/aide/internal/hooks"
-	"github.com/liamb/opencode/aide/internal/permission"
+	"github.com/liamb/aide/internal/config"
+	"github.com/liamb/aide/internal/hooks"
+	"github.com/liamb/aide/internal/permission"
 	"github.com/stretchr/testify/require"
 )
 

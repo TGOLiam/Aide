@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"charm.land/catwalk/pkg/catwalk"
-	"github.com/liamb/opencode/aide/internal/message"
+	"github.com/liamb/aide/internal/message"
 )
 
 // CreateMessageParams represents parameters for creating a message.

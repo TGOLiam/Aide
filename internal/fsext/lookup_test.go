@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/liamb/opencode/aide/internal/home"
+	"github.com/liamb/aide/internal/home"
 	"github.com/stretchr/testify/require"
 )
 

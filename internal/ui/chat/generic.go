@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"strings"
 
-	"github.com/liamb/opencode/aide/internal/message"
-	"github.com/liamb/opencode/aide/internal/ui/styles"
+	"github.com/liamb/aide/internal/message"
+	"github.com/liamb/aide/internal/ui/styles"
 )
 
 // GenericToolMessageItem is a message item that represents an unknown tool call.

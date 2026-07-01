@@ -5,10 +5,10 @@ import (
 
 	tea "charm.land/bubbletea/v2"
 
-	mcptools "github.com/liamb/opencode/aide/internal/agent/tools/mcp"
-	"github.com/liamb/opencode/aide/internal/app"
-	"github.com/liamb/opencode/aide/internal/config"
-	"github.com/liamb/opencode/aide/internal/pubsub"
+	mcptools "github.com/liamb/aide/internal/agent/tools/mcp"
+	"github.com/liamb/aide/internal/app"
+	"github.com/liamb/aide/internal/config"
+	"github.com/liamb/aide/internal/pubsub"
 )
 
 // SubscribeEvents returns a per-caller event channel for a workspace.

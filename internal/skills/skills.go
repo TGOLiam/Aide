@@ -15,7 +15,7 @@ import (
 	"sync"
 
 	"github.com/charlievieth/fastwalk"
-	"github.com/liamb/opencode/aide/internal/pubsub"
+	"github.com/liamb/aide/internal/pubsub"
 	"gopkg.in/yaml.v3"
 )
 

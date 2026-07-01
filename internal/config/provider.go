@@ -17,8 +17,8 @@ import (
 
 	"charm.land/catwalk/pkg/catwalk"
 	"charm.land/catwalk/pkg/embedded"
-	"github.com/liamb/opencode/aide/internal/csync"
-	"github.com/liamb/opencode/aide/internal/home"
+	"github.com/liamb/aide/internal/csync"
+	"github.com/liamb/aide/internal/home"
 	"github.com/charmbracelet/x/etag"
 )
 

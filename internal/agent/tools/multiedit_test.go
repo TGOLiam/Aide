@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/liamb/opencode/aide/internal/history"
-	"github.com/liamb/opencode/aide/internal/permission"
-	"github.com/liamb/opencode/aide/internal/pubsub"
+	"github.com/liamb/aide/internal/history"
+	"github.com/liamb/aide/internal/permission"
+	"github.com/liamb/aide/internal/pubsub"
 	"github.com/stretchr/testify/require"
 )
 

@@ -6,10 +6,10 @@ import (
 	"testing"
 
 	"charm.land/fantasy"
-	"github.com/liamb/opencode/aide/internal/config"
-	"github.com/liamb/opencode/aide/internal/permission"
-	"github.com/liamb/opencode/aide/internal/pubsub"
-	"github.com/liamb/opencode/aide/internal/shell"
+	"github.com/liamb/aide/internal/config"
+	"github.com/liamb/aide/internal/permission"
+	"github.com/liamb/aide/internal/pubsub"
+	"github.com/liamb/aide/internal/shell"
 	"github.com/stretchr/testify/require"
 )
 

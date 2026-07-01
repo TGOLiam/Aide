@@ -8,10 +8,10 @@ import (
 	"strings"
 
 	"charm.land/fantasy"
-	"github.com/liamb/opencode/aide/internal/agent/tools/mcp"
-	"github.com/liamb/opencode/aide/internal/config"
-	"github.com/liamb/opencode/aide/internal/lsp"
-	"github.com/liamb/opencode/aide/internal/skills"
+	"github.com/liamb/aide/internal/agent/tools/mcp"
+	"github.com/liamb/aide/internal/config"
+	"github.com/liamb/aide/internal/lsp"
+	"github.com/liamb/aide/internal/skills"
 )
 
 const CrushInfoToolName = "aide_info"

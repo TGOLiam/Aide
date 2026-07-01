@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"charm.land/glamour/v2"
-	"github.com/liamb/opencode/aide/internal/ui/styles"
+	"github.com/liamb/aide/internal/ui/styles"
 	"github.com/stretchr/testify/require"
 )
 

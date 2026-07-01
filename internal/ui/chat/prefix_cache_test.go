@@ -5,9 +5,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/liamb/opencode/aide/internal/message"
-	"github.com/liamb/opencode/aide/internal/ui/attachments"
-	"github.com/liamb/opencode/aide/internal/ui/styles"
+	"github.com/liamb/aide/internal/message"
+	"github.com/liamb/aide/internal/ui/attachments"
+	"github.com/liamb/aide/internal/ui/styles"
 	"github.com/stretchr/testify/require"
 )
 

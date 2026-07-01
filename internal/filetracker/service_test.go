@@ -6,7 +6,7 @@ import (
 	"testing/synctest"
 	"time"
 
-	"github.com/liamb/opencode/aide/internal/db"
+	"github.com/liamb/aide/internal/db"
 	"github.com/stretchr/testify/require"
 )
 

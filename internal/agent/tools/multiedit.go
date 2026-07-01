@@ -11,13 +11,13 @@ import (
 	"time"
 
 	"charm.land/fantasy"
-	"github.com/liamb/opencode/aide/internal/diff"
-	"github.com/liamb/opencode/aide/internal/filepathext"
-	"github.com/liamb/opencode/aide/internal/filetracker"
-	"github.com/liamb/opencode/aide/internal/fsext"
-	"github.com/liamb/opencode/aide/internal/history"
-	"github.com/liamb/opencode/aide/internal/lsp"
-	"github.com/liamb/opencode/aide/internal/permission"
+	"github.com/liamb/aide/internal/diff"
+	"github.com/liamb/aide/internal/filepathext"
+	"github.com/liamb/aide/internal/filetracker"
+	"github.com/liamb/aide/internal/fsext"
+	"github.com/liamb/aide/internal/history"
+	"github.com/liamb/aide/internal/lsp"
+	"github.com/liamb/aide/internal/permission"
 )
 
 type MultiEditOperation struct {

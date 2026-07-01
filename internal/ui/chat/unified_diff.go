@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/liamb/opencode/aide/internal/diffdetect"
-	"github.com/liamb/opencode/aide/internal/ui/common"
-	"github.com/liamb/opencode/aide/internal/ui/styles"
+	"github.com/liamb/aide/internal/diffdetect"
+	"github.com/liamb/aide/internal/ui/common"
+	"github.com/liamb/aide/internal/ui/styles"
 )
 
 type parsedDiffFile struct {

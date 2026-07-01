@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	tea "charm.land/bubbletea/v2"
-	"github.com/liamb/opencode/aide/internal/ui/notification"
+	"github.com/liamb/aide/internal/ui/notification"
 	"github.com/stretchr/testify/require"
 )
 

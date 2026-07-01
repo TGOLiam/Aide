@@ -3,9 +3,9 @@ package chat
 import (
 	"testing"
 
-	"github.com/liamb/opencode/aide/internal/message"
-	"github.com/liamb/opencode/aide/internal/ui/list"
-	"github.com/liamb/opencode/aide/internal/ui/styles"
+	"github.com/liamb/aide/internal/message"
+	"github.com/liamb/aide/internal/ui/list"
+	"github.com/liamb/aide/internal/ui/styles"
 	"github.com/stretchr/testify/require"
 )
 

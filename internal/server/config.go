@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/liamb/opencode/aide/internal/proto"
+	"github.com/liamb/aide/internal/proto"
 )
 
 // handlePostWorkspaceConfigSet sets a configuration field.

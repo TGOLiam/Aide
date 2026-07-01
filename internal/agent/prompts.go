@@ -4,8 +4,8 @@ import (
 	"context"
 	_ "embed"
 
-	"github.com/liamb/opencode/aide/internal/agent/prompt"
-	"github.com/liamb/opencode/aide/internal/config"
+	"github.com/liamb/aide/internal/agent/prompt"
+	"github.com/liamb/aide/internal/config"
 )
 
 //go:embed templates/coder.md.tpl

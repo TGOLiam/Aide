@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/liamb/opencode/aide/internal/config"
+	"github.com/liamb/aide/internal/config"
 	xstrings "github.com/charmbracelet/x/exp/strings"
 )
 

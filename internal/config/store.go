@@ -12,9 +12,9 @@ import (
 	"time"
 
 	"charm.land/catwalk/pkg/catwalk"
-	"github.com/liamb/opencode/aide/internal/env"
-	"github.com/liamb/opencode/aide/internal/lock"
-	"github.com/liamb/opencode/aide/internal/oauth"
+	"github.com/liamb/aide/internal/env"
+	"github.com/liamb/aide/internal/lock"
+	"github.com/liamb/aide/internal/oauth"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
 	"golang.org/x/sync/singleflight"

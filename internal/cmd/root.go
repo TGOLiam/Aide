@@ -24,21 +24,21 @@ import (
 	fang "charm.land/fang/v2"
 	"charm.land/lipgloss/v2"
 	"github.com/charmbracelet/colorprofile"
-	"github.com/liamb/opencode/aide/internal/app"
-	"github.com/liamb/opencode/aide/internal/client"
-	"github.com/liamb/opencode/aide/internal/config"
-	"github.com/liamb/opencode/aide/internal/db"
-	"github.com/liamb/opencode/aide/internal/lock"
-	crushlog "github.com/liamb/opencode/aide/internal/log"
-	"github.com/liamb/opencode/aide/internal/projects"
-	"github.com/liamb/opencode/aide/internal/proto"
-	"github.com/liamb/opencode/aide/internal/server"
-	"github.com/liamb/opencode/aide/internal/session"
-	"github.com/liamb/opencode/aide/internal/skills"
-	"github.com/liamb/opencode/aide/internal/ui/common"
-	ui "github.com/liamb/opencode/aide/internal/ui/model"
-	"github.com/liamb/opencode/aide/internal/version"
-	"github.com/liamb/opencode/aide/internal/workspace"
+	"github.com/liamb/aide/internal/app"
+	"github.com/liamb/aide/internal/client"
+	"github.com/liamb/aide/internal/config"
+	"github.com/liamb/aide/internal/db"
+	"github.com/liamb/aide/internal/lock"
+	crushlog "github.com/liamb/aide/internal/log"
+	"github.com/liamb/aide/internal/projects"
+	"github.com/liamb/aide/internal/proto"
+	"github.com/liamb/aide/internal/server"
+	"github.com/liamb/aide/internal/session"
+	"github.com/liamb/aide/internal/skills"
+	"github.com/liamb/aide/internal/ui/common"
+	ui "github.com/liamb/aide/internal/ui/model"
+	"github.com/liamb/aide/internal/version"
+	"github.com/liamb/aide/internal/workspace"
 	uv "github.com/charmbracelet/ultraviolet"
 	"github.com/charmbracelet/x/ansi"
 	"github.com/charmbracelet/x/exp/charmtone"
@@ -134,7 +134,7 @@ aide --continue
 
 		if _, err := program.Run(); err != nil {
 			slog.Error("TUI run error", "error", err)
-			return errors.New("Aide crashed. If metrics are enabled, we were notified about it. If you'd like to report it, please copy the stacktrace above and open an issue at https://github.com/liamb/opencode/aide/issues/new?template=bug.yml") //nolint:staticcheck
+			return errors.New("Aide crashed. If metrics are enabled, we were notified about it. If you'd like to report it, please copy the stacktrace above and open an issue at https://github.com/liamb/aide/issues/new?template=bug.yml") //nolint:staticcheck
 		}
 		return nil
 	},

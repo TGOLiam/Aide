@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/liamb/opencode/aide/internal/shell"
+	"github.com/liamb/aide/internal/shell"
 	"github.com/stretchr/testify/require"
 )
 

@@ -6,17 +6,17 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/liamb/opencode/aide/internal/agent/notify"
-	"github.com/liamb/opencode/aide/internal/agent/tools/mcp"
-	"github.com/liamb/opencode/aide/internal/app"
-	"github.com/liamb/opencode/aide/internal/backend"
-	"github.com/liamb/opencode/aide/internal/history"
-	"github.com/liamb/opencode/aide/internal/message"
-	"github.com/liamb/opencode/aide/internal/permission"
-	"github.com/liamb/opencode/aide/internal/proto"
-	"github.com/liamb/opencode/aide/internal/pubsub"
-	"github.com/liamb/opencode/aide/internal/session"
-	"github.com/liamb/opencode/aide/internal/skills"
+	"github.com/liamb/aide/internal/agent/notify"
+	"github.com/liamb/aide/internal/agent/tools/mcp"
+	"github.com/liamb/aide/internal/app"
+	"github.com/liamb/aide/internal/backend"
+	"github.com/liamb/aide/internal/history"
+	"github.com/liamb/aide/internal/message"
+	"github.com/liamb/aide/internal/permission"
+	"github.com/liamb/aide/internal/proto"
+	"github.com/liamb/aide/internal/pubsub"
+	"github.com/liamb/aide/internal/session"
+	"github.com/liamb/aide/internal/skills"
 )
 
 // wrapEvent converts a raw tea.Msg (a pubsub.Event[T] from the app

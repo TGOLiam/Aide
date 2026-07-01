@@ -11,8 +11,8 @@ import (
 	"sync"
 
 	"github.com/charlievieth/fastwalk"
-	"github.com/liamb/opencode/aide/internal/csync"
-	"github.com/liamb/opencode/aide/internal/home"
+	"github.com/liamb/aide/internal/csync"
+	"github.com/liamb/aide/internal/home"
 	gitconfig "github.com/go-git/go-git/v5/config"
 	"github.com/go-git/go-git/v5/plumbing/format/gitignore"
 )

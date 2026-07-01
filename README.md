@@ -21,13 +21,13 @@ Works with any LLM, integrates with your tools, and runs in every terminal.
 ## Installation
 
 ```bash
-go install github.com/liamb/opencode/aide@latest
+go install github.com/liamb/aide@latest
 ```
 
 Or build from source:
 
 ```bash
-git clone https://github.com/liamb/opencode/aide
+git clone https://github.com/liamb/aide
 cd aide
 go build .
 ```

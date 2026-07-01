@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/liamb/opencode/aide/internal/agent/notify"
-	"github.com/liamb/opencode/aide/internal/pubsub"
+	"github.com/liamb/aide/internal/agent/notify"
+	"github.com/liamb/aide/internal/pubsub"
 	"github.com/stretchr/testify/require"
 )
 

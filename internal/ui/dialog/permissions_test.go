@@ -4,9 +4,9 @@ import (
 	"testing"
 
 	tea "charm.land/bubbletea/v2"
-	"github.com/liamb/opencode/aide/internal/permission"
-	"github.com/liamb/opencode/aide/internal/ui/common"
-	"github.com/liamb/opencode/aide/internal/ui/styles"
+	"github.com/liamb/aide/internal/permission"
+	"github.com/liamb/aide/internal/ui/common"
+	"github.com/liamb/aide/internal/ui/styles"
 	"github.com/stretchr/testify/require"
 )
 

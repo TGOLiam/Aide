@@ -4,9 +4,9 @@ import (
 	"context"
 	"time"
 
-	"github.com/liamb/opencode/aide/internal/csync"
-	"github.com/liamb/opencode/aide/internal/lsp"
-	"github.com/liamb/opencode/aide/internal/pubsub"
+	"github.com/liamb/aide/internal/csync"
+	"github.com/liamb/aide/internal/lsp"
+	"github.com/liamb/aide/internal/pubsub"
 )
 
 // LSPEventType represents the type of LSP event

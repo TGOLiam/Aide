@@ -7,10 +7,10 @@ import (
 	"strings"
 
 	"charm.land/lipgloss/v2"
-	"github.com/liamb/opencode/aide/internal/lsp"
-	"github.com/liamb/opencode/aide/internal/ui/common"
-	"github.com/liamb/opencode/aide/internal/ui/styles"
-	"github.com/liamb/opencode/aide/internal/workspace"
+	"github.com/liamb/aide/internal/lsp"
+	"github.com/liamb/aide/internal/ui/common"
+	"github.com/liamb/aide/internal/ui/styles"
+	"github.com/liamb/aide/internal/workspace"
 	"github.com/charmbracelet/x/powernap/pkg/lsp/protocol"
 )
 

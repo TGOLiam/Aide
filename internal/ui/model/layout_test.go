@@ -6,9 +6,9 @@ import (
 	"testing"
 
 	"charm.land/bubbles/v2/textarea"
-	"github.com/liamb/opencode/aide/internal/session"
-	"github.com/liamb/opencode/aide/internal/ui/chat"
-	"github.com/liamb/opencode/aide/internal/ui/common"
+	"github.com/liamb/aide/internal/session"
+	"github.com/liamb/aide/internal/ui/chat"
+	"github.com/liamb/aide/internal/ui/common"
 )
 
 // testMessageItem is a minimal chat item used to populate the chat list

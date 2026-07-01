@@ -13,9 +13,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/liamb/opencode/aide/internal/config"
-	"github.com/liamb/opencode/aide/internal/csync"
-	"github.com/liamb/opencode/aide/internal/fsext"
+	"github.com/liamb/aide/internal/config"
+	"github.com/liamb/aide/internal/csync"
+	"github.com/liamb/aide/internal/fsext"
 	powernapconfig "github.com/charmbracelet/x/powernap/pkg/config"
 	powernap "github.com/charmbracelet/x/powernap/pkg/lsp"
 	"github.com/sourcegraph/jsonrpc2"

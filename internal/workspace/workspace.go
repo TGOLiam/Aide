@@ -10,16 +10,16 @@ import (
 
 	tea "charm.land/bubbletea/v2"
 	"charm.land/catwalk/pkg/catwalk"
-	mcptools "github.com/liamb/opencode/aide/internal/agent/tools/mcp"
-	"github.com/liamb/opencode/aide/internal/config"
-	"github.com/liamb/opencode/aide/internal/history"
-	"github.com/liamb/opencode/aide/internal/lsp"
-	"github.com/liamb/opencode/aide/internal/message"
-	"github.com/liamb/opencode/aide/internal/oauth"
-	"github.com/liamb/opencode/aide/internal/permission"
-	"github.com/liamb/opencode/aide/internal/proto"
-	"github.com/liamb/opencode/aide/internal/session"
-	"github.com/liamb/opencode/aide/internal/skills"
+	mcptools "github.com/liamb/aide/internal/agent/tools/mcp"
+	"github.com/liamb/aide/internal/config"
+	"github.com/liamb/aide/internal/history"
+	"github.com/liamb/aide/internal/lsp"
+	"github.com/liamb/aide/internal/message"
+	"github.com/liamb/aide/internal/oauth"
+	"github.com/liamb/aide/internal/permission"
+	"github.com/liamb/aide/internal/proto"
+	"github.com/liamb/aide/internal/session"
+	"github.com/liamb/aide/internal/skills"
 )
 
 // LSPClientInfo holds information about an LSP client's state. This is

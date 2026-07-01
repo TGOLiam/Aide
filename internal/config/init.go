@@ -7,7 +7,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/liamb/opencode/aide/internal/fsext"
+	"github.com/liamb/aide/internal/fsext"
 )
 
 const (

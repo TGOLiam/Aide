@@ -5,8 +5,8 @@ import (
 	"testing"
 
 	"charm.land/lipgloss/v2"
-	"github.com/liamb/opencode/aide/internal/history"
-	"github.com/liamb/opencode/aide/internal/ui/styles"
+	"github.com/liamb/aide/internal/history"
+	"github.com/liamb/aide/internal/ui/styles"
 	"github.com/stretchr/testify/require"
 )
 

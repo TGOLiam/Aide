@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"strings"
 
-	"github.com/liamb/opencode/aide/internal/diffdetect"
-	"github.com/liamb/opencode/aide/internal/stringext"
-	"github.com/liamb/opencode/aide/internal/ui/styles"
+	"github.com/liamb/aide/internal/diffdetect"
+	"github.com/liamb/aide/internal/stringext"
+	"github.com/liamb/aide/internal/ui/styles"
 )
 
 type toolResultContentWidths struct {

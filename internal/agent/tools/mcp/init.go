@@ -16,12 +16,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/liamb/opencode/aide/internal/config"
-	"github.com/liamb/opencode/aide/internal/csync"
-	"github.com/liamb/opencode/aide/internal/home"
-	"github.com/liamb/opencode/aide/internal/permission"
-	"github.com/liamb/opencode/aide/internal/pubsub"
-	"github.com/liamb/opencode/aide/internal/version"
+	"github.com/liamb/aide/internal/config"
+	"github.com/liamb/aide/internal/csync"
+	"github.com/liamb/aide/internal/home"
+	"github.com/liamb/aide/internal/permission"
+	"github.com/liamb/aide/internal/pubsub"
+	"github.com/liamb/aide/internal/version"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 

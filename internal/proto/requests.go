@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/liamb/opencode/aide/internal/config"
-	"github.com/liamb/opencode/aide/internal/oauth"
+	"github.com/liamb/aide/internal/config"
+	"github.com/liamb/aide/internal/oauth"
 )
 
 // ConfigSetRequest represents a request to set a config field.

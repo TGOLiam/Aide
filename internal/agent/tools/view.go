@@ -17,11 +17,11 @@ import (
 	"unicode/utf8"
 
 	"charm.land/fantasy"
-	"github.com/liamb/opencode/aide/internal/filepathext"
-	"github.com/liamb/opencode/aide/internal/filetracker"
-	"github.com/liamb/opencode/aide/internal/lsp"
-	"github.com/liamb/opencode/aide/internal/permission"
-	"github.com/liamb/opencode/aide/internal/skills"
+	"github.com/liamb/aide/internal/filepathext"
+	"github.com/liamb/aide/internal/filetracker"
+	"github.com/liamb/aide/internal/lsp"
+	"github.com/liamb/aide/internal/permission"
+	"github.com/liamb/aide/internal/skills"
 )
 
 //go:embed view.md.tpl

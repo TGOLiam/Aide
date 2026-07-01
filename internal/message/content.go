@@ -13,7 +13,7 @@ import (
 	"charm.land/fantasy/providers/anthropic"
 	"charm.land/fantasy/providers/google"
 	"charm.land/fantasy/providers/openai"
-	"github.com/liamb/opencode/aide/internal/stringext"
+	"github.com/liamb/aide/internal/stringext"
 	"github.com/charmbracelet/x/ansi"
 )
 

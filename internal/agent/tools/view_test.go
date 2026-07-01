@@ -11,9 +11,9 @@ import (
 	"time"
 
 	"charm.land/fantasy"
-	"github.com/liamb/opencode/aide/internal/filetracker"
-	"github.com/liamb/opencode/aide/internal/permission"
-	"github.com/liamb/opencode/aide/internal/pubsub"
+	"github.com/liamb/aide/internal/filetracker"
+	"github.com/liamb/aide/internal/permission"
+	"github.com/liamb/aide/internal/pubsub"
 	"github.com/stretchr/testify/require"
 )
 

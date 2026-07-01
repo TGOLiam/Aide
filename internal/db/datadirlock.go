@@ -10,8 +10,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/liamb/opencode/aide/internal/lock"
-	"github.com/liamb/opencode/aide/internal/version"
+	"github.com/liamb/aide/internal/lock"
+	"github.com/liamb/aide/internal/version"
 )
 
 // ErrDataDirLocked is returned by Connect when the data directory is

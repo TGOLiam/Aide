@@ -7,9 +7,9 @@ import (
 	"log/slog"
 
 	"charm.land/fantasy"
-	"github.com/liamb/opencode/aide/internal/agent/tools"
-	"github.com/liamb/opencode/aide/internal/hooks"
-	"github.com/liamb/opencode/aide/internal/permission"
+	"github.com/liamb/aide/internal/agent/tools"
+	"github.com/liamb/aide/internal/hooks"
+	"github.com/liamb/aide/internal/permission"
 	"github.com/tidwall/sjson"
 )
 

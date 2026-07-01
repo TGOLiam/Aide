@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/liamb/opencode/aide/internal/env"
-	"github.com/liamb/opencode/aide/internal/shell"
+	"github.com/liamb/aide/internal/env"
+	"github.com/liamb/aide/internal/shell"
 )
 
 // resolveTimeout bounds how long a single ResolveValue call may spend

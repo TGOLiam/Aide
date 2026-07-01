@@ -14,8 +14,8 @@ import (
 	"time"
 
 	"charm.land/fantasy"
-	"github.com/liamb/opencode/aide/internal/filepathext"
-	"github.com/liamb/opencode/aide/internal/permission"
+	"github.com/liamb/aide/internal/filepathext"
+	"github.com/liamb/aide/internal/permission"
 )
 
 type DownloadParams struct {

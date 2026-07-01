@@ -3,10 +3,10 @@ package model
 import (
 	"testing"
 
-	"github.com/liamb/opencode/aide/internal/config"
-	"github.com/liamb/opencode/aide/internal/skills"
-	"github.com/liamb/opencode/aide/internal/ui/common"
-	uistyles "github.com/liamb/opencode/aide/internal/ui/styles"
+	"github.com/liamb/aide/internal/config"
+	"github.com/liamb/aide/internal/skills"
+	"github.com/liamb/aide/internal/ui/common"
+	uistyles "github.com/liamb/aide/internal/ui/styles"
 	"github.com/stretchr/testify/require"
 )
 

@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/liamb/opencode/aide/internal/db"
+	"github.com/liamb/aide/internal/db"
 )
 
 // Service defines the interface for tracking file reads in sessions.

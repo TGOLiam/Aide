@@ -6,8 +6,8 @@ import (
 
 	"charm.land/glamour/v2"
 	"github.com/alecthomas/chroma/v2/formatters"
-	"github.com/liamb/opencode/aide/internal/ui/styles"
-	"github.com/liamb/opencode/aide/internal/ui/xchroma"
+	"github.com/liamb/aide/internal/ui/styles"
+	"github.com/liamb/aide/internal/ui/xchroma"
 )
 
 const formatterName = "aide"

@@ -7,7 +7,7 @@ import (
 
 	tea "charm.land/bubbletea/v2"
 
-	"github.com/liamb/opencode/aide/internal/message"
+	"github.com/liamb/aide/internal/message"
 )
 
 // promptHistoryLoadedMsg is sent when prompt history is loaded.

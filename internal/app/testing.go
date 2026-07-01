@@ -5,9 +5,9 @@ import (
 	"sync"
 
 	tea "charm.land/bubbletea/v2"
-	"github.com/liamb/opencode/aide/internal/agent/notify"
-	"github.com/liamb/opencode/aide/internal/permission"
-	"github.com/liamb/opencode/aide/internal/pubsub"
+	"github.com/liamb/aide/internal/agent/notify"
+	"github.com/liamb/aide/internal/permission"
+	"github.com/liamb/aide/internal/pubsub"
 )
 
 // NewForTest constructs a minimal [App] suitable for in-process tests

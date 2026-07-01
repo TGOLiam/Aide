@@ -15,9 +15,9 @@ import (
 	"strings"
 
 	"charm.land/fantasy"
-	"github.com/liamb/opencode/aide/internal/config"
-	"github.com/liamb/opencode/aide/internal/filepathext"
-	"github.com/liamb/opencode/aide/internal/fsext"
+	"github.com/liamb/aide/internal/config"
+	"github.com/liamb/aide/internal/filepathext"
+	"github.com/liamb/aide/internal/fsext"
 )
 
 const GlobToolName = "glob"

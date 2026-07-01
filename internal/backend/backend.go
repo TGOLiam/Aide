@@ -13,14 +13,14 @@ import (
 	"sync"
 	"time"
 
-	"github.com/liamb/opencode/aide/internal/app"
-	"github.com/liamb/opencode/aide/internal/config"
-	"github.com/liamb/opencode/aide/internal/csync"
-	"github.com/liamb/opencode/aide/internal/db"
-	"github.com/liamb/opencode/aide/internal/proto"
-	"github.com/liamb/opencode/aide/internal/skills"
-	"github.com/liamb/opencode/aide/internal/ui/util"
-	"github.com/liamb/opencode/aide/internal/version"
+	"github.com/liamb/aide/internal/app"
+	"github.com/liamb/aide/internal/config"
+	"github.com/liamb/aide/internal/csync"
+	"github.com/liamb/aide/internal/db"
+	"github.com/liamb/aide/internal/proto"
+	"github.com/liamb/aide/internal/skills"
+	"github.com/liamb/aide/internal/ui/util"
+	"github.com/liamb/aide/internal/version"
 	"github.com/google/uuid"
 )
 

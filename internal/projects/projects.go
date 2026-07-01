@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/liamb/opencode/aide/internal/config"
+	"github.com/liamb/aide/internal/config"
 )
 
 const projectsFileName = "projects.json"

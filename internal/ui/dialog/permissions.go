@@ -10,12 +10,12 @@ import (
 	"charm.land/bubbles/v2/viewport"
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
-	"github.com/liamb/opencode/aide/internal/agent/tools"
-	"github.com/liamb/opencode/aide/internal/fsext"
-	"github.com/liamb/opencode/aide/internal/permission"
-	"github.com/liamb/opencode/aide/internal/stringext"
-	"github.com/liamb/opencode/aide/internal/ui/common"
-	"github.com/liamb/opencode/aide/internal/ui/styles"
+	"github.com/liamb/aide/internal/agent/tools"
+	"github.com/liamb/aide/internal/fsext"
+	"github.com/liamb/aide/internal/permission"
+	"github.com/liamb/aide/internal/stringext"
+	"github.com/liamb/aide/internal/ui/common"
+	"github.com/liamb/aide/internal/ui/styles"
 	uv "github.com/charmbracelet/ultraviolet"
 )
 

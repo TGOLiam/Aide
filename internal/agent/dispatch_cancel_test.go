@@ -8,9 +8,9 @@ import (
 	"time"
 
 	"charm.land/fantasy"
-	"github.com/liamb/opencode/aide/internal/agent/notify"
-	"github.com/liamb/opencode/aide/internal/message"
-	"github.com/liamb/opencode/aide/internal/pubsub"
+	"github.com/liamb/aide/internal/agent/notify"
+	"github.com/liamb/aide/internal/message"
+	"github.com/liamb/aide/internal/pubsub"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

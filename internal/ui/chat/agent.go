@@ -7,10 +7,10 @@ import (
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
 	"charm.land/lipgloss/v2/tree"
-	"github.com/liamb/opencode/aide/internal/agent"
-	"github.com/liamb/opencode/aide/internal/message"
-	"github.com/liamb/opencode/aide/internal/ui/anim"
-	"github.com/liamb/opencode/aide/internal/ui/styles"
+	"github.com/liamb/aide/internal/agent"
+	"github.com/liamb/aide/internal/message"
+	"github.com/liamb/aide/internal/ui/anim"
+	"github.com/liamb/aide/internal/ui/styles"
 )
 
 // -----------------------------------------------------------------------------

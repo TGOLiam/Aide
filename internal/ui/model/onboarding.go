@@ -9,9 +9,9 @@ import (
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
 
-	"github.com/liamb/opencode/aide/internal/home"
-	"github.com/liamb/opencode/aide/internal/ui/common"
-	"github.com/liamb/opencode/aide/internal/ui/util"
+	"github.com/liamb/aide/internal/home"
+	"github.com/liamb/aide/internal/ui/common"
+	"github.com/liamb/aide/internal/ui/util"
 )
 
 // markProjectInitializedCmd marks the current project as initialized in the config.

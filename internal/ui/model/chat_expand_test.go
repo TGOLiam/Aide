@@ -3,8 +3,8 @@ package model
 import (
 	"testing"
 
-	"github.com/liamb/opencode/aide/internal/message"
-	"github.com/liamb/opencode/aide/internal/ui/chat"
+	"github.com/liamb/aide/internal/message"
+	"github.com/liamb/aide/internal/ui/chat"
 	"github.com/stretchr/testify/require"
 )
 

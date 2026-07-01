@@ -10,11 +10,11 @@ import (
 
 	"charm.land/catwalk/pkg/catwalk"
 	"charm.land/fantasy/providers/openaicompat"
-	"github.com/liamb/opencode/aide/internal/agent"
-	"github.com/liamb/opencode/aide/internal/config"
-	"github.com/liamb/opencode/aide/internal/message"
-	"github.com/liamb/opencode/aide/internal/permission"
-	"github.com/liamb/opencode/aide/internal/session"
+	"github.com/liamb/aide/internal/agent"
+	"github.com/liamb/aide/internal/config"
+	"github.com/liamb/aide/internal/message"
+	"github.com/liamb/aide/internal/permission"
+	"github.com/liamb/aide/internal/session"
 )
 
 // NewCoordinator builds a real agent.Coordinator through the production

@@ -6,7 +6,7 @@ import (
 	"fmt"
 
 	"charm.land/fantasy"
-	"github.com/liamb/opencode/aide/internal/session"
+	"github.com/liamb/aide/internal/session"
 )
 
 //go:embed todos.md

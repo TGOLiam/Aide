@@ -14,8 +14,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/liamb/opencode/aide/internal/config"
-	"github.com/liamb/opencode/aide/internal/db"
+	"github.com/liamb/aide/internal/config"
+	"github.com/liamb/aide/internal/db"
 	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
 )

@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/liamb/opencode/aide/internal/env"
+	"github.com/liamb/aide/internal/env"
 	"github.com/stretchr/testify/require"
 )
 

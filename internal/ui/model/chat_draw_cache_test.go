@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/liamb/opencode/aide/internal/ui/chat"
+	"github.com/liamb/aide/internal/ui/chat"
 	uv "github.com/charmbracelet/ultraviolet"
 	"github.com/charmbracelet/x/ansi"
 	"github.com/stretchr/testify/require"

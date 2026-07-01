@@ -12,9 +12,9 @@ import (
 
 	"charm.land/fantasy"
 	"charm.land/x/vcr"
-	"github.com/liamb/opencode/aide/internal/agent/tools"
-	"github.com/liamb/opencode/aide/internal/message"
-	"github.com/liamb/opencode/aide/internal/session"
+	"github.com/liamb/aide/internal/agent/tools"
+	"github.com/liamb/aide/internal/message"
+	"github.com/liamb/aide/internal/session"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 

@@ -3,8 +3,8 @@ package model
 import (
 	"testing"
 
-	"github.com/liamb/opencode/aide/internal/permission"
-	"github.com/liamb/opencode/aide/internal/ui/dialog"
+	"github.com/liamb/aide/internal/permission"
+	"github.com/liamb/aide/internal/ui/dialog"
 	"github.com/stretchr/testify/require"
 )
 

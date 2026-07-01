@@ -12,11 +12,11 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/liamb/opencode/aide/internal/config"
-	"github.com/liamb/opencode/aide/internal/filepathext"
-	"github.com/liamb/opencode/aide/internal/home"
-	"github.com/liamb/opencode/aide/internal/shell"
-	"github.com/liamb/opencode/aide/internal/skills"
+	"github.com/liamb/aide/internal/config"
+	"github.com/liamb/aide/internal/filepathext"
+	"github.com/liamb/aide/internal/home"
+	"github.com/liamb/aide/internal/shell"
+	"github.com/liamb/aide/internal/skills"
 )
 
 // Prompt represents a template-based prompt generator.

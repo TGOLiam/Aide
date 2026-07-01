@@ -6,8 +6,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/liamb/opencode/aide/internal/home"
-	"github.com/liamb/opencode/aide/internal/pubsub"
+	"github.com/liamb/aide/internal/home"
+	"github.com/liamb/aide/internal/pubsub"
 )
 
 // Manager owns per-workspace skill discovery state: the latest discovery

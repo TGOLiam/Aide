@@ -4,12 +4,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/liamb/opencode/aide/internal/config"
-	"github.com/liamb/opencode/aide/internal/message"
-	"github.com/liamb/opencode/aide/internal/ui/anim"
-	"github.com/liamb/opencode/aide/internal/ui/attachments"
-	"github.com/liamb/opencode/aide/internal/ui/list"
-	"github.com/liamb/opencode/aide/internal/ui/styles"
+	"github.com/liamb/aide/internal/config"
+	"github.com/liamb/aide/internal/message"
+	"github.com/liamb/aide/internal/ui/anim"
+	"github.com/liamb/aide/internal/ui/attachments"
+	"github.com/liamb/aide/internal/ui/list"
+	"github.com/liamb/aide/internal/ui/styles"
 	"github.com/stretchr/testify/require"
 )
 

@@ -6,9 +6,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/liamb/opencode/aide/internal/config"
-	"github.com/liamb/opencode/aide/internal/csync"
-	"github.com/liamb/opencode/aide/internal/env"
+	"github.com/liamb/aide/internal/config"
+	"github.com/liamb/aide/internal/csync"
+	"github.com/liamb/aide/internal/env"
 	"github.com/charmbracelet/x/powernap/pkg/lsp/protocol"
 	"github.com/stretchr/testify/require"
 )

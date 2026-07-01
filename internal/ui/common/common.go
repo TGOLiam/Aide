@@ -6,11 +6,11 @@ import (
 	"os"
 
 	tea "charm.land/bubbletea/v2"
-	"github.com/liamb/opencode/aide/internal/clipboard"
-	"github.com/liamb/opencode/aide/internal/config"
-	"github.com/liamb/opencode/aide/internal/ui/styles"
-	"github.com/liamb/opencode/aide/internal/ui/util"
-	"github.com/liamb/opencode/aide/internal/workspace"
+	"github.com/liamb/aide/internal/clipboard"
+	"github.com/liamb/aide/internal/config"
+	"github.com/liamb/aide/internal/ui/styles"
+	"github.com/liamb/aide/internal/ui/util"
+	"github.com/liamb/aide/internal/workspace"
 	uv "github.com/charmbracelet/ultraviolet"
 )
 

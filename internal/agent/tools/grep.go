@@ -20,9 +20,9 @@ import (
 	"time"
 
 	"charm.land/fantasy"
-	"github.com/liamb/opencode/aide/internal/config"
-	"github.com/liamb/opencode/aide/internal/csync"
-	"github.com/liamb/opencode/aide/internal/fsext"
+	"github.com/liamb/aide/internal/config"
+	"github.com/liamb/aide/internal/csync"
+	"github.com/liamb/aide/internal/fsext"
 )
 
 // regexCache provides thread-safe caching of compiled regex patterns

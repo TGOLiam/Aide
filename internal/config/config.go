@@ -13,8 +13,8 @@ import (
 	"time"
 
 	"charm.land/catwalk/pkg/catwalk"
-	"github.com/liamb/opencode/aide/internal/csync"
-	"github.com/liamb/opencode/aide/internal/oauth"
+	"github.com/liamb/aide/internal/csync"
+	"github.com/liamb/aide/internal/oauth"
 	"github.com/invopop/jsonschema"
 )
 

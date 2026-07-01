@@ -6,9 +6,9 @@ import (
 
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
-	"github.com/liamb/opencode/aide/internal/session"
-	"github.com/liamb/opencode/aide/internal/ui/chat"
-	"github.com/liamb/opencode/aide/internal/ui/styles"
+	"github.com/liamb/aide/internal/session"
+	"github.com/liamb/aide/internal/ui/chat"
+	"github.com/liamb/aide/internal/ui/styles"
 )
 
 // pillStyle returns the appropriate style for a pill based on focus state.

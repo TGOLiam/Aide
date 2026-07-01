@@ -5,10 +5,10 @@ import (
 	"strings"
 
 	"charm.land/lipgloss/v2"
-	"github.com/liamb/opencode/aide/internal/agent/tools/mcp"
-	"github.com/liamb/opencode/aide/internal/config"
-	"github.com/liamb/opencode/aide/internal/ui/common"
-	"github.com/liamb/opencode/aide/internal/ui/styles"
+	"github.com/liamb/aide/internal/agent/tools/mcp"
+	"github.com/liamb/aide/internal/config"
+	"github.com/liamb/aide/internal/ui/common"
+	"github.com/liamb/aide/internal/ui/styles"
 )
 
 // mcpInfo renders the MCP status section showing active MCP clients and their

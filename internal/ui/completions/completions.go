@@ -10,9 +10,9 @@ import (
 	"charm.land/bubbles/v2/key"
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
-	"github.com/liamb/opencode/aide/internal/agent/tools/mcp"
-	"github.com/liamb/opencode/aide/internal/fsext"
-	"github.com/liamb/opencode/aide/internal/ui/list"
+	"github.com/liamb/aide/internal/agent/tools/mcp"
+	"github.com/liamb/aide/internal/fsext"
+	"github.com/liamb/aide/internal/ui/list"
 	"github.com/charmbracelet/x/ansi"
 	"github.com/charmbracelet/x/exp/ordered"
 )

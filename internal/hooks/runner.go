@@ -9,8 +9,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/liamb/opencode/aide/internal/config"
-	"github.com/liamb/opencode/aide/internal/shell"
+	"github.com/liamb/aide/internal/config"
+	"github.com/liamb/aide/internal/shell"
 )
 
 // abandonGrace is how long runOne waits after ctx cancellation for the

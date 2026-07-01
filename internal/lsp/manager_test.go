@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/liamb/opencode/aide/internal/csync"
+	"github.com/liamb/aide/internal/csync"
 	"github.com/stretchr/testify/require"
 )
 

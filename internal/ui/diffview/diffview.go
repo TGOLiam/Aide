@@ -10,8 +10,8 @@ import (
 	"github.com/alecthomas/chroma/v2"
 	"github.com/alecthomas/chroma/v2/lexers"
 	"github.com/aymanbagabas/go-udiff"
-	"github.com/liamb/opencode/aide/internal/ansiext"
-	"github.com/liamb/opencode/aide/internal/ui/xchroma"
+	"github.com/liamb/aide/internal/ansiext"
+	"github.com/liamb/aide/internal/ui/xchroma"
 	"github.com/charmbracelet/x/ansi"
 	"github.com/zeebo/xxh3"
 )

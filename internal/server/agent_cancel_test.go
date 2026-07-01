@@ -12,11 +12,11 @@ import (
 	"time"
 
 	"charm.land/fantasy"
-	"github.com/liamb/opencode/aide/internal/agent"
-	"github.com/liamb/opencode/aide/internal/app"
-	"github.com/liamb/opencode/aide/internal/backend"
-	"github.com/liamb/opencode/aide/internal/message"
-	"github.com/liamb/opencode/aide/internal/proto"
+	"github.com/liamb/aide/internal/agent"
+	"github.com/liamb/aide/internal/app"
+	"github.com/liamb/aide/internal/backend"
+	"github.com/liamb/aide/internal/message"
+	"github.com/liamb/aide/internal/proto"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 )

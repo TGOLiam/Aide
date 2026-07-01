@@ -12,7 +12,7 @@ import (
 
 	"charm.land/log/v2"
 	"github.com/charmbracelet/colorprofile"
-	"github.com/liamb/opencode/aide/internal/config"
+	"github.com/liamb/aide/internal/config"
 	"github.com/charmbracelet/x/term"
 	"github.com/nxadm/tail"
 	"github.com/spf13/cobra"

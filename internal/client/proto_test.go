@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/liamb/opencode/aide/internal/proto"
-	"github.com/liamb/opencode/aide/internal/pubsub"
+	"github.com/liamb/aide/internal/proto"
+	"github.com/liamb/aide/internal/pubsub"
 	"github.com/stretchr/testify/require"
 )
 

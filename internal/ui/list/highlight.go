@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"charm.land/lipgloss/v2"
-	"github.com/liamb/opencode/aide/internal/stringext"
+	"github.com/liamb/aide/internal/stringext"
 	uv "github.com/charmbracelet/ultraviolet"
 )
 

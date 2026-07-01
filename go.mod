@@ -1,4 +1,4 @@
-module github.com/liamb/opencode/aide
+module github.com/liamb/aide
 
 go 1.26.4
 

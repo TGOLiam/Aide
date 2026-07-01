@@ -12,9 +12,9 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/liamb/opencode/aide/internal/config"
-	"github.com/liamb/opencode/aide/internal/proto"
-	"github.com/liamb/opencode/aide/internal/server"
+	"github.com/liamb/aide/internal/config"
+	"github.com/liamb/aide/internal/proto"
+	"github.com/liamb/aide/internal/server"
 	"github.com/google/uuid"
 )
 

@@ -10,9 +10,9 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/liamb/opencode/aide/internal/config"
-	crushlog "github.com/liamb/opencode/aide/internal/log"
-	"github.com/liamb/opencode/aide/internal/server"
+	"github.com/liamb/aide/internal/config"
+	crushlog "github.com/liamb/aide/internal/log"
+	"github.com/liamb/aide/internal/server"
 	"github.com/charmbracelet/x/term"
 	"github.com/spf13/cobra"
 )

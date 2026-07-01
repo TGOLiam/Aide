@@ -8,15 +8,15 @@ import (
 
 	tea "charm.land/bubbletea/v2"
 	"charm.land/catwalk/pkg/catwalk"
-	"github.com/liamb/opencode/aide/internal/commands"
-	"github.com/liamb/opencode/aide/internal/config"
-	"github.com/liamb/opencode/aide/internal/message"
-	"github.com/liamb/opencode/aide/internal/oauth"
-	"github.com/liamb/opencode/aide/internal/permission"
-	"github.com/liamb/opencode/aide/internal/session"
-	"github.com/liamb/opencode/aide/internal/skills"
-	"github.com/liamb/opencode/aide/internal/ui/common"
-	"github.com/liamb/opencode/aide/internal/ui/util"
+	"github.com/liamb/aide/internal/commands"
+	"github.com/liamb/aide/internal/config"
+	"github.com/liamb/aide/internal/message"
+	"github.com/liamb/aide/internal/oauth"
+	"github.com/liamb/aide/internal/permission"
+	"github.com/liamb/aide/internal/session"
+	"github.com/liamb/aide/internal/skills"
+	"github.com/liamb/aide/internal/ui/common"
+	"github.com/liamb/aide/internal/ui/util"
 )
 
 // ActionClose is a message to close the current dialog.

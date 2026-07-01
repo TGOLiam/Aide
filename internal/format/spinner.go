@@ -7,7 +7,7 @@ import (
 	"os"
 
 	tea "charm.land/bubbletea/v2"
-	"github.com/liamb/opencode/aide/internal/ui/anim"
+	"github.com/liamb/aide/internal/ui/anim"
 	"github.com/charmbracelet/x/ansi"
 )
 

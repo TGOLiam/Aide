@@ -7,9 +7,9 @@ import (
 
 	"charm.land/fantasy"
 
-	"github.com/liamb/opencode/aide/internal/agent/prompt"
-	"github.com/liamb/opencode/aide/internal/agent/tools"
-	"github.com/liamb/opencode/aide/internal/config"
+	"github.com/liamb/aide/internal/agent/prompt"
+	"github.com/liamb/aide/internal/agent/tools"
+	"github.com/liamb/aide/internal/config"
 )
 
 //go:embed templates/agent_tool.md

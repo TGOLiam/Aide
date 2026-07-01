@@ -9,7 +9,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/liamb/opencode/aide/internal/log"
+	"github.com/liamb/aide/internal/log"
 )
 
 var getRg = sync.OnceValue(func() string {

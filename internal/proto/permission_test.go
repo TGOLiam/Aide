@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/liamb/opencode/aide/internal/agent/tools"
-	"github.com/liamb/opencode/aide/internal/proto"
+	"github.com/liamb/aide/internal/agent/tools"
+	"github.com/liamb/aide/internal/proto"
 	"github.com/stretchr/testify/require"
 )
 

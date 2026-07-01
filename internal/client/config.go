@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/liamb/opencode/aide/internal/config"
-	"github.com/liamb/opencode/aide/internal/oauth"
-	"github.com/liamb/opencode/aide/internal/proto"
+	"github.com/liamb/aide/internal/config"
+	"github.com/liamb/aide/internal/oauth"
+	"github.com/liamb/aide/internal/proto"
 )
 
 // SetConfigField sets a config key/value pair on the server.

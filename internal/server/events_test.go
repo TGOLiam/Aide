@@ -5,11 +5,11 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/liamb/opencode/aide/internal/agent/notify"
-	"github.com/liamb/opencode/aide/internal/message"
-	"github.com/liamb/opencode/aide/internal/proto"
-	"github.com/liamb/opencode/aide/internal/pubsub"
-	"github.com/liamb/opencode/aide/internal/skills"
+	"github.com/liamb/aide/internal/agent/notify"
+	"github.com/liamb/aide/internal/message"
+	"github.com/liamb/aide/internal/proto"
+	"github.com/liamb/aide/internal/pubsub"
+	"github.com/liamb/aide/internal/skills"
 	"github.com/stretchr/testify/require"
 )
 

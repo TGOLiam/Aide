@@ -1,8 +1,8 @@
 package backend
 
 import (
-	"github.com/liamb/opencode/aide/internal/permission"
-	"github.com/liamb/opencode/aide/internal/proto"
+	"github.com/liamb/aide/internal/permission"
+	"github.com/liamb/aide/internal/proto"
 )
 
 // GrantPermission grants, denies, or persistently grants a permission

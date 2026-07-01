@@ -14,7 +14,7 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/liamb/opencode/aide/internal/filepathext"
+	"github.com/liamb/aide/internal/filepathext"
 	"mvdan.cc/sh/v3/expand"
 	"mvdan.cc/sh/v3/interp"
 	"mvdan.cc/sh/v3/syntax"

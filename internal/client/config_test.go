@@ -9,9 +9,9 @@ import (
 	"net/url"
 	"testing"
 
-	"github.com/liamb/opencode/aide/internal/config"
-	"github.com/liamb/opencode/aide/internal/oauth"
-	"github.com/liamb/opencode/aide/internal/proto"
+	"github.com/liamb/aide/internal/config"
+	"github.com/liamb/aide/internal/oauth"
+	"github.com/liamb/aide/internal/proto"
 	"github.com/stretchr/testify/require"
 )
 

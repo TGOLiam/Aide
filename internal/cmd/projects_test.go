@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/liamb/opencode/aide/internal/projects"
+	"github.com/liamb/aide/internal/projects"
 	"github.com/stretchr/testify/require"
 )
 

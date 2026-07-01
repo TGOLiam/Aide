@@ -14,8 +14,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/liamb/opencode/aide/internal/csync"
-	"github.com/liamb/opencode/aide/internal/proto"
+	"github.com/liamb/aide/internal/csync"
+	"github.com/liamb/aide/internal/proto"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 )

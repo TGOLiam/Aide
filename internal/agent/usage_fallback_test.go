@@ -6,8 +6,8 @@ import (
 
 	"charm.land/catwalk/pkg/catwalk"
 	"charm.land/fantasy"
-	"github.com/liamb/opencode/aide/internal/message"
-	"github.com/liamb/opencode/aide/internal/session"
+	"github.com/liamb/aide/internal/message"
+	"github.com/liamb/aide/internal/session"
 	"github.com/stretchr/testify/require"
 )
 

@@ -5,14 +5,14 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/liamb/opencode/aide/internal/agent"
-	mcptools "github.com/liamb/opencode/aide/internal/agent/tools/mcp"
-	"github.com/liamb/opencode/aide/internal/commands"
-	"github.com/liamb/opencode/aide/internal/config"
-	"github.com/liamb/opencode/aide/internal/oauth"
-	"github.com/liamb/opencode/aide/internal/proto"
-	"github.com/liamb/opencode/aide/internal/pubsub"
-	"github.com/liamb/opencode/aide/internal/skills"
+	"github.com/liamb/aide/internal/agent"
+	mcptools "github.com/liamb/aide/internal/agent/tools/mcp"
+	"github.com/liamb/aide/internal/commands"
+	"github.com/liamb/aide/internal/config"
+	"github.com/liamb/aide/internal/oauth"
+	"github.com/liamb/aide/internal/proto"
+	"github.com/liamb/aide/internal/pubsub"
+	"github.com/liamb/aide/internal/skills"
 )
 
 // publishConfigChanged publishes a ConfigChanged event on the workspace's

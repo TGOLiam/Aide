@@ -5,13 +5,13 @@ import (
 	"errors"
 	"os"
 
-	"github.com/liamb/opencode/aide/internal/agent"
-	"github.com/liamb/opencode/aide/internal/agent/notify"
-	"github.com/liamb/opencode/aide/internal/config"
-	"github.com/liamb/opencode/aide/internal/message"
-	"github.com/liamb/opencode/aide/internal/proto"
-	"github.com/liamb/opencode/aide/internal/pubsub"
-	"github.com/liamb/opencode/aide/internal/shell"
+	"github.com/liamb/aide/internal/agent"
+	"github.com/liamb/aide/internal/agent/notify"
+	"github.com/liamb/aide/internal/config"
+	"github.com/liamb/aide/internal/message"
+	"github.com/liamb/aide/internal/proto"
+	"github.com/liamb/aide/internal/pubsub"
+	"github.com/liamb/aide/internal/shell"
 )
 
 // SendMessage validates and accepts a prompt for the workspace's agent,

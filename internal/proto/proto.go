@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"charm.land/catwalk/pkg/catwalk"
-	"github.com/liamb/opencode/aide/internal/config"
-	"github.com/liamb/opencode/aide/internal/lsp"
+	"github.com/liamb/aide/internal/config"
+	"github.com/liamb/aide/internal/lsp"
 )
 
 // Workspace represents a running app.App workspace with its associated

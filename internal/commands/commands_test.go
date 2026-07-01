@@ -6,7 +6,7 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/liamb/opencode/aide/internal/skills"
+	"github.com/liamb/aide/internal/skills"
 	"github.com/stretchr/testify/require"
 )
 

@@ -6,10 +6,10 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/liamb/opencode/aide/internal/agent/tools"
-	"github.com/liamb/opencode/aide/internal/message"
-	"github.com/liamb/opencode/aide/internal/session"
-	"github.com/liamb/opencode/aide/internal/ui/styles"
+	"github.com/liamb/aide/internal/agent/tools"
+	"github.com/liamb/aide/internal/message"
+	"github.com/liamb/aide/internal/session"
+	"github.com/liamb/aide/internal/ui/styles"
 	"github.com/charmbracelet/x/ansi"
 )
 

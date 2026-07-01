@@ -3,9 +3,9 @@ package backend
 import (
 	"context"
 
-	"github.com/liamb/opencode/aide/internal/message"
-	"github.com/liamb/opencode/aide/internal/proto"
-	"github.com/liamb/opencode/aide/internal/session"
+	"github.com/liamb/aide/internal/message"
+	"github.com/liamb/aide/internal/proto"
+	"github.com/liamb/aide/internal/session"
 )
 
 // CreateSession creates a new session in the given workspace.

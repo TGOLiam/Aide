@@ -10,13 +10,13 @@ import (
 
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
-	"github.com/liamb/opencode/aide/internal/diff"
-	"github.com/liamb/opencode/aide/internal/fsext"
-	"github.com/liamb/opencode/aide/internal/history"
-	"github.com/liamb/opencode/aide/internal/session"
-	"github.com/liamb/opencode/aide/internal/ui/common"
-	"github.com/liamb/opencode/aide/internal/ui/styles"
-	"github.com/liamb/opencode/aide/internal/ui/util"
+	"github.com/liamb/aide/internal/diff"
+	"github.com/liamb/aide/internal/fsext"
+	"github.com/liamb/aide/internal/history"
+	"github.com/liamb/aide/internal/session"
+	"github.com/liamb/aide/internal/ui/common"
+	"github.com/liamb/aide/internal/ui/styles"
+	"github.com/liamb/aide/internal/ui/util"
 	"github.com/charmbracelet/x/ansi"
 )
 

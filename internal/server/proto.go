@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/liamb/opencode/aide/internal/backend"
-	"github.com/liamb/opencode/aide/internal/proto"
-	"github.com/liamb/opencode/aide/internal/session"
+	"github.com/liamb/aide/internal/backend"
+	"github.com/liamb/aide/internal/proto"
+	"github.com/liamb/aide/internal/session"
 	"github.com/google/uuid"
 )
 

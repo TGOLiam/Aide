@@ -6,7 +6,7 @@ import (
 	"fmt"
 
 	"charm.land/fantasy"
-	"github.com/liamb/opencode/aide/internal/shell"
+	"github.com/liamb/aide/internal/shell"
 )
 
 const (

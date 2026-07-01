@@ -9,10 +9,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/liamb/opencode/aide/internal/agent/tools/mcp"
-	"github.com/liamb/opencode/aide/internal/config"
-	"github.com/liamb/opencode/aide/internal/home"
-	"github.com/liamb/opencode/aide/internal/skills"
+	"github.com/liamb/aide/internal/agent/tools/mcp"
+	"github.com/liamb/aide/internal/config"
+	"github.com/liamb/aide/internal/home"
+	"github.com/liamb/aide/internal/skills"
 )
 
 var namedArgPattern = regexp.MustCompile(`\$([A-Z][A-Z0-9_]*)`)

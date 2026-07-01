@@ -12,7 +12,7 @@ import (
 	"charm.land/glamour/v2/ansi"
 	"charm.land/lipgloss/v2"
 	"github.com/charmbracelet/x/exp/charmtone"
-	"github.com/liamb/opencode/aide/internal/ui/diffview"
+	"github.com/liamb/aide/internal/ui/diffview"
 )
 
 // rgba converts hex color strings to RGBA color values.
