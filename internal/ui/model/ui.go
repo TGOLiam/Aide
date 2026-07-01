@@ -3190,24 +3190,28 @@ func (m *UI) setEditorPrompt(yolo bool) {
 func (m *UI) normalPromptFunc(info textarea.PromptInfo) string {
 	t := m.com.Styles
 	if info.LineNumber == 0 {
+		firstLinePrompt := t.Editor.PromptNormalFocused.Render()
+		if !info.Focused {
+			firstLinePrompt = t.Editor.PromptNormalBlurred.Render()
+		}
 		if info.Focused {
 			if m.textarea.Value() == "" {
 				hasWorkspace := m.com != nil && m.com.Workspace != nil
 				hintStyle := t.Editor.Textarea.Focused.Placeholder
 				if m.bangMode {
-					return "  > " + hintStyle.Render("Run a shell command")
+					return firstLinePrompt + hintStyle.Render("Run a shell command")
 				}
 				if hasWorkspace && m.com.Workspace.PermissionSkipRequests() {
-					return "  > " + hintStyle.Render("Yolo mode!")
+					return firstLinePrompt + hintStyle.Render("Yolo mode!")
 				}
 				if hasWorkspace && m.isAgentBusy() {
-					return "  > " + hintStyle.Render(m.workingPlaceholder)
+					return firstLinePrompt + hintStyle.Render(m.workingPlaceholder)
 				}
-				return "  > " + hintStyle.Render(m.readyPlaceholder)
+				return firstLinePrompt + hintStyle.Render(m.readyPlaceholder)
 			}
-			return "  > "
+			return firstLinePrompt
 		}
-		return "::: "
+		return firstLinePrompt
 	}
 	if info.Focused {
 		return t.Editor.PromptNormalFocused.Render()
