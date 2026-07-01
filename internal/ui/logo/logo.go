@@ -1,10 +1,9 @@
-// Package logo renders a Crush wordmark in a stylized way.
+// Package logo renders an Aide wordmark in a stylized way.
 package logo
 
 import (
 	"fmt"
 	"image/color"
-	"math/rand/v2"
 	"strings"
 
 	"charm.land/lipgloss/v2"
@@ -13,156 +12,97 @@ import (
 )
 
 // letterform represents a letterform. It can be stretched horizontally by
-// a given amount via the boolean argument.
+// a given amount via the boolean argument. Kept for compatibility with
+// letterforms.go.
 type letterform func(bool) string
 
 const diag = `╱`
 
-// Opts are the options for rendering the Crush title art.
+// Opts are the options for rendering the Aide title art.
 type Opts struct {
-	FieldColor   color.Color // diagonal lines
-	TitleColorA  color.Color // left gradient ramp point
-	TitleColorB  color.Color // right gradient ramp point
-	CharmColor   color.Color // Charm™ text color
+	FieldColor   color.Color // diagonal lines (diagonal fill)
+	TitleColorA  color.Color // ">_" prompt color (orange)
+	TitleColorB  color.Color // "AIDE" wordmark color
+	CharmColor   color.Color // Charm™ text color (unused in new design)
 	VersionColor color.Color // version text color
 	Width        int         // width of the rendered logo, used for truncation
-	Hyper        bool        // whether it is Crush or Hypercrush
+	Hyper        bool        // whether it is Aide or Hyperaide
 
-	// When true, stretch a random letterform on each render. Has no effect in
-	// compact mode. Mainly for testing. In production you will want to cache
-	// the stretched letterform to keep the logo from jittering on resize.
 	Unstable bool
 }
 
-// Render renders the Crush logo. Set the argument to true to render the narrow
-// version, intended for use in a sidebar.
+// Render renders the Aide logo.
 //
-// The compact argument determines whether it renders compact for the sidebar
-// or wider for the main pane.
+// When compact=true, returns a 3-line sidebar logo block:
+//
+//	╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱
+//	>_ AIDE
+//	╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱
+//
+// When compact=false, returns a wide version with diagonal side fields.
 func Render(base lipgloss.Style, version string, compact bool, o Opts) string {
-	charm := "Charm™"
-	if !o.Hyper {
-		charm = " " + charm
-	}
-
 	fg := func(c color.Color, s string) string {
 		return lipgloss.NewStyle().Foreground(c).Render(s)
 	}
 
-	// Title.
-	const spacing = 1
-	var hyperLetterforms []letterform
+	name := "AIDE"
 	if o.Hyper {
-		hyperLetterforms = []letterform{
-			LetterH,
-			LetterYAlt,
-			LetterP,
-			LetterE,
-			LetterR,
-		}
-	}
-	crushLetterforms := []letterform{
-		LetterC,
-		LetterR,
-		LetterU,
-		LetterSAlt,
-		LetterH,
-	}
-	if o.Hyper && !compact {
-		crushLetterforms = append(hyperLetterforms, crushLetterforms...)
+		name = "HYPERAIDE"
 	}
 
-	stretchIndex := -1 // -1 means no stretching.
-	if !compact && !o.Unstable {
-		// Always stretch the same letterform, which is picked once at random.
-		stretchIndex = cachedRandN(len(crushLetterforms))
-	} else if !compact && o.Unstable {
-		// Stretch a random letterform on every render.
-		stretchIndex = rand.IntN(len(crushLetterforms))
-	}
-	aide := renderWord(spacing, stretchIndex, crushLetterforms...)
-	if o.Hyper && compact {
-		aide = renderWord(spacing, stretchIndex, hyperLetterforms...) + "\n" + aide
-	}
-	crushWidth := lipgloss.Width(aide)
-	b := new(strings.Builder)
-	for r := range strings.SplitSeq(aide, "\n") {
-		fmt.Fprintln(b, styles.ApplyForegroundGrad(base, r, o.TitleColorA, o.TitleColorB))
-	}
-	aide = b.String()
+	prompt := fg(o.TitleColorA, ">_ ")
+	wordmark := fg(o.TitleColorB, name)
 
-	// Charm and version.
-	metaRowGap := 1
-	maxVersionWidth := crushWidth - lipgloss.Width(charm) - metaRowGap
-	version = ansi.Truncate(version, maxVersionWidth, "…") // truncate version if too long.
-	if o.Hyper && compact {
-		version += " "
-	}
-	gap := max(0, crushWidth-lipgloss.Width(charm)-lipgloss.Width(version))
-	metaRow := fg(o.CharmColor, charm) + strings.Repeat(" ", gap) + fg(o.VersionColor, version)
-
-	// Join the meta row and big Crush title.
-	aide = strings.TrimSpace(metaRow + "\n" + aide)
-
-	// Narrow version. If this is Hypercrush, this is also a stacked version.
 	if compact {
-		field := fg(o.FieldColor, strings.Repeat(diag, crushWidth))
-		return strings.Join([]string{field, field, aide, field, ""}, "\n")
+		return prompt + wordmark
 	}
 
-	fieldHeight := lipgloss.Height(aide)
+	// Wide version with diagonal side fields.
+	content := prompt + wordmark
+	versionStr := ""
+	if version != "" {
+		versionStr = "  " + fg(o.VersionColor, "v"+version)
+	}
+	metaRow := content + versionStr
 
-	// Left field.
+	metaWidth := lipgloss.Width(metaRow)
+
+	// Left field
 	const leftWidth = 6
 	leftFieldRow := fg(o.FieldColor, strings.Repeat(diag, leftWidth))
-	leftField := new(strings.Builder)
-	for range fieldHeight {
-		fmt.Fprintln(leftField, leftFieldRow)
-	}
 
-	// Right field.
-	rightWidth := max(15, o.Width-crushWidth-leftWidth-2) // 2 for the gap.
-	const stepDownAt = 0
-	rightField := new(strings.Builder)
-	for i := range fieldHeight {
-		width := rightWidth
-		if i >= stepDownAt {
-			width = rightWidth - (i - stepDownAt)
-		}
-		fmt.Fprint(rightField, fg(o.FieldColor, strings.Repeat(diag, width)), "\n")
-	}
+	// Right field - diagonal fill
+	rightWidth := max(15, o.Width-leftWidth-metaWidth-4)
+	rightFieldRow := fg(o.FieldColor, strings.Repeat(diag, rightWidth))
 
-	// Return the wide version.
-	const hGap = " "
-	logo := lipgloss.JoinHorizontal(lipgloss.Top, leftField.String(), hGap, aide, hGap, rightField.String())
+	logo := lipgloss.JoinHorizontal(lipgloss.Top, leftFieldRow, "  ", metaRow, "  ", rightFieldRow)
+
 	if o.Width > 0 {
-		// Truncate the logo to the specified width.
-		lines := strings.Split(logo, "\n")
-		for i, line := range lines {
-			lines[i] = ansi.Truncate(line, o.Width, "")
-		}
-		logo = strings.Join(lines, "\n")
+		logo = ansi.Truncate(logo, o.Width, "")
 	}
 	return logo
 }
 
-// SmallRender renders a smaller version of the Crush logo, suitable for
-// smaller windows or sidebar usage.
+// SmallRender renders a small inline version of the Aide logo: ">_ aide"
+// with diagonal fill to the right, suitable for sidebar header or topbar.
 func SmallRender(t *styles.Styles, width int, o Opts) string {
-	name := "Crush"
-	if o.Hyper {
-		name = "HYPERCRUSH"
-	}
-	charm := "Charm™"
-	if !o.Hyper {
-		charm = " " + charm
-	}
-	title := t.Logo.SmallCharm.Render(charm)
-	title = fmt.Sprintf("%s %s", title, styles.ApplyBoldForegroundGrad(t.Logo.GradCanvas, name, t.Logo.SmallGradFromColor, t.Logo.SmallGradToColor))
-	remainingWidth := width - lipgloss.Width(title) - 1 // 1 for the space after the name
+	title := lipgloss.NewStyle().Foreground(o.TitleColorA).Render(">_ ")
+	title += styles.ApplyBoldForegroundGrad(t.Logo.GradCanvas, "AIDE", t.Logo.SmallGradFromColor, t.Logo.SmallGradToColor)
+	remainingWidth := width - lipgloss.Width(title) - 1
 	if remainingWidth > 0 {
 		lines := strings.Repeat("╱", remainingWidth)
 		title = fmt.Sprintf("%s %s", title, t.Logo.SmallDiagonals.Render(lines))
 	}
 	return title
+}
+
+// LogoBlock returns a centered logo suitable for the sidebar logo area.
+func LogoBlock(t *styles.Styles, width int) string {
+	prompt := lipgloss.NewStyle().Foreground(t.Logo.TitleColorA).Render(">_ ")
+	name := styles.ApplyBoldForegroundGrad(t.Logo.GradCanvas, "AIDE", t.Logo.TitleColorA, t.Logo.TitleColorB)
+	line := prompt + name
+	lineWidth := lipgloss.Width(line)
+	leftPad := max(0, (width-lineWidth)/2)
+	padding := strings.Repeat(" ", leftPad)
+	return padding + line
 }

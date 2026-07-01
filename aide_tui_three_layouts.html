@@ -1,0 +1,181 @@
+
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.w{font-family:'JetBrains Mono',monospace;font-size:10.5px;line-height:1.55;color:#9a9a94}
+.lbl{color:#484840;font-size:9.5px;margin-bottom:5px;margin-top:14px;letter-spacing:.5px}
+.lbl:first-child{margin-top:0}
+.term{background:#0c0e0d;border:1px solid #1a1a18;border-radius:6px;overflow:hidden}
+.row{display:flex}
+.col{display:flex;flex-direction:column}
+.chat{flex:1;min-width:0;border-right:1px solid #1a1a18}
+.sb{width:178px;flex-shrink:0}
+.topbar{background:#090b0a;border-bottom:1px solid #1e1208;padding:4px 10px;font-size:10px;display:flex;align-items:center;gap:5px;flex-shrink:0;overflow:hidden;white-space:nowrap}
+.inputbar{border-top:1px solid #1a1a18;padding:5px 10px;color:#383832;font-size:10px;flex-shrink:0}
+.kbbar{background:#090b0a;border-top:1px solid #1a1208;padding:3px 10px;color:#383832;font-size:9.5px;flex-shrink:0;white-space:nowrap;overflow:hidden}
+.kbgrid{background:#090b0a;border-top:1px solid #1a1208;padding:5px 10px;color:#383832;font-size:9px;display:grid;grid-template-columns:auto 1fr auto 1fr auto 1fr;gap:1px 10px;flex-shrink:0}
+.body{padding:10px 12px;overflow:hidden;flex:1}
+.li{padding-left:10px}
+.logo-blk{border-bottom:1px solid #1a1a18;flex-shrink:0;overflow:hidden;background:#090b0a;display:flex;align-items:center;justify-content:center}
+.si{padding:7px 8px;flex:1;overflow:hidden}
+.si-hdr{background:#090b0a;border-bottom:1px solid #1e1208;padding:4px 8px;font-size:10px;flex-shrink:0;overflow:hidden}
+.sec{color:#282826;font-size:8.5px;margin-top:6px;margin-bottom:2px;letter-spacing:.5px}
+.sec:first-child{margin-top:0}
+b{font-weight:500;color:#ccccc4}
+.o{color:#c85f1e}
+.m{color:#555}
+.d{color:#333330}
+.g{color:#5aaa6a}
+.r{color:#b85858}
+.y{color:#b87820}
+.gr{color:#383832}
+.pn{color:#c85f1e;font-size:9.5px}
+.ps{color:#404040;font-size:8.5px}
+.fi{font-size:8.5px;color:#444440}
+.pt{color:#585852;font-size:9px}
+</style>
+
+<div class="w">
+
+<!-- LAYOUT 1 -->
+<div class="lbl">LAYOUT 1 — FULL CHAT · SIDEBAR WITH LOGO BLOCK</div>
+<div class="term"><div class="row" style="height:300px">
+  <div class="chat col">
+    <div class="body">
+      <div>via &nbsp;<span class="o">fantasy</span>&nbsp; library</div>
+      <div class="li">• <b>Session-based:</b> <span class="m">Persistent conversations in SQLite</span></div>
+      <div class="li">• <b>Tool system:</b> <span class="m">Each tool is a</span> <span class="o">fantasy.Tool</span></div>
+      <div class="li">• <b>Permissions:</b> <span class="m">Per-tool approval dialogs, yolo mode</span></div>
+      <div class="li">• <b>Hooks:</b> <span class="m">Pre/post execution hooks</span></div>
+      <br>
+      <div><b>## What's Still "Crush" vs "Aide"</b></div>
+      <br>
+      <div class="m">The rebrand is ~95% done:</div>
+      <br>
+      <div class="li"><span class="g">✅</span> Binary name: <span class="o">aide</span></div>
+      <div class="li"><span class="g">✅</span> Config paths: <span class="o">~/.config/aide/</span></div>
+      <div class="li"><span class="g">✅</span> Logo wordmark: <span class="o">&gt;_ aide</span> <span class="m">now renders in TUI</span></div>
+      <div class="li"><span class="y">⚠</span>  Config refs <span class="o">Crush.md</span> <span class="m">(backwards-compat)</span></div>
+    </div>
+    <div class="inputbar"><span class="m">[Plan]</span><br><span class="o">&gt;</span> Ready...</div>
+    <div class="kbbar"><span class="o">tab</span> focus chat &nbsp;·&nbsp; <span class="o">/</span> or <span class="o">ctrl+p</span> commands &nbsp;·&nbsp; <span class="o">ctrl+l</span> models &nbsp;·&nbsp; <span class="o">ctrl+c</span> quit</div>
+  </div>
+  <div class="sb col">
+    <div class="logo-blk" style="height:108px">
+      <svg width="178" height="108" viewBox="0 0 178 108" style="display:block">
+        <rect width="178" height="108" fill="#090b0a"/>
+        <text x="20" y="68" font-family="JetBrains Mono,monospace" font-size="20" font-weight="500" fill="#c85f1e">&gt;_</text>
+        <text x="58" y="68" font-family="Arial,sans-serif" font-size="28" font-weight="700" fill="#deded6" letter-spacing="2">AIDE</text>
+      </svg>
+    </div>
+    <div class="si">
+      <div class="pt">~/Projects/tools/Aide</div>
+      <div class="sec">PROVIDER</div>
+      <div class="pn">◇ DeepSeek-V4-Flash</div>
+      <div class="ps">via DeepSeek · Reasoning High</div>
+      <div class="ps">13% (139.4K) $0.05</div>
+      <div class="sec">MODIFIED FILES</div>
+      <div class="fi">~/s/tracker_test.go <span class="g">+1</span> <span class="r">-1</span></div>
+      <div class="fi">~/c/provider.go <span class="g">+1</span> <span class="r">-1</span></div>
+      <div class="fi">~/c/root.go <span class="g">+1</span> <span class="r">-1</span></div>
+      <div class="fi gr">…and 3 more</div>
+      <div class="sec">LSPS</div><div class="d" style="font-size:8.5px">None</div>
+      <div class="sec">MCPS</div><div class="d" style="font-size:8.5px">None</div>
+    </div>
+  </div>
+</div></div>
+
+<!-- LAYOUT 2 -->
+<div class="lbl">LAYOUT 2 — FULL CHAT · CONDENSED SIDEBAR, INLINE LOGO</div>
+<div class="term"><div class="row" style="height:278px">
+
+  <div class="chat col">
+    <div class="body">
+      <div>via &nbsp;<span class="o">fantasy</span>&nbsp; library</div>
+      <div class="li">• <b>Session-based:</b> <span class="m">Persistent conversations in SQLite</span></div>
+      <div class="li">• <b>Tool system:</b> <span class="m">Each tool is a</span> <span class="o">fantasy.Tool</span></div>
+      <div class="li">• <b>Permissions:</b> <span class="m">Per-tool approval dialogs, yolo mode</span></div>
+      <div class="li">• <b>Hooks:</b> <span class="m">Pre/post execution hooks</span></div>
+      <br>
+      <div class="m">The rebrand is ~95% done:</div>
+      <br>
+      <div class="li"><span class="g">✅</span> Binary name: <span class="o">aide</span></div>
+      <div class="li"><span class="g">✅</span> Logo wordmark: <span class="o">&gt;_ aide</span> <span class="m">renders in TUI</span></div>
+      <div class="li"><span class="g">✅</span> Import paths: <span class="o">github.com/liamb/aide</span></div>
+    </div>
+    <div class="inputbar"><span class="m">[Plan]</span><br><span class="o">&gt;</span> Ready...</div>
+    <div class="kbgrid">
+      <span class="o">tab</span><span>focus chat</span><span class="o">ctrl+j</span><span>newline</span><span class="o">ctrl+g</span><span>less</span>
+      <span class="o">/ ctrl+p</span><span>commands</span><span class="o">@</span><span>mention file</span><span class="o">ctrl+c</span><span>quit</span>
+      <span class="o">ctrl+l</span><span>models</span><span class="o">ctrl+o</span><span>open editor</span><span></span><span></span>
+    </div>
+  </div>
+
+  <div class="sb col">
+    <div class="si-hdr"><span class="o">&gt;_ aide</span> <span class="d">///////////</span></div>
+    <div class="si">
+      <div class="pt">~/Projects/tools/Aide</div>
+      <div class="sec">PROVIDER</div>
+      <div class="pn">◇ DeepSeek-V4-Flash</div>
+      <div class="ps">via DeepSeek</div>
+      <div class="ps">Reasoning High</div>
+      <div class="ps">13% (139.4K) $0.05</div>
+      <div class="sec">MODIFIED FILES</div>
+      <div class="fi">~/s/tracker_test.go <span class="g">+1</span> <span class="r">-1</span></div>
+      <div class="fi">~/c/provider.go <span class="g">+1</span> <span class="r">-1</span></div>
+      <div class="fi">~/c/root.go <span class="g">+1</span> <span class="r">-1</span></div>
+      <div class="fi">~/c/config.go <span class="g">+4</span> <span class="r">-4</span></div>
+      <div class="fi gr">…and 2 more</div>
+      <div class="sec">LSPS</div><div class="d" style="font-size:8.5px">None</div>
+      <div class="sec">MCPS</div><div class="d" style="font-size:8.5px">None</div>
+      <div class="sec">SKILLS</div><div class="d" style="font-size:8.5px">None</div>
+    </div>
+  </div>
+
+</div></div>
+
+<!-- LAYOUT 3 -->
+<div class="lbl">LAYOUT 3 — COMPACT · SINGLE COLUMN WITH TOPBAR</div>
+<div class="term"><div class="col" style="height:282px">
+
+  <div class="topbar">
+    <span class="o">&gt;_ aide</span>
+    <span class="d">///////////////////</span>
+    <span class="m" style="flex-shrink:0">~/Projects/tools/Aide</span>
+    <span class="d">·</span>
+    <span class="m" style="flex-shrink:0">13%</span>
+    <span class="d">·</span>
+    <span class="o" style="flex-shrink:0">ctrl+d</span><span class="m" style="flex-shrink:0">&nbsp;open</span>
+  </div>
+
+  <div class="body" style="border-left:2px solid #1a4a28">
+    <div style="padding-left:8px">
+      <span class="o">resolveReadOnlyTools()</span> &nbsp;<span class="m">which filters to only the 5 read-safe tools.</span>
+      <br><br>
+      <div><b>## Agent Infrastructure</b></div>
+      <br>
+      <div class="li">• <b>Providers:</b> <span class="m">Anthropic, OpenAI, Google, Bedrock, DeepSeek, Ollama, LM Studio</span></div>
+      <div class="li">• <b>Session-based:</b> <span class="m">Persistent conversations in SQLite, auto-summarization</span></div>
+      <div class="li">• <b>Tool system:</b> <span class="m">Each tool is a</span> <span class="o">fantasy.Tool</span> <span class="m">with name, desc, Call handler</span></div>
+      <div class="li">• <b>Permissions:</b> <span class="m">Per-tool approval dialogs, yolo mode for auto-accept</span></div>
+      <br>
+      <div><b>## What's Still "Crush" vs "Aide"</b></div>
+      <br>
+      <div class="m">The rebrand is ~95% done:</div>
+      <br>
+      <div class="li"><span class="g">✅</span> Binary name: <span class="o">aide</span></div>
+      <div class="li"><span class="g">✅</span> Config paths: <span class="o">~/.config/aide/</span></div>
+    </div>
+  </div>
+
+  <div class="inputbar"><span class="d">[Plan]</span><br><span class="d">:::</span> Ready...</div>
+  <div class="kbgrid">
+    <span class="o">tab</span><span>focus editor</span><span class="o">↑↓</span><span>scroll</span><span class="o">u</span><span>half page up</span>
+    <span class="o">ctrl+p</span><span>commands</span><span class="o">shift+↑↓</span><span>scroll item</span><span class="o">d</span><span>half page down</span>
+    <span class="o">ctrl+l</span><span>models</span><span class="o">b/pgup</span><span>page up</span><span class="o">g</span><span>home</span>
+    <span class="o">ctrl+s</span><span>sessions</span><span class="o">f/pgdn</span><span>page down</span><span class="o">G</span><span>end</span>
+  </div>
+
+</div></div>
+
+</div>

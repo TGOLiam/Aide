@@ -50,15 +50,95 @@ func (h *header) refresh() {
 	if !isHyper {
 		charm = " " + charm
 	}
-	name := "CRUSH"
+	name := "AIDE"
 	if isHyper {
-		name = "HYPERCRUSH"
+		name = "HYPERAIDE"
 	}
 	h.compactLogo = t.Header.Charm.Render(charm) + " " +
 		styles.ApplyBoldForegroundGrad(t.Header.LogoGradCanvas, name, t.Header.LogoGradFromColor, t.Header.LogoGradToColor) + " "
 	// Force drawHeader to re-render the wide logo on the next frame.
 	h.width = 0
 	h.logo = ""
+}
+
+// drawTopbar renders the Layout 3 compact topbar.
+//
+//	>_ aide /////////////////// ~/path • 13% • ctrl+d open
+func drawTopbar(
+	scr uv.Screen,
+	area uv.Rectangle,
+	com *common.Common,
+	session *session.Session,
+	width int,
+) {
+	t := com.Styles
+
+	// Logo part: ">_ AIDE"
+	logo := lipgloss.NewStyle().Foreground(t.Logo.TitleColorA).Render(">_ ") +
+		lipgloss.NewStyle().Foreground(t.Logo.SmallGradToColor).Render("AIDE")
+
+	// Working directory
+	dirTrimLimit := 4
+	cwd := fsext.DirTrim(fsext.PrettyPath(com.Workspace.WorkingDir()), dirTrimLimit)
+	cwdStr := t.Topbar.WorkingDir.Render(cwd)
+
+	// Context percentage
+	percentStr := ""
+	if session != nil {
+		agentCfg := com.Config().Agents[config.AgentCoder]
+		model := com.Config().GetModelByType(agentCfg.Model)
+		if model != nil && model.ContextWindow > 0 {
+			percentage := (float64(session.CompletionTokens+session.PromptTokens) / float64(model.ContextWindow)) * 100
+			percentageText := fmt.Sprintf("%d%%", int(percentage))
+			if session.EstimatedUsage {
+				percentageText = "~" + percentageText
+			}
+			percentStr = t.Topbar.Percentage.Render(percentageText)
+		}
+	}
+
+	// Keystroke hint
+	keystroke := t.Topbar.Keystroke.Render("ctrl+d") + t.Topbar.KeystrokeTip.Render(" open")
+
+	// Build the right-side details
+	var detailParts []string
+	if percentStr != "" {
+		detailParts = append(detailParts, percentStr)
+	}
+	detailParts = append(detailParts, keystroke)
+	dot := t.Topbar.Separator.Render(" • ")
+	details := strings.Join(detailParts, " "+dot+" ")
+
+	// Calculate space for diagonals
+	leftContent := logo
+	rightContent := cwdStr
+	if details != "" {
+		rightContent = cwdStr + " " + dot + " " + details
+	}
+
+	leftWidth := lipgloss.Width(leftContent)
+	rightWidth := lipgloss.Width(rightContent)
+	remainingWidth := width - leftWidth - rightWidth - 4 // 4 for padding
+
+	diagStr := ""
+	if remainingWidth > 0 {
+		diagStr = t.Topbar.Diagonals.Render(strings.Repeat("╱", remainingWidth))
+	}
+
+	// Combine
+	var b strings.Builder
+	b.WriteString(leftContent)
+	if diagStr != "" {
+		b.WriteString(" ")
+		b.WriteString(diagStr)
+		b.WriteString(" ")
+	}
+	b.WriteString(rightContent)
+
+	view := uv.NewStyledString(
+		t.Topbar.Wrapper.Render(b.String()),
+	)
+	view.Draw(scr, area)
 }
 
 // drawHeader draws the header for the given session.

@@ -290,6 +290,10 @@ type UI struct {
 	// by user toggle or auto-switch based on window size)
 	isCompact bool
 
+	// useTopbarLayout switches between compact header (false) and topbar (true)
+	// when isCompact is true.
+	useTopbarLayout bool
+
 	// detailsOpen tracks whether the details panel is open (in compact mode)
 	detailsOpen bool
 
@@ -381,6 +385,7 @@ func New(com *common.Common, initialSessionID string, continueLast bool) *UI {
 		skillStates:         skills.GetLatestStates(),
 		showThinking:        true,
 		agentMode:           config.AgentBuild,
+		useTopbarLayout:     true,
 	}
 
 	status := NewStatus(com, ui)
@@ -2455,7 +2460,11 @@ func (m *UI) Draw(scr uv.Screen, area uv.Rectangle) *tea.Cursor {
 
 	case uiChat:
 		if m.isCompact {
-			m.drawHeader(scr, layout.header)
+			if m.useTopbarLayout {
+				drawTopbar(scr, layout.header, m.com, m.session, m.width)
+			} else {
+				m.drawHeader(scr, layout.header)
+			}
 		} else {
 			m.drawSidebar(scr, layout.sidebar)
 		}
@@ -2471,6 +2480,17 @@ func (m *UI) Draw(scr uv.Screen, area uv.Rectangle) *tea.Cursor {
 		}
 		editor := uv.NewStyledString(m.renderEditorView(editorWidth))
 		editor.Draw(scr, layout.editor)
+
+		// Draw green accent border in compact topbar mode (Layout 3)
+		if m.isCompact && m.useTopbarLayout {
+			borderStyle := uv.NewStyledString(
+				m.com.Styles.AccentBorder.Render("▎"),
+			)
+			borderStyle.Draw(scr, image.Rectangle{
+				Min: image.Pt(layout.main.Min.X-1, layout.main.Min.Y),
+				Max: image.Pt(layout.main.Min.X, layout.editor.Max.Y),
+			})
+		}
 
 		// Draw details overlay in compact mode when open
 		if m.isCompact && m.detailsOpen {
@@ -2916,7 +2936,7 @@ func (m *UI) generateLayout(w, h int) uiLayout {
 	// The sidebar width
 	sidebarWidth := 30
 	// The header height
-	const landingHeaderHeight = 4
+	const landingHeaderHeight = 1
 
 	var helpKeyMap help.KeyMap = m
 	if m.status != nil && m.status.ShowingAll() {
@@ -4393,7 +4413,11 @@ func (m *UI) switchAgent(agentID string) tea.Cmd {
 
 // renderLogo renders the Aide logo with the given styles and dimensions.
 func renderLogo(t *styles.Styles, compact, hyper bool, width int) string {
-	return logo.Render(t.Logo.GradCanvas, version.Version, compact, logo.Opts{
+	v := version.Version
+	if v == "devel" {
+		v = ""
+	}
+	return logo.Render(t.Logo.GradCanvas, v, compact, logo.Opts{
 		FieldColor:   t.Logo.FieldColor,
 		TitleColorA:  t.Logo.TitleColorA,
 		TitleColorB:  t.Logo.TitleColorB,

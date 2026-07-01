@@ -92,6 +92,24 @@ type Styles struct {
 		Title   lipgloss.Style
 	}
 
+	// Topbar for compact Layout 3 mode
+	Topbar struct {
+		Logo         lipgloss.Style // ">_ Aide" prompt style
+		Diagonals    lipgloss.Style // Diagonal fill (╱)
+		WorkingDir   lipgloss.Style // Working directory path
+		Percentage   lipgloss.Style // Context percentage
+		Keystroke    lipgloss.Style // Keystroke hints (e.g. "ctrl+d")
+		KeystrokeTip lipgloss.Style // Keystroke action text (e.g. "open")
+		Separator    lipgloss.Style // Separator dots (•)
+		Wrapper      lipgloss.Style // Outer container for topbar row
+	}
+
+	// AccentBorder is the green left-side accent border (Layout 3)
+	AccentBorder lipgloss.Style
+
+	// SectionLabel is the uppercase section header label (e.g. "PROVIDER")
+	SectionLabel lipgloss.Style
+
 	// Tool calls
 	ToolCallSuccess lipgloss.Style
 
@@ -154,6 +172,7 @@ type Styles struct {
 	// Logo
 	Logo struct {
 		FieldColor         color.Color
+		FieldColorStyle    lipgloss.Style // Styled diagonal fill characters
 		TitleColorA        color.Color
 		TitleColorB        color.Color
 		CharmColor         color.Color

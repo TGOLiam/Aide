@@ -68,7 +68,7 @@ func (m *UI) agentModeTag(width int) string {
 		return ""
 	}
 	name := cmp.Or(agentCfg.Name, m.agentMode)
-	style := m.com.Styles.ModelInfo.Reasoning
+	style := lipgloss.NewStyle().Foreground(m.com.Styles.Logo.TitleColorA)
 	return style.Width(width).Render("[" + name + "]")
 }
 
@@ -141,6 +141,11 @@ func getDynamicHeightLimits(availableHeight, fileCount, lspCount, mcpCount, skil
 	return maxFiles, maxLSPs, maxMCPs, maxSkills
 }
 
+// sectionLabel renders a section label with orange accent (e.g. "Provider", "Modified Files", "LSPs").
+func (m *UI) sectionLabel(label string) string {
+	return m.com.Styles.SectionLabel.Render(label)
+}
+
 // sidebar renders the chat sidebar containing session title, working
 // directory, model info, file list, LSP status, and MCP status.
 func (m *UI) drawSidebar(scr uv.Screen, area uv.Rectangle) {
@@ -168,6 +173,7 @@ func (m *UI) drawSidebar(scr uv.Screen, area uv.Rectangle) {
 		"",
 		cwd,
 		"",
+		m.sectionLabel("Provider"),
 		m.modelInfo(width),
 		"",
 	}

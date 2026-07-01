@@ -533,11 +533,11 @@ func quickStyle(o quickStyleOpts) Styles {
 	}
 
 	s.Help = help.Styles{
-		ShortKey:       base.Foreground(o.fgMoreSubtle),
+		ShortKey:       lipgloss.NewStyle().Foreground(o.primary),
 		ShortDesc:      base.Foreground(o.fgMostSubtle),
 		ShortSeparator: base.Foreground(o.separator),
 		Ellipsis:       base.Foreground(o.separator),
-		FullKey:        base.Foreground(o.fgMoreSubtle),
+		FullKey:        lipgloss.NewStyle().Foreground(o.primary),
 		FullDesc:       base.Foreground(o.fgMostSubtle),
 		FullSeparator:  base.Foreground(o.separator),
 	}
@@ -747,18 +747,35 @@ func quickStyle(o quickStyleOpts) Styles {
 
 	// Logo
 	s.Logo.FieldColor = o.primary
-	s.Logo.TitleColorA = o.secondary
-	s.Logo.TitleColorB = o.primary
+	s.Logo.FieldColorStyle = lipgloss.NewStyle().Foreground(o.primary)
+	s.Logo.TitleColorA = o.primary
+	s.Logo.TitleColorB = o.fgBase
 	s.Logo.CharmColor = o.secondary
 	s.Logo.VersionColor = o.primary
-	s.Logo.SmallCharm = lipgloss.NewStyle().Foreground(o.secondary)
+	s.Logo.SmallCharm = lipgloss.NewStyle().Foreground(o.primary)
 	s.Logo.SmallDiagonals = lipgloss.NewStyle().Foreground(o.primary)
 	s.Logo.GradCanvas = lipgloss.NewStyle()
-	s.Logo.SmallGradFromColor = o.secondary
-	s.Logo.SmallGradToColor = o.primary
+	s.Logo.SmallGradFromColor = o.fgBase
+	s.Logo.SmallGradToColor = o.fgBase
+
+	// Topbar
+	s.Topbar.Logo = lipgloss.NewStyle().Foreground(o.primary)
+	s.Topbar.Diagonals = lipgloss.NewStyle().Foreground(o.primary)
+	s.Topbar.WorkingDir = lipgloss.NewStyle().Foreground(o.info)
+	s.Topbar.Percentage = lipgloss.NewStyle().Foreground(o.info)
+	s.Topbar.Keystroke = lipgloss.NewStyle().Foreground(o.primary)
+	s.Topbar.KeystrokeTip = lipgloss.NewStyle().Foreground(o.info)
+	s.Topbar.Separator = lipgloss.NewStyle().Foreground(o.separator)
+	s.Topbar.Wrapper = lipgloss.NewStyle()
+
+	// Accent border
+	s.AccentBorder = lipgloss.NewStyle().Foreground(o.successMostSubtle)
+
+	// Section label
+	s.SectionLabel = lipgloss.NewStyle().Foreground(o.primary)
 
 	// Section
-	s.Section.Title = subtle
+	s.Section.Title = lipgloss.NewStyle().Foreground(o.primary)
 	s.Section.Line = base.Foreground(o.separator)
 
 	// Initialize
@@ -767,7 +784,7 @@ func quickStyle(o quickStyleOpts) Styles {
 	s.Initialize.Accent = base.Foreground(o.successMostSubtle)
 
 	// ResourceGroup (LSP/MCP/skills sidebar lists).
-	s.Resource.Heading = lipgloss.NewStyle().Foreground(o.fgMostSubtle)
+	s.Resource.Heading = lipgloss.NewStyle().Foreground(o.primary)
 	s.Resource.Name = lipgloss.NewStyle().Foreground(o.fgMoreSubtle)
 	s.Resource.StatusText = lipgloss.NewStyle().Foreground(o.fgMostSubtle)
 	s.Resource.OfflineIcon = lipgloss.NewStyle().Foreground(o.bgMostVisible).SetString("●")
