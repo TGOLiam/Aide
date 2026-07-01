@@ -17,9 +17,8 @@ import (
 
 	"charm.land/catwalk/pkg/catwalk"
 	"charm.land/catwalk/pkg/embedded"
-	"github.com/charmbracelet/crush/internal/agent/hyper"
-	"github.com/charmbracelet/crush/internal/csync"
-	"github.com/charmbracelet/crush/internal/home"
+	"github.com/liamb/opencode/aide/internal/csync"
+	"github.com/liamb/opencode/aide/internal/home"
 	"github.com/charmbracelet/x/etag"
 )
 
@@ -41,8 +40,8 @@ func cachePathFor(name string) string {
 	}
 
 	// return the path to the main data directory
-	// for windows, it should be in `%LOCALAPPDATA%/crush/`
-	// for linux and macOS, it should be in `$HOME/.local/share/crush/`
+	// for windows, it should be in `%LOCALAPPDATA%/aide/`
+	// for linux and macOS, it should be in `$HOME/.local/share/aide/`
 	if runtime.GOOS == "windows" {
 		localAppData := os.Getenv("LOCALAPPDATA")
 		if localAppData == "" {
@@ -89,42 +88,8 @@ func UpdateProviders(pathOrURL string) error {
 	return nil
 }
 
-// UpdateHyper updates the Hyper provider information from a specified URL.
-func UpdateHyper(pathOrURL string) error {
-	var provider catwalk.Provider
-	pathOrURL = cmp.Or(pathOrURL, hyper.BaseURL())
-
-	switch {
-	case pathOrURL == "embedded":
-		provider = hyper.Embedded()
-	case strings.HasPrefix(pathOrURL, "http://") || strings.HasPrefix(pathOrURL, "https://"):
-		client := realHyperClient{baseURL: pathOrURL}
-		var err error
-		provider, err = client.Get(context.Background(), "")
-		if err != nil {
-			return fmt.Errorf("failed to fetch provider from Hyper: %w", err)
-		}
-	default:
-		content, err := os.ReadFile(pathOrURL)
-		if err != nil {
-			return fmt.Errorf("failed to read file: %w", err)
-		}
-		if err := json.Unmarshal(content, &provider); err != nil {
-			return fmt.Errorf("failed to unmarshal provider data: %w", err)
-		}
-	}
-
-	if err := newCache[catwalk.Provider](cachePathFor("hyper")).Store(provider); err != nil {
-		return fmt.Errorf("failed to save Hyper provider to cache: %w", err)
-	}
-
-	slog.Info("Hyper provider updated successfully", "from", pathOrURL, "to", cachePathFor("hyper"))
-	return nil
-}
-
 var (
 	catwalkSyncer = &catwalkSync{}
-	hyperSyncer   = &hyperSync{}
 )
 
 // Providers returns the list of providers, taking into account cached results
@@ -147,9 +112,6 @@ func Providers(cfg *Config) ([]catwalk.Provider, error) {
 		ctx, cancel := context.WithTimeout(context.Background(), 45*time.Second)
 		defer cancel()
 
-		var hyperProvider catwalk.Provider
-		var hyperFound bool
-
 		wg.Go(func() {
 			if customProvidersOnly {
 				return
@@ -162,35 +124,15 @@ func Providers(cfg *Config) ([]catwalk.Provider, error) {
 			items, err := catwalkSyncer.Get(ctx)
 			if err != nil {
 				catwalkURL := fmt.Sprintf("%s/v2/providers", cmp.Or(os.Getenv("CATWALK_URL"), defaultCatwalkURL))
-				errs = append(errs, fmt.Errorf("Crush was unable to fetch an updated list of providers from %s. Consider setting CRUSH_DISABLE_PROVIDER_AUTO_UPDATE=1 to use the embedded providers bundled at the time of this Crush release. You can also update providers manually. For more info see crush update-providers --help.\n\nCause: %w", catwalkURL, err)) //nolint:staticcheck
+				errs = append(errs, fmt.Errorf("Aide was unable to fetch an updated list of providers from %s. Consider setting AIDE_DISABLE_PROVIDER_AUTO_UPDATE=1 to use the embedded providers bundled at the time of this Aide release. You can also update providers manually. For more info see aide update-providers --help.\n\nCause: %w", catwalkURL, err)) //nolint:staticcheck
 				return
 			}
 			providers.Append(items...)
 		})
 
-		wg.Go(func() {
-			if customProvidersOnly {
-				return
-			}
-			path := cachePathFor("hyper")
-			hyperSyncer.Init(realHyperClient{baseURL: hyper.BaseURL()}, path, autoupdate)
-
-			item, err := hyperSyncer.Get(ctx)
-			if err != nil {
-				errs = append(errs, fmt.Errorf("Crush was unable to fetch updated information from Hyper: %w", err)) //nolint:staticcheck
-				return
-			}
-			hyperProvider = item
-			hyperFound = true
-		})
-
 		wg.Wait()
 
-		if hyperFound {
-			providerList = append([]catwalk.Provider{hyperProvider}, slices.Collect(providers.Seq())...)
-		} else {
-			providerList = slices.Collect(providers.Seq())
-		}
+		providerList = slices.Collect(providers.Seq())
 		providerErr = errors.Join(errs...)
 	})
 	return providerList, providerErr

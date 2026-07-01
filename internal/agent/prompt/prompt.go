@@ -12,11 +12,11 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/charmbracelet/crush/internal/config"
-	"github.com/charmbracelet/crush/internal/filepathext"
-	"github.com/charmbracelet/crush/internal/home"
-	"github.com/charmbracelet/crush/internal/shell"
-	"github.com/charmbracelet/crush/internal/skills"
+	"github.com/liamb/opencode/aide/internal/config"
+	"github.com/liamb/opencode/aide/internal/filepathext"
+	"github.com/liamb/opencode/aide/internal/home"
+	"github.com/liamb/opencode/aide/internal/shell"
+	"github.com/liamb/opencode/aide/internal/skills"
 )
 
 // Prompt represents a template-based prompt generator.

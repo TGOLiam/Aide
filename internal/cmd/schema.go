@@ -5,9 +5,8 @@ import (
 	"fmt"
 
 	"charm.land/catwalk/pkg/catwalk"
-	"github.com/charmbracelet/crush/internal/agent/hyper"
-	"github.com/charmbracelet/crush/internal/config"
-	"github.com/charmbracelet/crush/internal/discover"
+	"github.com/liamb/opencode/aide/internal/config"
+	"github.com/liamb/opencode/aide/internal/discover"
 	"github.com/invopop/jsonschema"
 	"github.com/spf13/cobra"
 )
@@ -15,7 +14,7 @@ import (
 var schemaCmd = &cobra.Command{
 	Use:    "schema",
 	Short:  "Generate JSON schema for configuration",
-	Long:   "Generate JSON schema for the crush configuration file",
+	Long:   "Generate JSON schema for the aide configuration file",
 	Hidden: true,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		reflector := new(jsonschema.Reflector)
@@ -50,7 +49,6 @@ func setProviderTypeEnum(schema *jsonschema.Schema) {
 	for _, t := range catwalk.KnownProviderTypes() {
 		types = append(types, string(t))
 	}
-	types = append(types, string(hyper.Name))
 	types = append(types, discover.RegisteredProviderTypes()...)
 
 	typeProp.Enum = make([]any, len(types))

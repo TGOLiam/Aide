@@ -6,7 +6,7 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/charmbracelet/crush/internal/skills"
+	"github.com/liamb/opencode/aide/internal/skills"
 	"github.com/stretchr/testify/require"
 )
 

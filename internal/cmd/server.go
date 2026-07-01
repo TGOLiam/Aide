@@ -10,9 +10,9 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/charmbracelet/crush/internal/config"
-	crushlog "github.com/charmbracelet/crush/internal/log"
-	"github.com/charmbracelet/crush/internal/server"
+	"github.com/liamb/opencode/aide/internal/config"
+	crushlog "github.com/liamb/opencode/aide/internal/log"
+	"github.com/liamb/opencode/aide/internal/server"
 	"github.com/charmbracelet/x/term"
 	"github.com/spf13/cobra"
 )
@@ -47,7 +47,7 @@ var serverCmd = &cobra.Command{
 			return fmt.Errorf("invalid server host: %v", err)
 		}
 
-		logFile := filepath.Join(config.GlobalCacheDir(), "server-"+safeHostName(hostURL), "crush.log")
+		logFile := filepath.Join(config.GlobalCacheDir(), "server-"+safeHostName(hostURL), "aide.log")
 
 		if term.IsTerminal(os.Stderr.Fd()) {
 			crushlog.Setup(logFile, debug, os.Stderr)

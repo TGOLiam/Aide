@@ -12,12 +12,9 @@ import (
 	"time"
 
 	"charm.land/catwalk/pkg/catwalk"
-	hyperp "github.com/charmbracelet/crush/internal/agent/hyper"
-	"github.com/charmbracelet/crush/internal/env"
-	"github.com/charmbracelet/crush/internal/lock"
-	"github.com/charmbracelet/crush/internal/oauth"
-	"github.com/charmbracelet/crush/internal/oauth/copilot"
-	"github.com/charmbracelet/crush/internal/oauth/hyper"
+	"github.com/liamb/opencode/aide/internal/env"
+	"github.com/liamb/opencode/aide/internal/lock"
+	"github.com/liamb/opencode/aide/internal/oauth"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
 	"golang.org/x/sync/singleflight"
@@ -73,8 +70,8 @@ type ConfigStore struct {
 	config             *Config
 	workingDir         string
 	resolver           VariableResolver
-	globalDataPath     string   // ~/.local/share/crush/crush.json
-	workspacePath      string   // .crush/crush.json
+	globalDataPath     string   // ~/.local/share/aide/aide.json
+	workspacePath      string   // .aide/aide.json
 	loadedPaths        []string // config files that were successfully loaded
 	knownProviders     []catwalk.Provider
 	overrides          RuntimeOverrides
@@ -504,7 +501,7 @@ func (s *ConfigStore) SetProviderAPIKey(scope Scope, providerID string, apiKey a
 //
 // Providers like Hyper rotate refresh tokens: each exchange consumes the
 // caller's refresh token, issues a new pair, and revokes the old one. If
-// two crush instances (or two goroutines) refresh concurrently with the
+// two aide instances (or two goroutines) refresh concurrently with the
 // same stored refresh token, the second exchange reuses an already-revoked
 // token, trips the provider's reuse detection, and revokes the entire
 // token family — leaving both with dead tokens even though each refresh
@@ -627,10 +624,6 @@ func (s *ConfigStore) exchange(ctx context.Context, providerID, refreshToken str
 		return s.exchangeToken(ctx, providerID, refreshToken)
 	}
 	switch providerID {
-	case string(catwalk.InferenceProviderCopilot):
-		return copilot.RefreshToken(ctx, refreshToken)
-	case hyperp.Name:
-		return hyper.ExchangeToken(ctx, refreshToken)
 	default:
 		return nil, fmt.Errorf("OAuth refresh not supported for provider %s", providerID)
 	}
@@ -738,36 +731,9 @@ func NewTestStore(cfg *Config, loadedPaths ...string) *ConfigStore {
 }
 
 // ImportCopilot attempts to import a GitHub Copilot token from disk.
+// This service is no longer available.
 func (s *ConfigStore) ImportCopilot() (*oauth.Token, bool) {
-	if s.HasConfigField(ScopeGlobal, "providers.copilot.api_key") || s.HasConfigField(ScopeGlobal, "providers.copilot.oauth") {
-		return nil, false
-	}
-
-	diskToken, hasDiskToken := copilot.RefreshTokenFromDisk()
-	if !hasDiskToken {
-		return nil, false
-	}
-
-	slog.Info("Found existing GitHub Copilot token on disk. Authenticating...")
-	token, err := copilot.RefreshToken(context.TODO(), diskToken)
-	if err != nil {
-		slog.Error("Unable to import GitHub Copilot token", "error", err)
-		return nil, false
-	}
-
-	if err := s.SetProviderAPIKey(ScopeGlobal, string(catwalk.InferenceProviderCopilot), token); err != nil {
-		return token, false
-	}
-
-	if err := s.SetConfigFields(ScopeGlobal, map[string]any{
-		"providers.copilot.api_key": token.AccessToken,
-		"providers.copilot.oauth":   token,
-	}); err != nil {
-		slog.Error("Unable to save GitHub Copilot token to disk", "error", err)
-	}
-
-	slog.Info("GitHub Copilot successfully imported")
-	return token, true
+	return nil, false
 }
 
 // StalenessResult contains the result of a staleness check.

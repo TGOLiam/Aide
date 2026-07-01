@@ -4,9 +4,9 @@ import (
 	"context"
 	"time"
 
-	"github.com/charmbracelet/crush/internal/csync"
-	"github.com/charmbracelet/crush/internal/lsp"
-	"github.com/charmbracelet/crush/internal/pubsub"
+	"github.com/liamb/opencode/aide/internal/csync"
+	"github.com/liamb/opencode/aide/internal/lsp"
+	"github.com/liamb/opencode/aide/internal/pubsub"
 )
 
 // LSPEventType represents the type of LSP event

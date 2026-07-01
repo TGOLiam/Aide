@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"strings"
 
-	"github.com/charmbracelet/crush/internal/diffdetect"
-	"github.com/charmbracelet/crush/internal/stringext"
-	"github.com/charmbracelet/crush/internal/ui/styles"
+	"github.com/liamb/opencode/aide/internal/diffdetect"
+	"github.com/liamb/opencode/aide/internal/stringext"
+	"github.com/liamb/opencode/aide/internal/ui/styles"
 )
 
 type toolResultContentWidths struct {

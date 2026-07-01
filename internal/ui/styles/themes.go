@@ -1,116 +1,80 @@
 package styles
 
-import (
-	"github.com/charmbracelet/x/exp/charmtone"
-)
-
 // ThemeKeyForProvider returns a stable identifier for the theme
-// associated with the given provider ID. Providers that share a theme
-// yield the same key, so callers can cheaply detect when switching
-// providers would not actually change the active theme and skip the
-// expensive style rebuild. This is the single source of truth for the
-// provider-to-theme mapping; [ThemeForProvider] builds on it.
+// associated with the given provider ID.
 func ThemeKeyForProvider(providerID string) string {
-	switch providerID {
-	case "hyper":
-		return "hyper"
-	default:
-		return "default"
-	}
+	return "aide"
 }
 
 // ThemeForProvider returns the Styles associated with the given provider
-// ID. Unknown or empty provider IDs yield the default Charmtone Pantera
-// theme.
+// ID. Unknown or empty provider IDs yield the Aide Orange theme.
 func ThemeForProvider(providerID string) Styles {
-	switch ThemeKeyForProvider(providerID) {
-	case "hyper":
-		return HypercrushObsidiana()
-	default:
-		return CharmtonePantera()
-	}
+	return AideOrange()
 }
 
-// CharmtonePantera returns the Charmtone dark theme. It's the default style
-// for the UI.
-func CharmtonePantera() Styles {
+// AideOrange returns the Aide orange theme.
+func AideOrange() Styles {
 	s := quickStyle(quickStyleOpts{
-		primary:   charmtone.Charple,
-		secondary: charmtone.Dolly,
-		accent:    charmtone.Bok,
-		keyword:   charmtone.Blush,
+		primary:   rgba("#c85f1e"), // Orange — primary accent
+		secondary: rgba("#e07840"), // Orange light
+		accent:    rgba("#8a4010"), // Orange dim
+		keyword:   rgba("#4a2008"), // Orange faint
 
-		fgBase:       charmtone.Sash,
-		fgMoreSubtle: charmtone.Squid,
-		fgSubtle:     charmtone.Smoke,
-		fgMostSubtle: charmtone.Oyster,
+		fgBase:       rgba("#deded6"), // text-primary
+		fgMoreSubtle: rgba("#a8a8a0"), // text-secondary
+		fgSubtle:     rgba("#a3a39c"), // text-dim (lightened for readability)
+		fgMostSubtle: rgba("#686864"), // text-faint (lightened)
 
-		onPrimary: charmtone.Butter,
+		onPrimary: rgba("#deded6"), // text on orange bg
 
-		bgBase:         charmtone.Pepper,
-		bgLeastVisible: charmtone.BBQ,
-		bgLessVisible:  charmtone.Char,
-		bgMostVisible:  charmtone.Iron,
+		bgBase:         rgba("#0c0e0d"), // bg-terminal
+		bgLeastVisible: rgba("#0f1110"), // bg-chrome
+		bgLessVisible:  rgba("#09100a"), // bg-bar
+		bgMostVisible:  rgba("#1c1e1c"), // border-chrome
 
-		separator: charmtone.Char,
+		separator: rgba("#1c1e1c"), // border-chrome
 
-		destructive:       charmtone.Coral,
-		error:             charmtone.Sriracha,
-		warningSubtle:     charmtone.Zest,
-		warning:           charmtone.Mustard,
-		denied:            charmtone.Tang,
-		busy:              charmtone.Citron,
-		info:              charmtone.Malibu,
-		infoMoreSubtle:    charmtone.Sardine,
-		infoMostSubtle:    charmtone.Damson,
-		success:           charmtone.Julep,
-		successMoreSubtle: charmtone.Bok,
-		successMostSubtle: charmtone.Guac,
+		destructive:       rgba("#b85858"), // text-diff-rem
+		error:             rgba("#b85858"),
+		warningSubtle:     rgba("#8a8a84"),
+		warning:           rgba("#e07840"),
+		denied:            rgba("#b85858"),
+		busy:              rgba("#8a8a84"),
+		info:              rgba("#a8a8a0"),
+		infoMoreSubtle:    rgba("#6e6e68"), // text-muted (lightened)
+		infoMostSubtle:    rgba("#686864"),
+		success:           rgba("#00FFB2"), // text-shell-out (Julep)
+		successMoreSubtle: rgba("#68FFD6"), // text-diff-add (Bok)
+		successMostSubtle: rgba("#12C78F"), // bg-diff-add (Guac)
 
-		// ANSI 16-color palette for remapping raw terminal output
-		// (e.g. bang-mode shell commands) onto legible Charmtone colors.
-		ansiBlack:   charmtone.BBQ,
-		ansiRed:     charmtone.Coral,
-		ansiGreen:   charmtone.Guac,
-		ansiYellow:  charmtone.Mustard,
-		ansiBlue:    charmtone.Charple,
-		ansiMagenta: charmtone.Dolly,
-		ansiCyan:    charmtone.Malibu,
-		ansiWhite:   charmtone.Smoke,
-
-		ansiBrightBlack:   charmtone.Iron,
-		ansiBrightRed:     charmtone.Tuna,
-		ansiBrightGreen:   charmtone.Julep,
-		ansiBrightYellow:  charmtone.Zest,
-		ansiBrightBlue:    charmtone.Guppy,
-		ansiBrightMagenta: charmtone.Blush,
-		ansiBrightCyan:    charmtone.Sardine,
-		ansiBrightWhite:   charmtone.Salt,
+		// ANSI 16-color palette
+		ansiBlack:        rgba("#0c0e0d"),
+		ansiRed:          rgba("#b85858"),
+		ansiGreen:        rgba("#00FFB2"),
+		ansiYellow:       rgba("#e07840"),
+		ansiBlue:         rgba("#6e6e68"),
+		ansiMagenta:      rgba("#a3a39c"),
+		ansiCyan:         rgba("#a8a8a0"),
+		ansiWhite:        rgba("#deded6"),
+		ansiBrightBlack:  rgba("#686864"),
+		ansiBrightRed:    rgba("#b85858"),
+		ansiBrightGreen:  rgba("#68FFD6"),
+		ansiBrightYellow: rgba("#c85f1e"),
+		ansiBrightBlue:   rgba("#6e6e68"),
+		ansiBrightMagenta: rgba("#8a8a84"),
+		ansiBrightCyan:   rgba("#a8a8a0"),
+		ansiBrightWhite:  rgba("#deded6"),
 	})
-
-	// Bang ! prompt overrides - use Salt/Hazy/Larple colors.
-	s.Editor.PromptBangIconFocused = s.Editor.PromptBangIconFocused.
-		Foreground(charmtone.Salt).
-		Background(charmtone.Hazy)
-	s.Editor.PromptBangDotsFocused = s.Editor.PromptBangDotsFocused.
-		Foreground(charmtone.Hazy)
-	s.Editor.PromptBangDotsBlurred = s.Editor.PromptBangDotsBlurred.
-		Foreground(charmtone.Larple)
-
-	// Shell bar/prompt overrides - use Charple/Iron/Hazy colors.
-	s.Messages.ShellBarFocused = s.Messages.ShellBarFocused.
-		BorderForeground(charmtone.Charple)
-	s.Messages.ShellBarBlurred = s.Messages.ShellBarBlurred.
-		BorderForeground(charmtone.Iron)
-	s.Messages.ShellPrompt = s.Messages.ShellPrompt.
-		Foreground(charmtone.Hazy)
-	s.Messages.ShellPromptBlurred = s.Messages.ShellPromptBlurred.
-		Foreground(charmtone.Hazy)
 
 	return s
 }
 
-// HypercrushObsidiana returns the Hypercrush dark theme.
+// CharmtonePantera returns the Aide Orange theme (default alias).
+func CharmtonePantera() Styles {
+	return AideOrange()
+}
+
+// HypercrushObsidiana returns the Hypercrush dark theme (alias, kept for compatibility).
 func HypercrushObsidiana() Styles {
-	return CharmtonePantera()
+	return AideOrange()
 }

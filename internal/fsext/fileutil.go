@@ -12,8 +12,8 @@ import (
 
 	"github.com/bmatcuk/doublestar/v4"
 	"github.com/charlievieth/fastwalk"
-	"github.com/charmbracelet/crush/internal/csync"
-	"github.com/charmbracelet/crush/internal/home"
+	"github.com/liamb/opencode/aide/internal/csync"
+	"github.com/liamb/opencode/aide/internal/home"
 )
 
 type FileInfo struct {
@@ -29,7 +29,7 @@ func SkipHidden(path string) bool {
 	}
 
 	commonIgnoredDirs := map[string]bool{
-		".crush":           true,
+		".aide":           true,
 		"node_modules":     true,
 		"vendor":           true,
 		"dist":             true,
@@ -59,7 +59,7 @@ func SkipHidden(path string) bool {
 }
 
 // FastGlobWalker provides gitignore-aware file walking with fastwalk
-// It uses hierarchical ignore checking like git does, checking .gitignore/.crushignore
+// It uses hierarchical ignore checking like git does, checking .gitignore/.aideignore
 // files in each directory from the root to the target path.
 type FastGlobWalker struct {
 	directoryLister *directoryLister

@@ -1,4 +1,4 @@
-module github.com/charmbracelet/crush
+module github.com/liamb/opencode/aide
 
 go 1.26.4
 

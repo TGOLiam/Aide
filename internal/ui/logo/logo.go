@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"charm.land/lipgloss/v2"
-	"github.com/charmbracelet/crush/internal/ui/styles"
+	"github.com/liamb/opencode/aide/internal/ui/styles"
 	"github.com/charmbracelet/x/ansi"
 )
 
@@ -80,16 +80,16 @@ func Render(base lipgloss.Style, version string, compact bool, o Opts) string {
 		// Stretch a random letterform on every render.
 		stretchIndex = rand.IntN(len(crushLetterforms))
 	}
-	crush := renderWord(spacing, stretchIndex, crushLetterforms...)
+	aide := renderWord(spacing, stretchIndex, crushLetterforms...)
 	if o.Hyper && compact {
-		crush = renderWord(spacing, stretchIndex, hyperLetterforms...) + "\n" + crush
+		aide = renderWord(spacing, stretchIndex, hyperLetterforms...) + "\n" + aide
 	}
-	crushWidth := lipgloss.Width(crush)
+	crushWidth := lipgloss.Width(aide)
 	b := new(strings.Builder)
-	for r := range strings.SplitSeq(crush, "\n") {
+	for r := range strings.SplitSeq(aide, "\n") {
 		fmt.Fprintln(b, styles.ApplyForegroundGrad(base, r, o.TitleColorA, o.TitleColorB))
 	}
-	crush = b.String()
+	aide = b.String()
 
 	// Charm and version.
 	metaRowGap := 1
@@ -102,15 +102,15 @@ func Render(base lipgloss.Style, version string, compact bool, o Opts) string {
 	metaRow := fg(o.CharmColor, charm) + strings.Repeat(" ", gap) + fg(o.VersionColor, version)
 
 	// Join the meta row and big Crush title.
-	crush = strings.TrimSpace(metaRow + "\n" + crush)
+	aide = strings.TrimSpace(metaRow + "\n" + aide)
 
 	// Narrow version. If this is Hypercrush, this is also a stacked version.
 	if compact {
 		field := fg(o.FieldColor, strings.Repeat(diag, crushWidth))
-		return strings.Join([]string{field, field, crush, field, ""}, "\n")
+		return strings.Join([]string{field, field, aide, field, ""}, "\n")
 	}
 
-	fieldHeight := lipgloss.Height(crush)
+	fieldHeight := lipgloss.Height(aide)
 
 	// Left field.
 	const leftWidth = 6
@@ -134,7 +134,7 @@ func Render(base lipgloss.Style, version string, compact bool, o Opts) string {
 
 	// Return the wide version.
 	const hGap = " "
-	logo := lipgloss.JoinHorizontal(lipgloss.Top, leftField.String(), hGap, crush, hGap, rightField.String())
+	logo := lipgloss.JoinHorizontal(lipgloss.Top, leftField.String(), hGap, aide, hGap, rightField.String())
 	if o.Width > 0 {
 		// Truncate the logo to the specified width.
 		lines := strings.Split(logo, "\n")

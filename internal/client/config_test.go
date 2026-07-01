@@ -9,9 +9,9 @@ import (
 	"net/url"
 	"testing"
 
-	"github.com/charmbracelet/crush/internal/config"
-	"github.com/charmbracelet/crush/internal/oauth"
-	"github.com/charmbracelet/crush/internal/proto"
+	"github.com/liamb/opencode/aide/internal/config"
+	"github.com/liamb/opencode/aide/internal/oauth"
+	"github.com/liamb/opencode/aide/internal/proto"
 	"github.com/stretchr/testify/require"
 )
 

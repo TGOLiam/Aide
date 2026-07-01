@@ -6,11 +6,11 @@ import (
 	"os"
 
 	tea "charm.land/bubbletea/v2"
-	"github.com/charmbracelet/crush/internal/clipboard"
-	"github.com/charmbracelet/crush/internal/config"
-	"github.com/charmbracelet/crush/internal/ui/styles"
-	"github.com/charmbracelet/crush/internal/ui/util"
-	"github.com/charmbracelet/crush/internal/workspace"
+	"github.com/liamb/opencode/aide/internal/clipboard"
+	"github.com/liamb/opencode/aide/internal/config"
+	"github.com/liamb/opencode/aide/internal/ui/styles"
+	"github.com/liamb/opencode/aide/internal/ui/util"
+	"github.com/liamb/opencode/aide/internal/workspace"
 	uv "github.com/charmbracelet/ultraviolet"
 )
 
@@ -58,7 +58,7 @@ func largeModelProviderID(ws workspace.Workspace) string {
 // IsHyper reports whether the currently selected large model is provided
 // by Hyper.
 func (c *Common) IsHyper() bool {
-	return largeModelProviderID(c.Workspace) == "hyper"
+	return false
 }
 
 // CenterRect returns a new [Rectangle] centered within the given area with the

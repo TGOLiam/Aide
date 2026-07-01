@@ -2,6 +2,7 @@ package styles
 
 import (
 	"image/color"
+	"strconv"
 
 	"charm.land/bubbles/v2/filepicker"
 	"charm.land/bubbles/v2/help"
@@ -10,9 +11,23 @@ import (
 	tea "charm.land/bubbletea/v2"
 	"charm.land/glamour/v2/ansi"
 	"charm.land/lipgloss/v2"
-	"github.com/charmbracelet/crush/internal/ui/diffview"
+	"github.com/liamb/opencode/aide/internal/ui/diffview"
 	"github.com/charmbracelet/x/exp/charmtone"
 )
+
+// rgba converts hex color strings to RGBA color values.
+func rgba(hex string) color.RGBA {
+	if len(hex) > 0 && hex[0] == '#' {
+		hex = hex[1:]
+	}
+	if len(hex) != 6 {
+		return color.RGBA{}
+	}
+	r, _ := strconv.ParseUint(hex[0:2], 16, 8)
+	g, _ := strconv.ParseUint(hex[2:4], 16, 8)
+	b, _ := strconv.ParseUint(hex[4:6], 16, 8)
+	return color.RGBA{R: uint8(r), G: uint8(g), B: uint8(b), A: 255}
+}
 
 // quickStyleOpts is the palette of colors used by quickStyle to simplify the
 // process of building a theme.
