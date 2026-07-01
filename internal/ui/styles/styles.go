@@ -17,11 +17,10 @@ import (
 )
 
 const (
-	CheckIcon       string = "✓"
-	SpinnerIcon     string = "⋯"
-	LoadingIcon     string = "⟳"
-	ModelIcon       string = "◇"
-	HypercreditIcon string = "◆"
+	CheckIcon   string = "✓"
+	SpinnerIcon string = "⋯"
+	LoadingIcon string = "⟳"
+	ModelIcon   string = "◇"
 
 	ArrowRightIcon string = "→"
 
@@ -66,7 +65,7 @@ type Styles struct {
 	// basic 16-color SGR codes (red, green, blue, …) and leave the actual
 	// colors up to the terminal; without this palette they fall through
 	// to the user's terminal defaults, which are often illegible on
-	// Crush's background. Defining them here keeps output readable and
+	// Aide's background. Defining them here keeps output readable and
 	// on-brand regardless of terminal configuration.
 	ANSI [16]color.Color
 
@@ -75,15 +74,14 @@ type Styles struct {
 		Charm             lipgloss.Style // Style for "Charm™" label
 		Diagonals         lipgloss.Style // Style for diagonal separators (╱)
 		Percentage        lipgloss.Style // Style for context percentage
-		HypercreditIcon   lipgloss.Style // Style for Hypercredit count (◆ N)
 		Keystroke         lipgloss.Style // Style for keystroke hints (e.g., "ctrl+d")
 		KeystrokeTip      lipgloss.Style // Style for keystroke action text (e.g., "open", "close")
 		WorkingDir        lipgloss.Style // Style for current working directory
 		Separator         lipgloss.Style // Style for separator dots (•)
 		Wrapper           lipgloss.Style // Outer container for the entire header row
-		LogoGradCanvas    lipgloss.Style // Canvas for the compact "CRUSH" gradient
-		LogoGradFromColor color.Color    // "CRUSH" wordmark gradient start
-		LogoGradToColor   color.Color    // "CRUSH" wordmark gradient end
+		LogoGradCanvas    lipgloss.Style // Canvas for the compact "AIDE" gradient
+		LogoGradFromColor color.Color    // "AIDE" wordmark gradient start
+		LogoGradToColor   color.Color    // "AIDE" wordmark gradient end
 	}
 
 	CompactDetails struct {
@@ -175,7 +173,6 @@ type Styles struct {
 		FieldColorStyle    lipgloss.Style // Styled diagonal fill characters
 		TitleColorA        color.Color
 		TitleColorB        color.Color
-		CharmColor         color.Color
 		VersionColor       color.Color
 		SmallCharm         lipgloss.Style // "Charm™" label in SmallRender
 		SmallDiagonals     lipgloss.Style // Diagonal line fill in SmallRender
@@ -228,7 +225,6 @@ type Styles struct {
 		TokenPercentage      lipgloss.Style // "42%" percent of context window
 		EstimatedUsagePrefix lipgloss.Style // "~" prefix for estimated usage
 		Cost                 lipgloss.Style // "$0.42" cost readout
-		HypercreditIcon      lipgloss.Style // Hypercredit icon (◆)
 		HypercreditText      lipgloss.Style // Remaining Hypercredits text
 	}
 

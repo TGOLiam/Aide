@@ -11,8 +11,8 @@ import (
 	tea "charm.land/bubbletea/v2"
 	"charm.land/glamour/v2/ansi"
 	"charm.land/lipgloss/v2"
-	"github.com/liamb/opencode/aide/internal/ui/diffview"
 	"github.com/charmbracelet/x/exp/charmtone"
+	"github.com/liamb/opencode/aide/internal/ui/diffview"
 )
 
 // rgba converts hex color strings to RGBA color values.
@@ -615,7 +615,6 @@ func quickStyle(o quickStyleOpts) Styles {
 	s.Header.Charm = base.Foreground(o.secondary)
 	s.Header.Diagonals = base.Foreground(o.primary)
 	s.Header.Percentage = muted
-	s.Header.HypercreditIcon = base.Foreground(o.secondary)
 	s.Header.Keystroke = muted
 	s.Header.KeystrokeTip = subtle
 	s.Header.WorkingDir = muted
@@ -750,7 +749,6 @@ func quickStyle(o quickStyleOpts) Styles {
 	s.Logo.FieldColorStyle = lipgloss.NewStyle().Foreground(o.primary)
 	s.Logo.TitleColorA = o.primary
 	s.Logo.TitleColorB = o.fgBase
-	s.Logo.CharmColor = o.secondary
 	s.Logo.VersionColor = o.primary
 	s.Logo.SmallCharm = lipgloss.NewStyle().Foreground(o.primary)
 	s.Logo.SmallDiagonals = lipgloss.NewStyle().Foreground(o.primary)
@@ -827,7 +825,6 @@ func quickStyle(o quickStyleOpts) Styles {
 	s.ModelInfo.TokenPercentage = lipgloss.NewStyle().Foreground(o.fgMoreSubtle)
 	s.ModelInfo.EstimatedUsagePrefix = s.ModelInfo.TokenPercentage
 	s.ModelInfo.Cost = lipgloss.NewStyle().Foreground(o.fgMoreSubtle)
-	s.ModelInfo.HypercreditIcon = lipgloss.NewStyle().Foreground(o.secondary)
 	s.ModelInfo.HypercreditText = lipgloss.NewStyle().Foreground(o.fgMoreSubtle)
 
 	// ResourceGroup

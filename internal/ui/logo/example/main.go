@@ -7,9 +7,9 @@ import (
 	"os"
 
 	"charm.land/lipgloss/v2"
+	"github.com/charmbracelet/x/term"
 	"github.com/liamb/opencode/aide/internal/ui/logo"
 	"github.com/liamb/opencode/aide/internal/ui/styles"
-	"github.com/charmbracelet/x/term"
 )
 
 func main() {
@@ -23,10 +23,8 @@ func main() {
 		FieldColor:   s.Logo.FieldColor,
 		TitleColorA:  s.Logo.TitleColorA,
 		TitleColorB:  s.Logo.TitleColorB,
-		CharmColor:   s.Logo.CharmColor,
 		VersionColor: s.Logo.VersionColor,
 		Width:        w,
-		Unstable:     true,
 	}
 
 	renderCompact := func(hyper bool) string {

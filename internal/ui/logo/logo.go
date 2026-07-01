@@ -7,14 +7,9 @@ import (
 	"strings"
 
 	"charm.land/lipgloss/v2"
-	"github.com/liamb/opencode/aide/internal/ui/styles"
 	"github.com/charmbracelet/x/ansi"
+	"github.com/liamb/opencode/aide/internal/ui/styles"
 )
-
-// letterform represents a letterform. It can be stretched horizontally by
-// a given amount via the boolean argument. Kept for compatibility with
-// letterforms.go.
-type letterform func(bool) string
 
 const diag = `╱`
 
@@ -23,12 +18,9 @@ type Opts struct {
 	FieldColor   color.Color // diagonal lines (diagonal fill)
 	TitleColorA  color.Color // ">_" prompt color (orange)
 	TitleColorB  color.Color // "AIDE" wordmark color
-	CharmColor   color.Color // Charm™ text color (unused in new design)
 	VersionColor color.Color // version text color
 	Width        int         // width of the rendered logo, used for truncation
 	Hyper        bool        // whether it is Aide or Hyperaide
-
-	Unstable bool
 }
 
 // Render renders the Aide logo.
@@ -94,15 +86,4 @@ func SmallRender(t *styles.Styles, width int, o Opts) string {
 		title = fmt.Sprintf("%s %s", title, t.Logo.SmallDiagonals.Render(lines))
 	}
 	return title
-}
-
-// LogoBlock returns a centered logo suitable for the sidebar logo area.
-func LogoBlock(t *styles.Styles, width int) string {
-	prompt := lipgloss.NewStyle().Foreground(t.Logo.TitleColorA).Render(">_ ")
-	name := styles.ApplyBoldForegroundGrad(t.Logo.GradCanvas, "AIDE", t.Logo.TitleColorA, t.Logo.TitleColorB)
-	line := prompt + name
-	lineWidth := lipgloss.Width(line)
-	leftPad := max(0, (width-lineWidth)/2)
-	padding := strings.Repeat(" ", leftPad)
-	return padding + line
 }

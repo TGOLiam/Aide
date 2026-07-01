@@ -38,7 +38,7 @@ var (
 //
 // The returned renderer is NOT safe for concurrent Render calls
 // (goldmark's BlockStack carries state across the public Render
-// API). Crush's TUI is single-threaded so production never
+// API). Aide's TUI is single-threaded so production never
 // contends, but parallel callers (most notably parallel tests)
 // must serialize via [LockMarkdownRenderer]. Treat the renderer
 // as effectively pinned to one goroutine at a time.
