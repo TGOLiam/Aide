@@ -398,7 +398,6 @@ func New(com *common.Common, initialSessionID string, continueLast bool) *UI {
 
 	ui.setEditorPrompt(com.Workspace.PermissionSkipRequests())
 	ui.randomizePlaceholders()
-	ui.textarea.Placeholder = ui.readyPlaceholder
 	ui.status = status
 
 	// Initialize compact mode from config
@@ -1101,17 +1100,7 @@ func (m *UI) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch m.focus {
 	case uiFocusMain:
 	case uiFocusEditor:
-		// Textarea placeholder logic
-		if m.bangMode {
-			m.textarea.Placeholder = "Run a shell command"
-		} else if m.isAgentBusy() {
-			m.textarea.Placeholder = m.workingPlaceholder
-		} else {
-			m.textarea.Placeholder = m.readyPlaceholder
-		}
-		if !m.bangMode && m.com.Workspace.PermissionSkipRequests() {
-			m.textarea.Placeholder = "Yolo mode!"
-		}
+		// The textarea prompt handles empty-state hints directly.
 	}
 
 	// at this point this can only handle [message.Attachment] message, and we
@@ -3202,6 +3191,19 @@ func (m *UI) normalPromptFunc(info textarea.PromptInfo) string {
 	t := m.com.Styles
 	if info.LineNumber == 0 {
 		if info.Focused {
+			if m.textarea.Value() == "" {
+				hasWorkspace := m.com != nil && m.com.Workspace != nil
+				if m.bangMode {
+					return "  > Run a shell command"
+				}
+				if hasWorkspace && m.com.Workspace.PermissionSkipRequests() {
+					return "  > Yolo mode!"
+				}
+				if hasWorkspace && m.isAgentBusy() {
+					return "  > " + m.workingPlaceholder
+				}
+				return "  > " + m.readyPlaceholder
+			}
 			return "  > "
 		}
 		return "::: "
@@ -3451,7 +3453,7 @@ func (m *UI) renderEditorView(width int) string {
 	if agentTag != "" {
 		parts = append(parts, agentTag)
 	}
-	parts = append(parts, m.textarea.View(), "")
+	parts = append(parts, m.textarea.View())
 	return strings.Join(parts, "\n")
 }
 

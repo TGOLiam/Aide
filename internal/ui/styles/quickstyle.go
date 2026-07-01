@@ -145,7 +145,7 @@ func quickStyle(o quickStyleOpts) Styles {
 			Prompt:           base.Foreground(o.accent),
 		},
 		Blurred: textarea.StyleState{
-			Base:             base,
+			Base:             base.Border(lipgloss.RoundedBorder()).BorderForeground(o.fgMoreSubtle),
 			Text:             base.Foreground(o.fgMoreSubtle),
 			LineNumber:       base.Foreground(o.fgMoreSubtle),
 			CursorLine:       base,
