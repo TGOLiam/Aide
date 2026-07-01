@@ -129,7 +129,7 @@ func quickStyle(o quickStyleOpts) Styles {
 		},
 		Cursor: textinput.CursorStyle{
 			Color: o.secondary,
-			Shape: tea.CursorBlock,
+			Shape: tea.CursorBar,
 			Blink: true,
 		},
 	}
@@ -155,7 +155,7 @@ func quickStyle(o quickStyleOpts) Styles {
 		},
 		Cursor: textarea.CursorStyle{
 			Color: o.secondary,
-			Shape: tea.CursorBlock,
+			Shape: tea.CursorBar,
 			Blink: true,
 		},
 	}
