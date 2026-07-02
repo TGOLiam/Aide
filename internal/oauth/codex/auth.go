@@ -301,10 +301,13 @@ func pollOnce(ctx context.Context, deviceAuthID, userCode string) (*oauth.Token,
 }
 
 func exchangeAuthCode(ctx context.Context, code, codeVerifier string) (*oauth.Token, error) {
-	form := fmt.Sprintf(
-		"grant_type=authorization_code&code=%s&redirect_uri=%s/deviceauth/callback&client_id=%s&code_verifier=%s",
-		code, issuer, clientID, codeVerifier,
-	)
+	form := url.Values{
+		"grant_type":    {"authorization_code"},
+		"code":          {code},
+		"redirect_uri":  {issuer + "/deviceauth/callback"},
+		"client_id":     {clientID},
+		"code_verifier": {codeVerifier},
+	}.Encode()
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, tokenURL, strings.NewReader(form))
 	if err != nil {
@@ -466,10 +469,14 @@ func (s *PKCESession) WaitForResult(timeout time.Duration) (*oauth.Token, error)
 }
 
 func (s *PKCESession) exchangeToken(ctx context.Context, code string, w http.ResponseWriter) {
-	form := fmt.Sprintf(
-		"grant_type=authorization_code&code=%s&redirect_uri=%s&client_id=%s&code_verifier=%s",
-		code, s.RedirectURI, clientID, s.Verifier,
-	)
+	form := url.Values{
+		"grant_type":    {"authorization_code"},
+		"code":          {code},
+		"redirect_uri":  {s.RedirectURI},
+		"client_id":     {clientID},
+		"code_verifier": {s.Verifier},
+	}.Encode()
+
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, tokenURL, strings.NewReader(form))
 	if err != nil {
 		s.errCh <- fmt.Errorf("token exchange: %w", err)
@@ -561,10 +568,11 @@ func oauthErrorPage(msg string) string {
 
 // RefreshToken exchanges a refresh token for a new set of tokens.
 func RefreshToken(ctx context.Context, refreshToken string) (*oauth.Token, error) {
-	form := fmt.Sprintf(
-		"grant_type=refresh_token&refresh_token=%s&client_id=%s",
-		refreshToken, clientID,
-	)
+	form := url.Values{
+		"grant_type":    {"refresh_token"},
+		"refresh_token": {refreshToken},
+		"client_id":     {clientID},
+	}.Encode()
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, tokenURL, strings.NewReader(form))
 	if err != nil {
