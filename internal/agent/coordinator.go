@@ -922,6 +922,8 @@ func (c *coordinator) buildOpenaiCompatProvider(baseURL, apiKey string, headers 
 	case codex.ProviderID:
 		// Use the Responses API for Codex (it uses OpenAI Responses format).
 		opts = append(opts, openaicompat.WithUseResponsesAPI())
+		// The Codex API doesn't support the max_output_tokens parameter.
+		opts = append(opts, openaicompat.WithSDKOptions(openaisdk.WithJSONDel("max_output_tokens")))
 		// Look up the OAuth token for the account ID if available.
 		var accountID string
 		if cfg, ok := c.cfg.Config().Providers.Get(providerID); ok && cfg.OAuthToken != nil {
