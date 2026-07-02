@@ -5,13 +5,12 @@ import (
 	"strings"
 
 	"charm.land/lipgloss/v2"
-	"github.com/liamb/aide/internal/config"
+	uv "github.com/charmbracelet/ultraviolet"
+	"github.com/charmbracelet/x/ansi"
 	"github.com/liamb/aide/internal/fsext"
 	"github.com/liamb/aide/internal/session"
 	"github.com/liamb/aide/internal/ui/common"
 	"github.com/liamb/aide/internal/ui/styles"
-	uv "github.com/charmbracelet/ultraviolet"
-	"github.com/charmbracelet/x/ansi"
 )
 
 const (
@@ -63,7 +62,7 @@ func (h *header) refresh() {
 
 // drawTopbar renders the Layout 3 compact topbar.
 //
-//	>_ aide /////////////////// ~/path • 13% • ctrl+d open
+//	//// >_ aide ///////////////////
 func drawTopbar(
 	scr uv.Screen,
 	area uv.Rectangle,
@@ -73,52 +72,14 @@ func drawTopbar(
 ) {
 	t := com.Styles
 
-	// Logo part: ">_ AIDE"
-	logo := lipgloss.NewStyle().Foreground(t.Logo.TitleColorA).Render(">_ ") +
+	// Logo part: "//// >_ AIDE"
+	logo := lipgloss.NewStyle().Foreground(t.Logo.TitleColorA).Render("//// >_ ") +
 		lipgloss.NewStyle().Foreground(t.Logo.SmallGradToColor).Render("AIDE")
-
-	// Working directory
-	dirTrimLimit := 4
-	cwd := fsext.DirTrim(fsext.PrettyPath(com.Workspace.WorkingDir()), dirTrimLimit)
-	cwdStr := t.Topbar.WorkingDir.Render(cwd)
-
-	// Context percentage
-	percentStr := ""
-	if session != nil {
-		agentCfg := com.Config().Agents[config.AgentCoder]
-		model := com.Config().GetModelByType(agentCfg.Model)
-		if model != nil && model.ContextWindow > 0 {
-			percentage := (float64(session.CompletionTokens+session.PromptTokens) / float64(model.ContextWindow)) * 100
-			percentageText := fmt.Sprintf("%d%%", int(percentage))
-			if session.EstimatedUsage {
-				percentageText = "~" + percentageText
-			}
-			percentStr = t.Topbar.Percentage.Render(percentageText)
-		}
-	}
-
-	// Keystroke hint
-	keystroke := t.Topbar.Keystroke.Render("ctrl+d") + t.Topbar.KeystrokeTip.Render(" open")
-
-	// Build the right-side details
-	var detailParts []string
-	if percentStr != "" {
-		detailParts = append(detailParts, percentStr)
-	}
-	detailParts = append(detailParts, keystroke)
-	dot := t.Topbar.Separator.Render(" • ")
-	details := strings.Join(detailParts, " "+dot+" ")
 
 	// Calculate space for diagonals
 	leftContent := logo
-	rightContent := cwdStr
-	if details != "" {
-		rightContent = cwdStr + " " + dot + " " + details
-	}
-
 	leftWidth := lipgloss.Width(leftContent)
-	rightWidth := lipgloss.Width(rightContent)
-	remainingWidth := width - leftWidth - rightWidth - 4 // 4 for padding
+	remainingWidth := width - leftWidth - 4 // 4 for padding
 
 	diagStr := ""
 	if remainingWidth > 0 {
@@ -133,7 +94,6 @@ func drawTopbar(
 		b.WriteString(diagStr)
 		b.WriteString(" ")
 	}
-	b.WriteString(rightContent)
 
 	view := uv.NewStyledString(
 		t.Topbar.Wrapper.Render(b.String()),
@@ -179,7 +139,6 @@ func (h *header) drawHeader(
 		h.com,
 		session,
 		lspErrorCount,
-		detailsOpen,
 		availDetailWidth,
 	)
 
@@ -210,7 +169,6 @@ func renderHeaderDetails(
 	com *common.Common,
 	session *session.Session,
 	lspErrorCount int,
-	detailsOpen bool,
 	availWidth int,
 ) string {
 	t := com.Styles
@@ -219,25 +177,6 @@ func renderHeaderDetails(
 
 	if lspErrorCount > 0 {
 		parts = append(parts, t.LSP.ErrorDiagnostic.Render(fmt.Sprintf("%s%d", styles.LSPErrorIcon, lspErrorCount)))
-	}
-
-	agentCfg := com.Config().Agents[config.AgentCoder]
-	model := com.Config().GetModelByType(agentCfg.Model)
-	if model != nil && model.ContextWindow > 0 {
-		percentage := (float64(session.CompletionTokens+session.PromptTokens) / float64(model.ContextWindow)) * 100
-		percentageText := fmt.Sprintf("%d%%", int(percentage))
-		if session.EstimatedUsage {
-			percentageText = "~" + percentageText
-		}
-		formattedPercentage := t.Header.Percentage.Render(percentageText)
-		parts = append(parts, formattedPercentage)
-	}
-
-	const keystroke = "ctrl+d"
-	if detailsOpen {
-		parts = append(parts, t.Header.Keystroke.Render(keystroke)+t.Header.KeystrokeTip.Render(" close"))
-	} else {
-		parts = append(parts, t.Header.Keystroke.Render(keystroke)+t.Header.KeystrokeTip.Render(" open "))
 	}
 
 	dot := t.Header.Separator.Render(" • ")

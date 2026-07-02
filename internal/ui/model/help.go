@@ -77,12 +77,24 @@ func (m *UI) ShortHelp() []key.Binding {
 			tab.SetHelp("tab", "focus editor")
 		}
 
-		binds = append(
-			binds,
-			tab,
-			commands,
-			k.Models,
-		)
+		if m.isCompact {
+			help := k.Help
+			help.SetHelp("ctrl+d", "more")
+			binds = append(
+				binds,
+				tab,
+				commands,
+				help,
+				k.Models,
+			)
+		} else {
+			binds = append(
+				binds,
+				tab,
+				commands,
+				k.Models,
+			)
+		}
 
 		switch m.focus {
 		case uiFocusEditor:
@@ -115,11 +127,10 @@ func (m *UI) ShortHelp() []key.Binding {
 		)
 	}
 
-	binds = append(
-		binds,
-		k.Quit,
-		k.Help,
-	)
+	binds = append(binds, k.Quit)
+	if !m.isCompact {
+		binds = append(binds, k.Help)
+	}
 
 	return binds
 }
@@ -130,6 +141,9 @@ func (m *UI) FullHelp() [][]key.Binding {
 	k := &m.keyMap
 	help := k.Help
 	help.SetHelp("ctrl+g", "less")
+	if m.isCompact {
+		help.SetHelp("ctrl+d", "more")
+	}
 	hasAttachments := len(m.attachments.List()) > 0
 	hasSession := m.hasSession()
 	commands := k.Commands
