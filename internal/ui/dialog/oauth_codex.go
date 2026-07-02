@@ -10,9 +10,12 @@ import (
 	"github.com/liamb/aide/internal/config"
 	"github.com/liamb/aide/internal/oauth/codex"
 	"github.com/liamb/aide/internal/ui/common"
+	"github.com/pkg/browser"
 )
 
 // NewOAuthCodex creates a new OAuth dialog for OpenAI Codex authentication.
+// It uses the PKCE browser-based OAuth flow (opens a browser window for the
+// user to log in directly, rather than showing a device code).
 func NewOAuthCodex(
 	com *common.Common,
 	isOnboarding bool,
@@ -24,11 +27,12 @@ func NewOAuthCodex(
 }
 
 // OAuthCodex implements the OAuthProvider interface for OpenAI Codex.
-// It uses the OpenAI device auth flow to obtain tokens for the Codex API.
+// It uses the PKCE browser-based OAuth flow: opens the user's browser to
+// auth.openai.com, starts a local web server to catch the callback, and
+// exchanges the auth code for tokens.
 type OAuthCodex struct {
-	deviceAuthID string
-	userCode     string
-	cancelFunc   func()
+	session   *codex.PKCESession
+	cancelFunc func()
 }
 
 var _ OAuthProvider = (*OAuthCodex)(nil)
@@ -38,37 +42,55 @@ func (m *OAuthCodex) name() string {
 }
 
 func (m *OAuthCodex) initiateAuth() tea.Msg {
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-	defer cancel()
-
-	resp, err := codex.InitiateDeviceAuth(ctx)
+	// Generate PKCE challenge and start local server.
+	session, err := codex.GeneratePKCE()
 	if err != nil {
-		return ActionOAuthErrored{Error: fmt.Errorf("failed to initiate Codex device auth: %w", err)}
+		return ActionOAuthErrored{Error: fmt.Errorf("failed to initiate Codex auth: %w", err)}
+	}
+	m.session = session
+
+	if err := session.StartLocalServer(); err != nil {
+		return ActionOAuthErrored{Error: fmt.Errorf("failed to start local auth server: %w", err)}
 	}
 
-	m.deviceAuthID = resp.DeviceAuthID
-	m.userCode = resp.UserCode
+	authURL := session.AuthorizeURL()
+
+	// Open the browser to the authorization URL.
+	if err := browser.OpenURL(authURL); err != nil {
+		// Browser didn't open, but we can still show the URL to the user.
+		return ActionInitiateOAuth{
+			DeviceCode:      "",
+			UserCode:        authURL,
+			VerificationURL: authURL,
+			ExpiresIn:       300,
+			Interval:        1,
+		}
+	}
 
 	return ActionInitiateOAuth{
-		DeviceCode:      resp.DeviceAuthID,
-		UserCode:        resp.UserCode,
-		VerificationURL: resp.VerificationURL,
-		ExpiresIn:       resp.ExpiresIn,
-		Interval:        5,
+		DeviceCode:      "",
+		UserCode:        "Browser opened",
+		VerificationURL: authURL,
+		ExpiresIn:       300,
+		Interval:        1,
 	}
 }
 
 func (m *OAuthCodex) startPolling(deviceCode string, expiresIn int) tea.Cmd {
 	return func() tea.Msg {
+		if m.session == nil {
+			return ActionOAuthErrored{Error: fmt.Errorf("Codex auth session not initialized")}
+		}
+
 		ctx, cancel := context.WithCancel(context.Background())
 		m.cancelFunc = cancel
 
-		token, err := codex.PollForToken(ctx, m.deviceAuthID, m.userCode, expiresIn)
+		token, err := m.session.WaitForResult(5 * time.Minute)
 		if err != nil {
 			if ctx.Err() != nil {
 				return nil // cancelled, don't report error
 			}
-			return ActionOAuthErrored{Error: err}
+			return ActionOAuthErrored{Error: fmt.Errorf("Codex authorization failed: %w", err)}
 		}
 
 		return ActionCompleteOAuth{Token: token}
@@ -78,6 +100,9 @@ func (m *OAuthCodex) startPolling(deviceCode string, expiresIn int) tea.Cmd {
 func (m *OAuthCodex) stopPolling() tea.Msg {
 	if m.cancelFunc != nil {
 		m.cancelFunc()
+	}
+	if m.session != nil {
+		m.session.StopLocalServer()
 	}
 	return nil
 }
