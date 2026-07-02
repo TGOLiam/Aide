@@ -545,7 +545,7 @@ func (s *PKCESession) handleCallback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	go s.exchangeToken(r.Context(), code, w)
+	go s.exchangeToken(context.Background(), code, w)
 
 	writeOAuthResponse(w, oauthSuccessPage())
 }
