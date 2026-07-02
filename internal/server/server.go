@@ -22,7 +22,7 @@ import (
 // use 104 so the resulting path is portable across both platforms.
 const maxUnixSocketPathLen = 104
 
-// socketDir returns the directory used for the Crush Unix socket.
+// socketDir returns the directory used for the Aide Unix socket.
 // It prefers $XDG_RUNTIME_DIR when set (systemd's per-user runtime
 // directory on Linux), and otherwise falls back to [os.TempDir],
 // which resolves to the per-user private $TMPDIR on macOS and to
@@ -85,7 +85,7 @@ func DefaultHost() string {
 	return "unix://" + path
 }
 
-// Server represents a Crush server bound to a specific address.
+// Server represents an Aide server bound to a specific address.
 type Server struct {
 	// Addr can be a TCP address, a Unix socket path, or a Windows named pipe.
 	Addr    string

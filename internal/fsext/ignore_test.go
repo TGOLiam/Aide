@@ -51,8 +51,8 @@ func TestShouldExcludeFile(t *testing.T) {
 	}
 
 	// Create .aideignore file
-	crushignoreContent := "custom_ignored/\n"
-	if err := os.WriteFile(filepath.Join(tempDir, ".aideignore"), []byte(crushignoreContent), 0o644); err != nil {
+	aideignoreContent := "custom_ignored/\n"
+	if err := os.WriteFile(filepath.Join(tempDir, ".aideignore"), []byte(aideignoreContent), 0o644); err != nil {
 		t.Fatalf("Failed to create .aideignore: %v", err)
 	}
 

@@ -55,7 +55,7 @@ func TestClientServerSpawnRace(t *testing.T) {
 	}
 
 	repoRoot := repoRootFromTest(t)
-	bin := buildCrushBinary(t, repoRoot)
+	bin := buildAideBinary(t, repoRoot)
 
 	// Use /tmp directly so the unix socket path stays under the
 	// 104-char sockaddr_un limit on darwin. t.TempDir() can return a
@@ -281,10 +281,10 @@ func repoRootFromTest(t *testing.T) string {
 	}
 }
 
-// buildCrushBinary builds the aide binary once at the start of the
+// buildAideBinary builds the aide binary once at the start of the
 // test and returns the absolute path. Subsequent t.Cleanup removes
 // the built artefact.
-func buildCrushBinary(t *testing.T, repoRoot string) string {
+func buildAideBinary(t *testing.T, repoRoot string) string {
 	t.Helper()
 
 	binDir, err := os.MkdirTemp("", "aide-race-bin-")

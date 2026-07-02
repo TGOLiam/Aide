@@ -14,14 +14,14 @@ import (
 	"github.com/liamb/aide/internal/skills"
 )
 
-const CrushInfoToolName = "aide_info"
+const AideInfoToolName = "aide_info"
 
 //go:embed aide_info.md
 var aideInfoDescription string
 
-type CrushInfoParams struct{}
+type AideInfoParams struct{}
 
-func NewCrushInfoTool(
+func NewAideInfoTool(
 	cfg *config.ConfigStore,
 	lspManager *lsp.Manager,
 	allSkills []*skills.Skill,
@@ -29,15 +29,15 @@ func NewCrushInfoTool(
 	skillTracker *skills.Tracker,
 ) fantasy.AgentTool {
 	return fantasy.NewAgentTool(
-		CrushInfoToolName,
+		AideInfoToolName,
 		aideInfoDescription,
-		func(ctx context.Context, _ CrushInfoParams, _ fantasy.ToolCall) (fantasy.ToolResponse, error) {
-			return fantasy.NewTextResponse(buildCrushInfo(cfg, lspManager, allSkills, activeSkills, skillTracker)), nil
+		func(ctx context.Context, _ AideInfoParams, _ fantasy.ToolCall) (fantasy.ToolResponse, error) {
+			return fantasy.NewTextResponse(buildAideInfo(cfg, lspManager, allSkills, activeSkills, skillTracker)), nil
 		},
 	)
 }
 
-func buildCrushInfo(cfg *config.ConfigStore, lspManager *lsp.Manager, allSkills []*skills.Skill, activeSkills []*skills.Skill, skillTracker *skills.Tracker) string {
+func buildAideInfo(cfg *config.ConfigStore, lspManager *lsp.Manager, allSkills []*skills.Skill, activeSkills []*skills.Skill, skillTracker *skills.Tracker) string {
 	var b strings.Builder
 
 	writeConfigFiles(&b, cfg)

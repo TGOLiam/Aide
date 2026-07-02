@@ -46,7 +46,7 @@ var DefaultCreateGrace = 30 * time.Second
 // shutdown (e.g. when the last workspace is removed).
 type ShutdownFunc func()
 
-// Backend provides transport-agnostic business logic for the Crush
+// Backend provides transport-agnostic business logic for the Aide
 // server. It manages workspaces and delegates to [app.App] services.
 //
 // Locking order: when both [Backend.mu] and [Workspace.clientsMu] are
@@ -273,7 +273,7 @@ func (b *Backend) CreateWorkspace(args proto.Workspace) (*Workspace, proto.Works
 
 	cfg.Overrides().SkipPermissionRequests = args.YOLO
 
-	if err := createDotCrushDir(cfg.Config().Options.DataDirectory); err != nil {
+	if err := createDotAideDir(cfg.Config().Options.DataDirectory); err != nil {
 		return nil, proto.Workspace{}, fmt.Errorf("failed to create data directory: %w", err)
 	}
 

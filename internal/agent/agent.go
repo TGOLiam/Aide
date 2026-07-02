@@ -1,4 +1,4 @@
-// Package agent is the core orchestration layer for Crush AI agents.
+// Package agent is the core orchestration layer for Aide AI agents.
 //
 // It provides session-based AI agent functionality for managing
 // conversations, tool execution, and message handling. It coordinates
@@ -55,7 +55,7 @@ const (
 	smallContextWindowRatio     = 0.2
 )
 
-var userAgent = fmt.Sprintf("Charm-Crush/%s (https://charm.land/aide)", version.Version)
+var userAgent = fmt.Sprintf("Aide/%s (https://github.com/liamb/aide)", version.Version)
 
 //go:embed templates/title.md
 var titlePrompt []byte

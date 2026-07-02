@@ -17,9 +17,9 @@ import (
 	"charm.land/fantasy"
 )
 
-const CrushLogsToolName = "crush_logs"
+const AideLogsToolName = "aide_logs"
 
-//go:embed crush_logs.md.tpl
+//go:embed aide_logs.md.tpl
 var aideLogsDescriptionTmpl []byte
 
 var aideLogsDescriptionTpl = template.Must(
@@ -73,9 +73,9 @@ type AideLogsParams struct {
 	Lines int `json:"lines,omitempty" description:"Number of recent log entries to return (default 50, max 100)"`
 }
 
-func NewCrushLogsTool(logFile string) fantasy.AgentTool {
+func NewAideLogsTool(logFile string) fantasy.AgentTool {
 	return fantasy.NewAgentTool(
-		CrushLogsToolName,
+		AideLogsToolName,
 		aideLogsDescription(),
 		func(ctx context.Context, params AideLogsParams, call fantasy.ToolCall) (fantasy.ToolResponse, error) {
 			result := runAideLogs(logFile, params)

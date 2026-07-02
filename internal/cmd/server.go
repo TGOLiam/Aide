@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/liamb/aide/internal/config"
-	crushlog "github.com/liamb/aide/internal/log"
+	aidelog "github.com/liamb/aide/internal/log"
 	"github.com/liamb/aide/internal/server"
 	"github.com/charmbracelet/x/term"
 	"github.com/spf13/cobra"
@@ -26,7 +26,7 @@ func init() {
 
 var serverCmd = &cobra.Command{
 	Use:   "server",
-	Short: "Start the Crush server",
+	Short: "Start the Aide server",
 	RunE: func(cmd *cobra.Command, _ []string) error {
 		dataDir, err := cmd.Flags().GetString("data-dir")
 		if err != nil {
@@ -50,14 +50,14 @@ var serverCmd = &cobra.Command{
 		logFile := filepath.Join(config.GlobalCacheDir(), "server-"+safeHostName(hostURL), "aide.log")
 
 		if term.IsTerminal(os.Stderr.Fd()) {
-			crushlog.Setup(logFile, debug, os.Stderr)
+			aidelog.Setup(logFile, debug, os.Stderr)
 		} else {
-			crushlog.Setup(logFile, debug)
+			aidelog.Setup(logFile, debug)
 		}
 
 		srv := server.NewServer(cfg, hostURL.Scheme, hostURL.Host)
 		srv.SetLogger(slog.Default())
-		slog.Info("Starting Crush server...", "addr", serverHost)
+		slog.Info("Starting Aide server...", "addr", serverHost)
 
 		errch := make(chan error, 1)
 		sigch := make(chan os.Signal, 1)

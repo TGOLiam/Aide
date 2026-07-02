@@ -1,5 +1,5 @@
 {
-  "$schema": "https://charm.land/crush.json",
+  "$schema": "https://liamb.github.io/aide/schema.json",
   "lsp": {
     "gopls": {
       "options": {

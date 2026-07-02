@@ -1,5 +1,5 @@
 // Package mcp provides functionality for managing Model Context Protocol (MCP)
-// clients within the Crush application.
+// clients within the Aide application.
 package mcp
 
 import (

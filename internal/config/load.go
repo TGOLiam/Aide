@@ -145,7 +145,7 @@ func mustMarshalConfig(cfg *Config) []byte {
 	return data
 }
 
-func PushPopCrushEnv() func() {
+func PushPopAideEnv() func() {
 	var found []string
 	for _, ev := range os.Environ() {
 		if strings.HasPrefix(ev, "AIDE_") {
@@ -175,7 +175,7 @@ func PushPopCrushEnv() func() {
 
 func (c *Config) configureProviders(ctx context.Context, store *ConfigStore, env env.Env, resolver VariableResolver, knownProviders []catwalk.Provider) error {
 	knownProviderNames := make(map[string]bool)
-	restore := PushPopCrushEnv()
+	restore := PushPopAideEnv()
 	defer restore()
 
 	// When disable_default_providers is enabled, skip all default/embedded
@@ -487,10 +487,10 @@ func (c *Config) setDefaults(workingDir, dataDir string) {
 		c.Options.TUI = &TUIOptions{}
 	}
 	if len(c.Options.GlobalContextPaths) == 0 {
-		crushConfigDir := filepath.Dir(GlobalConfig())
+		aideConfigDir := filepath.Dir(GlobalConfig())
 		c.Options.GlobalContextPaths = []string{
-			filepath.Join(crushConfigDir, "CRUSH.md"),
-			filepath.Join(filepath.Dir(crushConfigDir), "AGENTS.md"),
+			filepath.Join(aideConfigDir, "AIDE.md"),
+			filepath.Join(filepath.Dir(aideConfigDir), "AGENTS.md"),
 		}
 	}
 	slices.Sort(c.Options.GlobalContextPaths)
@@ -1003,8 +1003,8 @@ func migrateDisableNotifications() {
 
 // GlobalConfig returns the global configuration file path for the application.
 func GlobalConfig() string {
-	if crushGlobal := os.Getenv("AIDE_GLOBAL_CONFIG"); crushGlobal != "" {
-		return filepath.Join(crushGlobal, fmt.Sprintf("%s.json", appName))
+	if aideGlobal := os.Getenv("AIDE_GLOBAL_CONFIG"); aideGlobal != "" {
+		return filepath.Join(aideGlobal, fmt.Sprintf("%s.json", appName))
 	}
 	return filepath.Join(home.Config(), appName, fmt.Sprintf("%s.json", appName))
 }
@@ -1012,8 +1012,8 @@ func GlobalConfig() string {
 // GlobalCacheDir returns the path to the global cache directory for the
 // application.
 func GlobalCacheDir() string {
-	if crushCache := os.Getenv("AIDE_CACHE_DIR"); crushCache != "" {
-		return crushCache
+	if aideCache := os.Getenv("AIDE_CACHE_DIR"); aideCache != "" {
+		return aideCache
 	}
 	if xdgCacheHome := os.Getenv("XDG_CACHE_HOME"); xdgCacheHome != "" {
 		return filepath.Join(xdgCacheHome, appName)
@@ -1036,8 +1036,8 @@ func ProjectConfigs(cwd string) []string {
 // GlobalConfigData returns the path to the main data directory for the application.
 // this config is used when the app overrides configurations instead of updating the global config.
 func GlobalConfigData() string {
-	if crushData := os.Getenv("AIDE_GLOBAL_DATA"); crushData != "" {
-		return filepath.Join(crushData, fmt.Sprintf("%s.json", appName))
+	if aideData := os.Getenv("AIDE_GLOBAL_DATA"); aideData != "" {
+		return filepath.Join(aideData, fmt.Sprintf("%s.json", appName))
 	}
 	if xdgDataHome := os.Getenv("XDG_DATA_HOME"); xdgDataHome != "" {
 		return filepath.Join(xdgDataHome, appName, fmt.Sprintf("%s.json", appName))
@@ -1142,8 +1142,8 @@ func projectBoundary(dir string) string {
 // Skills in these directories are auto-discovered and their files can be read
 // without permission prompts.
 func GlobalSkillsDirs() []string {
-	if crushSkills := os.Getenv("AIDE_SKILLS_DIR"); crushSkills != "" {
-		return []string{crushSkills}
+	if aideSkills := os.Getenv("AIDE_SKILLS_DIR"); aideSkills != "" {
+		return []string{aideSkills}
 	}
 
 	paths := []string{

@@ -48,14 +48,14 @@ func makeLogEntry(level, msg, source string, line int, extra map[string]any) map
 	return entry
 }
 
-func TestNewCrushLogsTool(t *testing.T) {
+func TestNewAideLogsTool(t *testing.T) {
 	t.Parallel()
-	tool := NewCrushLogsTool("/tmp/test.log")
+	tool := NewAideLogsTool("/tmp/test.log")
 	require.NotNil(t, tool)
-	require.Equal(t, CrushLogsToolName, tool.Info().Name)
+	require.Equal(t, AideLogsToolName, tool.Info().Name)
 }
 
-func TestCrushLogs_HappyPath(t *testing.T) {
+func TestAideLogs_HappyPath(t *testing.T) {
 	t.Parallel()
 	entries := []map[string]any{
 		makeLogEntry("INFO", "Application started", "app.go", 42, map[string]any{"version": "1.0.0"}),
@@ -83,7 +83,7 @@ func TestCrushLogs_HappyPath(t *testing.T) {
 	require.Contains(t, lines[2], "db.go:55")
 }
 
-func TestCrushLogs_DefaultLines(t *testing.T) {
+func TestAideLogs_DefaultLines(t *testing.T) {
 	t.Parallel()
 	// Create 100 log entries.
 	var entries []map[string]any
@@ -104,7 +104,7 @@ func TestCrushLogs_DefaultLines(t *testing.T) {
 	require.Contains(t, lines[49], "Entry 99")
 }
 
-func TestCrushLogs_MaxCap(t *testing.T) {
+func TestAideLogs_MaxCap(t *testing.T) {
 	t.Parallel()
 	// Create 200 log entries.
 	var entries []map[string]any
@@ -121,13 +121,13 @@ func TestCrushLogs_MaxCap(t *testing.T) {
 	require.Len(t, lines, 100)
 }
 
-func TestCrushLogs_MissingFile(t *testing.T) {
+func TestAideLogs_MissingFile(t *testing.T) {
 	t.Parallel()
 	result := runAideLogs("/nonexistent/path/aide.log", AideLogsParams{Lines: 50})
 	require.Contains(t, result, "No log file found")
 }
 
-func TestCrushLogs_EmptyFile(t *testing.T) {
+func TestAideLogs_EmptyFile(t *testing.T) {
 	t.Parallel()
 	tempDir := t.TempDir()
 	logFile := filepath.Join(tempDir, "aide.log")
@@ -138,7 +138,7 @@ func TestCrushLogs_EmptyFile(t *testing.T) {
 	require.Contains(t, result, "Log file is empty")
 }
 
-func TestCrushLogs_MalformedLines(t *testing.T) {
+func TestAideLogs_MalformedLines(t *testing.T) {
 	t.Parallel()
 	tempDir := t.TempDir()
 	logFile := filepath.Join(tempDir, "aide.log")
@@ -168,7 +168,7 @@ func TestCrushLogs_MalformedLines(t *testing.T) {
 	require.Contains(t, lines[1], "Another valid entry")
 }
 
-func TestCrushLogs_ExtraFieldsSorted(t *testing.T) {
+func TestAideLogs_ExtraFieldsSorted(t *testing.T) {
 	t.Parallel()
 	entries := []map[string]any{
 		makeLogEntry("INFO", "Test message", "app.go", 1, map[string]any{
@@ -191,7 +191,7 @@ func TestCrushLogs_ExtraFieldsSorted(t *testing.T) {
 	require.True(t, idxM < idxZ, "m_field should come before z_field")
 }
 
-func TestCrushLogs_NonStringValues(t *testing.T) {
+func TestAideLogs_NonStringValues(t *testing.T) {
 	t.Parallel()
 	entry := map[string]any{
 		"time":   time.Now().Format(time.RFC3339),
@@ -225,7 +225,7 @@ func TestCrushLogs_NonStringValues(t *testing.T) {
 	require.Contains(t, result, `arr="[`)
 }
 
-func TestCrushLogs_Redaction(t *testing.T) {
+func TestAideLogs_Redaction(t *testing.T) {
 	t.Parallel()
 	entries := []map[string]any{
 		makeLogEntry("INFO", "API call", "api.go", 10, map[string]any{
@@ -266,7 +266,7 @@ func TestCrushLogs_Redaction(t *testing.T) {
 	require.NotContains(t, result, "mytoken")
 }
 
-func TestCrushLogs_ReservedFields(t *testing.T) {
+func TestAideLogs_ReservedFields(t *testing.T) {
 	t.Parallel()
 	entries := []map[string]any{
 		{
@@ -298,7 +298,7 @@ func TestCrushLogs_ReservedFields(t *testing.T) {
 	require.Contains(t, result, `extra="should appear"`)
 }
 
-func TestCrushLogs_OversizedLines(t *testing.T) {
+func TestAideLogs_OversizedLines(t *testing.T) {
 	t.Parallel()
 	tempDir := t.TempDir()
 	logFile := filepath.Join(tempDir, "aide.log")
@@ -340,7 +340,7 @@ func TestCrushLogs_OversizedLines(t *testing.T) {
 	require.Contains(t, lines[1], "Second valid entry")
 }
 
-func TestCrushLogs_PartialTrailingLine(t *testing.T) {
+func TestAideLogs_PartialTrailingLine(t *testing.T) {
 	t.Parallel()
 	tempDir := t.TempDir()
 	logFile := filepath.Join(tempDir, "aide.log")
@@ -370,7 +370,7 @@ func TestCrushLogs_PartialTrailingLine(t *testing.T) {
 	}
 }
 
-func TestCrushLogs_ValueQuoting(t *testing.T) {
+func TestAideLogs_ValueQuoting(t *testing.T) {
 	t.Parallel()
 	entries := []map[string]any{
 		makeLogEntry("INFO", "Test", "app.go", 1, map[string]any{
@@ -410,7 +410,7 @@ func TestCrushLogs_ValueQuoting(t *testing.T) {
 	require.Contains(t, result, "normal=simplevalue")
 }
 
-func TestCrushLogs_ChronologicalOrder(t *testing.T) {
+func TestAideLogs_ChronologicalOrder(t *testing.T) {
 	t.Parallel()
 	// Create entries with different timestamps.
 	baseTime := time.Date(2024, 1, 15, 10, 0, 0, 0, time.UTC)
@@ -448,7 +448,7 @@ func TestCrushLogs_ChronologicalOrder(t *testing.T) {
 	require.Contains(t, lines[2], "Third")
 }
 
-func TestCrushLogs_TimeOnlyFormat(t *testing.T) {
+func TestAideLogs_TimeOnlyFormat(t *testing.T) {
 	t.Parallel()
 	entry := map[string]any{
 		"time":   "2024-01-15T15:04:05Z",
@@ -465,7 +465,7 @@ func TestCrushLogs_TimeOnlyFormat(t *testing.T) {
 	require.True(t, strings.HasPrefix(result, "15:04:05"), "Expected time-only format, got: %s", result)
 }
 
-func TestCrushLogs_LevelVariations(t *testing.T) {
+func TestAideLogs_LevelVariations(t *testing.T) {
 	t.Parallel()
 	entries := []map[string]any{
 		makeLogEntry("DEBUG", "Debug message", "app.go", 1, nil),
@@ -490,7 +490,7 @@ func TestCrushLogs_LevelVariations(t *testing.T) {
 	require.Contains(t, lines[4], "ERROR")
 }
 
-func TestCrushLogs_SourceVariations(t *testing.T) {
+func TestAideLogs_SourceVariations(t *testing.T) {
 	t.Parallel()
 	entries := []map[string]any{
 		// Source as object with file and line.

@@ -29,7 +29,7 @@ import (
 	"github.com/liamb/aide/internal/config"
 	"github.com/liamb/aide/internal/db"
 	"github.com/liamb/aide/internal/lock"
-	crushlog "github.com/liamb/aide/internal/log"
+	aidelog "github.com/liamb/aide/internal/log"
 	"github.com/liamb/aide/internal/projects"
 	"github.com/liamb/aide/internal/proto"
 	"github.com/liamb/aide/internal/server"
@@ -281,7 +281,7 @@ func setupLocalWorkspace(cmd *cobra.Command) (workspace.Workspace, func(), error
 	}
 
 	logFile := filepath.Join(cfg.Options.DataDirectory, "logs", "aide.log")
-	crushlog.Setup(logFile, debug)
+	aidelog.Setup(logFile, debug)
 
 	// Discover skills once before app.New. Local mode hosts a single
 	// workspace per process, so WithGlobalMirror keeps the package
@@ -391,7 +391,7 @@ func connectToServer(cmd *cobra.Command) (*client.Client, *proto.Workspace, func
 
 	if ws.Config != nil {
 		logFile := filepath.Join(ws.Config.Options.DataDirectory, "logs", "aide.log")
-		crushlog.Setup(logFile, debug)
+		aidelog.Setup(logFile, debug)
 	}
 
 	cleanup := func() { _ = c.DeleteWorkspace(context.Background(), ws.ID) }
@@ -405,11 +405,11 @@ func connectToServer(cmd *cobra.Command) (*client.Client, *proto.Workspace, func
 func ensureServer(cmd *cobra.Command, hostURL *url.URL) error {
 	// Initialize the persistent log here so stale-socket diagnostics
 	// emitted before connectToServer runs are captured in the per-host
-	// server log file. crushlog.Setup uses sync.Once internally, so the
+	// server log file. aidelog.Setup uses sync.Once internally, so the
 	// later call from connectToServer becomes a no-op.
 	debug, _ := cmd.Flags().GetBool("debug")
 	logFile := filepath.Join(config.GlobalCacheDir(), "server-"+safeHostName(hostURL), "aide.log")
-	crushlog.Setup(logFile, debug)
+	aidelog.Setup(logFile, debug)
 
 	switch hostURL.Scheme {
 	case "unix", "npipe":
@@ -827,7 +827,7 @@ func ResolveCwd(cmd *cobra.Command) (string, error) {
 	return cwd, nil
 }
 
-func createDotCrushDir(dir string) error {
+func createDotAideDir(dir string) error {
 	if err := os.MkdirAll(dir, 0o700); err != nil {
 		return fmt.Errorf("failed to create data directory: %q %w", dir, err)
 	}
