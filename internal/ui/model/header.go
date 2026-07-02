@@ -62,7 +62,7 @@ func (h *header) refresh() {
 
 // drawTopbar renders the Layout 3 compact topbar.
 //
-//	//// >_ aide ///////////////////
+//	╱╱╱╱ >_ aide /////////////////// ~/path
 func drawTopbar(
 	scr uv.Screen,
 	area uv.Rectangle,
@@ -72,14 +72,19 @@ func drawTopbar(
 ) {
 	t := com.Styles
 
-	// Logo part: "//// >_ AIDE"
-	logo := lipgloss.NewStyle().Foreground(t.Logo.TitleColorA).Render("//// >_ ") +
+	prefix := t.Topbar.Diagonals.Render(strings.Repeat(headerDiag, 4))
+	logo := prefix + " " + lipgloss.NewStyle().Foreground(t.Logo.TitleColorA).Render(">_ ") +
 		lipgloss.NewStyle().Foreground(t.Logo.SmallGradToColor).Render("AIDE")
+
+	cwd := fsext.DirTrim(fsext.PrettyPath(com.Workspace.WorkingDir()), 4)
+	cwdStr := t.Topbar.WorkingDir.Render(cwd)
 
 	// Calculate space for diagonals
 	leftContent := logo
+	rightContent := cwdStr
 	leftWidth := lipgloss.Width(leftContent)
-	remainingWidth := width - leftWidth - 4 // 4 for padding
+	rightWidth := lipgloss.Width(rightContent)
+	remainingWidth := width - leftWidth - rightWidth - 4 // 4 for padding
 
 	diagStr := ""
 	if remainingWidth > 0 {
@@ -94,6 +99,7 @@ func drawTopbar(
 		b.WriteString(diagStr)
 		b.WriteString(" ")
 	}
+	b.WriteString(rightContent)
 
 	view := uv.NewStyledString(
 		t.Topbar.Wrapper.Render(b.String()),
