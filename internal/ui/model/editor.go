@@ -17,6 +17,7 @@ import (
 
 	"charm.land/bubbles/v2/textarea"
 	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 	"github.com/charmbracelet/x/editor"
 	"github.com/liamb/aide/internal/clipboard"
 	"github.com/liamb/aide/internal/fsext"
@@ -295,17 +296,24 @@ func (m *UI) textareaWord() string {
 // renderEditorView renders the editor view with attachments if any
 // and the current agent mode indicator.
 func (m *UI) renderEditorView(width int) string {
-	var attachmentsView string
+	agentTag := m.agentModeTag(width)
+	attachmentsView := ""
 	if len(m.attachments.List()) > 0 {
 		attachmentsView = m.attachments.Render(width)
 	}
-	agentTag := m.agentModeTag(width)
+
 	var parts []string
-	if attachmentsView != "" {
-		parts = append(parts, attachmentsView)
-	}
-	if agentTag != "" {
-		parts = append(parts, agentTag)
+	if agentTag != "" || attachmentsView != "" {
+		if agentTag == "" {
+			parts = append(parts, attachmentsView)
+		} else if attachmentsView == "" {
+			parts = append(parts, agentTag)
+		} else {
+			agentWidth := lipgloss.Width(agentTag)
+			attachmentsWidth := lipgloss.Width(attachmentsView)
+			gap := max(1, width-agentWidth-attachmentsWidth)
+			parts = append(parts, agentTag+strings.Repeat(" ", gap)+attachmentsView)
+		}
 	}
 	parts = append(parts, m.textarea.View())
 	return strings.Join(parts, "\n")
