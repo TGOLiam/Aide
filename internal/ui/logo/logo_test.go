@@ -22,7 +22,7 @@ func TestCompactRenderUsesSidebarBrandFormat(t *testing.T) {
 	if !strings.Contains(got, "////") {
 		t.Fatalf("expected compact logo to include left slashes, got %q", got)
 	}
-	if !strings.Contains(got, ">_ ") || !strings.Contains(got, "Aide") {
-		t.Fatalf("expected compact logo to include >_ Aide, got %q", got)
+	if !strings.Contains(got, ">_ ") || !strings.Contains(got, "AIDE") {
+		t.Fatalf("expected compact logo to include >_ AIDE, got %q", got)
 	}
 }

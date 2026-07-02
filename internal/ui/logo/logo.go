@@ -37,9 +37,9 @@ func Render(base lipgloss.Style, version string, compact bool, o Opts) string {
 		return lipgloss.NewStyle().Foreground(c).Render(s)
 	}
 
-	name := "Aide"
+	name := "AIDE"
 	if o.Hyper {
-		name = "Hyperaide"
+		name = "HYPERAIDE"
 	}
 
 	prompt := fg(o.TitleColorA, ">_ ")
@@ -82,12 +82,12 @@ func Render(base lipgloss.Style, version string, compact bool, o Opts) string {
 	return logo
 }
 
-// SmallRender renders a small inline version of the Aide logo: ">_ aide"
+// SmallRender renders a small inline version of the Aide logo: ">_ AIDE"
 // with diagonal fill to the right, suitable for sidebar header or topbar.
 func SmallRender(t *styles.Styles, width int, o Opts) string {
-	wordmark := "Aide"
+	wordmark := "AIDE"
 	if o.Hyper {
-		wordmark = "Hyperaide"
+		wordmark = "HYPERAIDE"
 	}
 	leftField := t.Logo.SmallDiagonals.Render("////")
 	title := lipgloss.NewStyle().Foreground(o.TitleColorA).Render(">_ ")

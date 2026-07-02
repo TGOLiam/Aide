@@ -283,11 +283,11 @@ func (m *UI) FullHelp() [][]key.Binding {
 
 // renderLogo renders the Aide logo with the given styles and dimensions.
 func renderLogo(t *styles.Styles, compact, hyper bool, width int) string {
-	v := version.Version
-	if v == "devel" {
-		v = ""
+	versionText := ""
+	if compact && version.Version != "devel" {
+		versionText = version.Version
 	}
-	return logo.Render(t.Logo.GradCanvas, v, compact, logo.Opts{
+	return logo.Render(t.Logo.GradCanvas, versionText, compact, logo.Opts{
 		FieldColor:   t.Logo.FieldColor,
 		TitleColorA:  t.Logo.TitleColorA,
 		TitleColorB:  t.Logo.TitleColorB,
