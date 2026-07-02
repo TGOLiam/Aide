@@ -465,6 +465,51 @@ func (s *PKCESession) WaitForResult(timeout time.Duration) (*oauth.Token, error)
 	}
 }
 
+func (s *PKCESession) exchangeToken(ctx context.Context, code string, w http.ResponseWriter) {
+	form := fmt.Sprintf(
+		"grant_type=authorization_code&code=%s&redirect_uri=%s&client_id=%s&code_verifier=%s",
+		code, s.RedirectURI, clientID, s.Verifier,
+	)
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, tokenURL, strings.NewReader(form))
+	if err != nil {
+		s.errCh <- fmt.Errorf("token exchange: %w", err)
+		return
+	}
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		s.errCh <- fmt.Errorf("token exchange: %w", err)
+		return
+	}
+	defer resp.Body.Close()
+
+	respBody, err := io.ReadAll(io.LimitReader(resp.Body, 1<<20))
+	if err != nil {
+		s.errCh <- fmt.Errorf("token exchange: %w", err)
+		return
+	}
+	if resp.StatusCode != http.StatusOK {
+		s.errCh <- fmt.Errorf("token exchange failed: status %d, body: %s", resp.StatusCode, string(respBody))
+		return
+	}
+
+	var tr tokenResponse
+	if err := json.Unmarshal(respBody, &tr); err != nil {
+		s.errCh <- fmt.Errorf("token exchange: %w", err)
+		return
+	}
+
+	t := &oauth.Token{
+		AccessToken:  tr.AccessToken,
+		RefreshToken: tr.RefreshToken,
+		ExpiresIn:    tr.ExpiresIn,
+		AccountID:    extractAccountID(tr.IDToken),
+	}
+	t.SetExpiresAt()
+	s.resultCh <- t
+}
+
 func (s *PKCESession) handleCallback(w http.ResponseWriter, r *http.Request) {
 	code := r.URL.Query().Get("code")
 	state := r.URL.Query().Get("state")
@@ -493,14 +538,7 @@ func (s *PKCESession) handleCallback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	go func() {
-		token, err := exchangeAuthCode(r.Context(), code, s.Verifier)
-		if err != nil {
-			s.errCh <- err
-			return
-		}
-		s.resultCh <- token
-	}()
+	go s.exchangeToken(r.Context(), code, w)
 
 	writeOAuthResponse(w, oauthSuccessPage())
 }
