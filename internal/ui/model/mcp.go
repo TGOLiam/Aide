@@ -1,14 +1,18 @@
 package model
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
 	"charm.land/lipgloss/v2"
+	tea "charm.land/bubbletea/v2"
 	"github.com/liamb/aide/internal/agent/tools/mcp"
 	"github.com/liamb/aide/internal/config"
 	"github.com/liamb/aide/internal/ui/common"
 	"github.com/liamb/aide/internal/ui/styles"
+	"github.com/liamb/aide/internal/ui/util"
+	"github.com/liamb/aide/internal/workspace"
 )
 
 // mcpInfo renders the MCP status section showing active MCP clients and their
@@ -104,4 +108,61 @@ func mcpList(t *styles.Styles, mcps []mcp.ClientInfo, width, maxItems int) strin
 		return lipgloss.JoinVertical(lipgloss.Left, visibleItems...)
 	}
 	return lipgloss.JoinVertical(lipgloss.Left, renderedMcps...)
+}
+
+func (m *UI) runMCPPrompt(clientID, promptID string, arguments map[string]string) tea.Cmd {
+	load := func() tea.Msg {
+		prompt, err := m.com.Workspace.GetMCPPrompt(clientID, promptID, arguments)
+		if err != nil {
+			// TODO: make this better
+			return util.ReportError(err)()
+		}
+
+		if prompt == "" {
+			return nil
+		}
+		return sendMessageMsg{
+			Content: prompt,
+		}
+	}
+
+	var cmds []tea.Cmd
+	if cmd := m.dialog.StartLoading(); cmd != nil {
+		cmds = append(cmds, cmd)
+	}
+	cmds = append(cmds, load, func() tea.Msg {
+		return closeDialogMsg{}
+	})
+
+	return tea.Sequence(cmds...)
+}
+
+func (m *UI) handleStateChanged() tea.Cmd {
+	return func() tea.Msg {
+		m.com.Workspace.UpdateAgentModel(context.Background())
+		return mcpStateChangedMsg{
+			states: m.com.Workspace.MCPGetStates(),
+		}
+	}
+}
+
+func handleMCPPromptsEvent(ws workspace.Workspace, name string) tea.Cmd {
+	return func() tea.Msg {
+		ws.MCPRefreshPrompts(context.Background(), name)
+		return nil
+	}
+}
+
+func handleMCPToolsEvent(ws workspace.Workspace, name string) tea.Cmd {
+	return func() tea.Msg {
+		ws.RefreshMCPTools(context.Background(), name)
+		return nil
+	}
+}
+
+func handleMCPResourcesEvent(ws workspace.Workspace, name string) tea.Cmd {
+	return func() tea.Msg {
+		ws.MCPRefreshResources(context.Background(), name)
+		return nil
+	}
 }
