@@ -13,6 +13,7 @@ import (
 	"charm.land/catwalk/pkg/catwalk"
 	"github.com/liamb/aide/internal/agent/notify"
 	"github.com/liamb/aide/internal/config"
+	"github.com/liamb/aide/internal/oauth/codex"
 	"github.com/liamb/aide/internal/permission"
 	"github.com/liamb/aide/internal/stringext"
 	"github.com/liamb/aide/internal/ui/chat"
@@ -458,6 +459,8 @@ func (m *UI) openAuthenticationDialog(provider catwalk.Provider, model config.Se
 	)
 
 	switch provider.ID {
+	case codex.ProviderID:
+		dlg, cmd = dialog.NewOAuthCodex(m.com, isOnboarding, provider, model, modelType)
 	default:
 		dlg, cmd = dialog.NewAPIKeyInput(m.com, isOnboarding, provider, model, modelType)
 	}

@@ -43,6 +43,7 @@ import (
 	"charm.land/fantasy/providers/openaicompat"
 	"charm.land/fantasy/providers/openrouter"
 	"charm.land/fantasy/providers/vercel"
+	"github.com/liamb/aide/internal/oauth/codex"
 	openaisdk "github.com/charmbracelet/openai-go/option"
 	"github.com/qjebbs/go-jsons"
 )
@@ -918,6 +919,17 @@ func (c *coordinator) buildOpenaiCompatProvider(baseURL, apiKey string, headers 
 	// Set HTTP client based on provider and debug mode.
 	var httpClient *http.Client
 	switch providerID {
+	case codex.ProviderID:
+		// Use the Responses API for Codex (it uses OpenAI Responses format).
+		opts = append(opts, openaicompat.WithUseResponsesAPI())
+		// Look up the OAuth token for the account ID if available.
+		var accountID string
+		if cfg, ok := c.cfg.Config().Providers.Get(providerID); ok && cfg.OAuthToken != nil {
+			accountID = cfg.OAuthToken.AccountID
+		}
+		httpClient = &http.Client{
+			Transport: codex.NewTransport(apiKey, accountID, nil),
+		}
 	}
 	if httpClient == nil && c.cfg.Config().Options.Debug {
 		httpClient = log.NewHTTPClient()

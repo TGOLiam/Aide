@@ -16,6 +16,10 @@ type Token struct {
 	RefreshToken string `json:"refresh_token"`
 	ExpiresIn    int    `json:"expires_in"`
 	ExpiresAt    int64  `json:"expires_at"`
+	// AccountID is an optional provider-specific account identifier.
+	// For OpenAI Codex, this is the chatgpt_account_id extracted from
+	// the id_token JWT and is used as the ChatGPT-Account-Id header.
+	AccountID string `json:"account_id,omitempty"`
 }
 
 // SetExpiresAt calculates and sets the ExpiresAt field based on the

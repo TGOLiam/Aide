@@ -19,6 +19,7 @@ import (
 	"charm.land/catwalk/pkg/embedded"
 	"github.com/liamb/aide/internal/csync"
 	"github.com/liamb/aide/internal/home"
+	"github.com/liamb/aide/internal/oauth/codex"
 	"github.com/charmbracelet/x/etag"
 )
 
@@ -133,6 +134,17 @@ func Providers(cfg *Config) ([]catwalk.Provider, error) {
 		wg.Wait()
 
 		providerList = slices.Collect(providers.Seq())
+
+		// Inject the OpenAI Codex provider into the known providers list.
+		// Codex is the backend API for chatgpt.com, accessible to ChatGPT
+		// Plus, Pro, and Edu subscribers via OAuth. It is not part of the
+		// upstream catwalk provider registry, so we add it here.
+		if !customProvidersOnly && !slices.ContainsFunc(providerList, func(p catwalk.Provider) bool {
+			return string(p.ID) == codex.ProviderID
+		}) {
+			providerList = append(providerList, codex.ProviderConfig())
+		}
+
 		providerErr = errors.Join(errs...)
 	})
 	return providerList, providerErr

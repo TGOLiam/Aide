@@ -15,6 +15,7 @@ import (
 	"github.com/liamb/aide/internal/env"
 	"github.com/liamb/aide/internal/lock"
 	"github.com/liamb/aide/internal/oauth"
+	"github.com/liamb/aide/internal/oauth/codex"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
 	"golang.org/x/sync/singleflight"
@@ -624,6 +625,8 @@ func (s *ConfigStore) exchange(ctx context.Context, providerID, refreshToken str
 		return s.exchangeToken(ctx, providerID, refreshToken)
 	}
 	switch providerID {
+	case codex.ProviderID:
+		return codex.RefreshToken(ctx, refreshToken)
 	default:
 		return nil, fmt.Errorf("OAuth refresh not supported for provider %s", providerID)
 	}
