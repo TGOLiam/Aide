@@ -147,7 +147,16 @@ func (s *Skill) Validate() error {
 
 // Parse parses a SKILL.md file from disk.
 func Parse(path string) (*Skill, error) {
-	content, err := os.ReadFile(path)
+	cleanPath := filepath.Clean(path)
+	if filepath.Base(cleanPath) != SkillFileName {
+		return nil, fmt.Errorf("invalid skill file path %q: expected %s", path, SkillFileName)
+	}
+
+	if cleanPath == ".." || strings.HasPrefix(cleanPath, ".."+string(filepath.Separator)) {
+		return nil, fmt.Errorf("invalid skill file path %q: path traversal is not allowed", path)
+	}
+
+	content, err := os.ReadFile(cleanPath)
 	if err != nil {
 		return nil, err
 	}
@@ -157,8 +166,8 @@ func Parse(path string) (*Skill, error) {
 		return nil, err
 	}
 
-	skill.Path = filepath.Dir(path)
-	skill.SkillFilePath = path
+	skill.Path = filepath.Dir(cleanPath)
+	skill.SkillFilePath = cleanPath
 
 	return skill, nil
 }
