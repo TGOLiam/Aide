@@ -17,7 +17,6 @@ import (
 
 	"charm.land/bubbles/v2/textarea"
 	tea "charm.land/bubbletea/v2"
-	"charm.land/lipgloss/v2"
 	"github.com/charmbracelet/x/editor"
 	"github.com/liamb/aide/internal/clipboard"
 	"github.com/liamb/aide/internal/fsext"
@@ -303,16 +302,14 @@ func (m *UI) renderEditorView(width int) string {
 	}
 
 	var parts []string
-	if agentTag != "" || attachmentsView != "" {
-		if agentTag == "" {
-			parts = append(parts, attachmentsView)
-		} else if attachmentsView == "" {
+	if agentTag != "" && attachmentsView != "" {
+		parts = append(parts, strings.TrimRight(agentTag, " ")+" "+attachmentsView)
+	} else {
+		if agentTag != "" {
 			parts = append(parts, agentTag)
-		} else {
-			agentWidth := lipgloss.Width(agentTag)
-			attachmentsWidth := lipgloss.Width(attachmentsView)
-			gap := max(1, width-agentWidth-attachmentsWidth)
-			parts = append(parts, agentTag+strings.Repeat(" ", gap)+attachmentsView)
+		}
+		if attachmentsView != "" {
+			parts = append(parts, attachmentsView)
 		}
 	}
 	parts = append(parts, m.textarea.View())
